@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>troylc博客</title>
-  <subtitle>爱生活爱编程，一起来进步吧！</subtitle>
+  <title>troyCoder</title>
+  <subtitle>爱生活爱编程，分享学习工作中的知识和见解！</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
