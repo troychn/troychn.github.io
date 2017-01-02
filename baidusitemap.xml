@@ -3,23 +3,20 @@
 
 
     
-    
   <url>
-    <loc>http://www.troylc.cc/experience/2016/05/30/Hexo-0.html</loc>
-    <lastmod>2017-01-01T15:53:48.000Z</lastmod>
+    <loc>http://www.troylc.cc/hexo/2016/06/29/Hexo-7.html</loc>
+    <lastmod>2017-01-02T05:47:59.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo博客折腾记</title>
-        <pubTime>2016-05-30T05:50:23.000Z</pubTime>
+        <title>Hexo教程(七)-hexo-利用git多PC间同步博客</title>
+        <pubTime>2016-06-29T02:22:16.000Z</pubTime>
         
         <tag>hexo</tag>
-         
-        <tag>心得</tag>
          
          
            
              
-              <breadCrumb title="心得" url="http://www.troylc.cc/categories/experience/"/>
+              <breadCrumb title="hexo" url="http://www.troylc.cc/categories/hexo/"/>
           
         </display>
     </data>
@@ -28,7 +25,7 @@
     
   <url>
     <loc>http://www.troylc.cc/hexo/2016/06/28/Hexo-6.html</loc>
-    <lastmod>2017-01-01T15:49:26.000Z</lastmod>
+    <lastmod>2017-01-02T05:47:02.000Z</lastmod>
     <data>
         <display>
         <title>Hexo教程(六)-hexo-jacman主题文章页优化</title>
@@ -51,24 +48,27 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/hexo/2016/06/29/Hexo-7.html</loc>
-    <lastmod>2017-01-01T15:45:52.000Z</lastmod>
+    <loc>http://www.troylc.cc/experience/2016/05/30/Hexo-0.html</loc>
+    <lastmod>2017-01-02T05:37:48.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo教程(七)-hexo-利用git多PC间同步博客</title>
-        <pubTime>2016-06-29T02:22:16.000Z</pubTime>
+        <title>Hexo博客折腾记</title>
+        <pubTime>2016-05-30T05:50:23.000Z</pubTime>
         
         <tag>hexo</tag>
+         
+        <tag>心得</tag>
          
          
            
              
-              <breadCrumb title="hexo" url="http://www.troylc.cc/categories/hexo/"/>
+              <breadCrumb title="心得" url="http://www.troylc.cc/categories/experience/"/>
           
         </display>
     </data>
     </url>
 
+    
     
     
     
