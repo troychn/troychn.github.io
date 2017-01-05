@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/docker/2017/01/05/docker04ininstall.html</loc>
+    <lastmod>2017-01-05T08:11:23.000Z</lastmod>
+    <data>
+        <display>
+        <title>docker系列-docker、docker-compse最新版本安装及版本升级</title>
+        <pubTime>2017-01-05T08:11:23.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+         
+           
+             
+              <breadCrumb title="docker" url="http://www.troylc.cc/categories/docker/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/hexo/2016/06/29/Hexo-7.html</loc>
     <lastmod>2017-01-02T05:47:59.000Z</lastmod>
     <data>
@@ -120,6 +142,7 @@
     </url>
 
     
+    
   <url>
     <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
@@ -141,7 +164,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>http://www.troylc.cc/docker/2016/07/17/docker-01.html</loc>
