@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/docker/2017/01/08/Docker05registry-jenkins.html</loc>
+    <lastmod>2017-01-07T16:50:52.000Z</lastmod>
+    <data>
+        <display>
+        <title>jenkins-registry持续集成-jenkins-registry安装与数据迁移(一)</title>
+        <pubTime>2017-01-07T16:50:52.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>jenkins</tag>
+         
+        <tag>registry</tag>
+         
+         
+           
+             
+              <breadCrumb title="docker" url="http://www.troylc.cc/categories/docker/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/docker/2017/01/05/docker04ininstall.html</loc>
     <lastmod>2017-01-05T09:09:15.000Z</lastmod>
     <data>

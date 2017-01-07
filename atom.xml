@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-01-05T09:09:15.000Z</updated>
+  <updated>2017-01-07T16:50:52.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -14,6 +14,66 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>jenkins-registry持续集成-jenkins-registry安装与数据迁移(一)</title>
+    <link href="http://www.troylc.cc/docker/2017/01/08/Docker05registry-jenkins.html"/>
+    <id>http://www.troylc.cc/docker/2017/01/08/Docker05registry-jenkins.html</id>
+    <published>2017-01-07T16:50:52.000Z</published>
+    <updated>2017-01-07T16:50:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近项目中也是一直在用jenkins做持续集成，正好更新jenkins为最新版本及迁移原来的老环境。顺手把它记录下来，和大家一起分享（本文同样适用新入手jenkins的同学）。 </p>
+<h3 id="持续集成原理"><a href="#持续集成原理" class="headerlink" title="持续集成原理"></a>持续集成原理</h3><p>持续集成, 简称CI（continuous integration）.</p>
+<ul>
+<li>CI作为敏捷开发重要的一步，其目的在于让产品快速迭代的同时，尽可能保持高质量.</li>
+<li>CI一种可以增加项目可见性，降低项目失败风险的开发实践。其每一次代码更新，都要通过自动化测试来检测代码和功能的正确性，只有通过自动测试的代码才能进行后续的交付和部署.</li>
+<li>CI 是团队成员间（产研测）更好地协调工作，更好的适应敏捷迭代开发，自动完成减少人工干预，保证每个时间点上团队成员提交的代码都能成功集成的，可以很好的用于对各种WEB、APP项目的打包.  </li>
+</ul>
+<p>Jenkins<br><a href="https://jenkins.io/index.html" target="_blank" rel="external">Jenkins</a>是一个用Java编写的开源的持续集成工具，提供了软件开发的持续集成服务，可监控并触发持续重复的工作，具有开源，支持多平台和插件扩展，安装简单，界面化管理等特点。</p>
+<p>附网上jenkins持续交付流程图<br><img src="http://note.youdao.com/yws/public/resource/f63aea77ab66b196c469ff330cbff084/xmlnote/CF1A4905662247D79B3FDA6FD00857DE/19125" alt="jenkins持续集成"><br>持续集成，持续交付各个阶段所使用的一些典型工具的使用，以及在各个阶段中的相关团队的相关活动，以下图为典型的DevOps相关的活动<br><img src="http://note.youdao.com/yws/public/resource/f63aea77ab66b196c469ff330cbff084/xmlnote/6E94BDCEE7DF4243AF6DA8C9AC831B1C/19140" alt="jenkins持续集成2"></p>
+<h3 id="docker环境安装"><a href="#docker环境安装" class="headerlink" title="docker环境安装"></a>docker环境安装</h3><p>参考：<a href="http://www.troylc.cc/docker/2017/01/05/docker04ininstall.html">docker系列-docker、docker-compse最新版本安装及版本升级</a></p>
+<h3 id="jenkins环境安装"><a href="#jenkins环境安装" class="headerlink" title="jenkins环境安装"></a>jenkins环境安装</h3><p>首页在有联网条件下的docker环境中下载jenkins最新版本的docker镜像</p>
+<h4 id="下载jenkins镜像"><a href="#下载jenkins镜像" class="headerlink" title="下载jenkins镜像"></a>下载jenkins镜像</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">[root@registry-jenkins ~]# docker pull jenkins:2.32.1-alpine</div><div class="line">2.32.1-alpine: Pulling from library/jenkins</div><div class="line">b7f33cc0b48e: Pull complete </div><div class="line">43a564ae36a3: Pull complete </div><div class="line">b294f0e7874b: Downloading [=========================================&gt;         ] 41.12 MB/49.36 MB</div><div class="line">63c7a703a76a: Downloading [===========&gt;                                       ] 5.144 MB/23.26 MB</div><div class="line">1948a77ff7cc: Download complete </div><div class="line">ceb220f57d17: Downloading [=========================&gt;                         ] 35.11 MB/69.93 MB</div><div class="line">d0fbbc51c7ae: Waiting </div><div class="line">6eee39234906: Waiting </div><div class="line">6eee39234906: Pulling fs layer </div><div class="line">[root@registry-jenkins ~]# docker pull registry</div><div class="line">latest: Pulling from library/registry</div><div class="line">b7f33cc0b48e: Pull complete </div><div class="line">43a564ae36a3: Pull complete </div><div class="line">b294f0e7874b: Downloading [=========================================&gt;         ] 41.12 MB/49.36 MB</div><div class="line">63c7a703a76a: Downloading [===========&gt;                                       ] 5.144 MB/23.26 MB</div><div class="line">1948a77ff7cc: Download complete </div><div class="line">6eee39234906: Pulling fs layer </div><div class="line"></div><div class="line">[root@registry-jenkins ~]# docker images</div><div class="line">REPOSITORY                   TAG                    IMAGE ID            CREATED             SIZE</div><div class="line">jenkins                      2.32.1-alpine          0c0c0a437b20        10 days ago         263.7 MB</div><div class="line">registry                     latest                 182810e6ba8c        10 days ago         37.6 MB</div><div class="line">nginx                        latest                 abf312888d13        5 weeks ago         181.5 MB</div><div class="line">mysql                        latest                 d9124e6c552f        6 weeks ago         383.4 MB</div><div class="line">tomcat                       8.0.39-jre8-alpine     fbb6a04c1245        7 weeks ago         135.4 MB</div><div class="line">java                         openjdk-8-jdk-alpine   d991edd81416        7 weeks ago         145 MB</div><div class="line">tomcat                       8.5.5-jre8-alpine      af393862df5a        4 months ago        135 MB</div><div class="line">redis                        latest                 4f5f397d4b7c        10 months ago       177.5 MB</div><div class="line">toptomcat                    latest                 ce8c4307d74c        14 months ago       395.5 MB</div><div class="line">topsecnginx                  latest                 bd299f0f0516        14 months ago       223.4 MB</div></pre></td></tr></table></figure>
+<h4 id="加载器安装"><a href="#加载器安装" class="headerlink" title="加载器安装"></a>加载器安装</h4><p>==注意：==<br>一般由于docker hub是国外的网站，下载镜像非常慢，各位可以用国内的加载器，这里我推荐两种加载器：</p>
+<ol>
+<li>daocloud加载器</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -sSL https://get.daocloud.io/daotools/set_mirror.sh | sh -s http://69693d08.m.daocloud.io</div></pre></td></tr></table></figure>
+<p>该脚本可以将 –registry-mirror 加入到你的 Docker 配置文件 /etc/default/docker 中。适用于 Ubuntu14.04、Debian、CentOS6 、CentOS7、Fedora、Arch Linux、openSUSE Leap 42.1，具体地址为 <a href="https://www.daocloud.io/mirror#accelerator-doc" target="_blank" rel="external">https://www.daocloud.io/mirror#accelerator-doc</a>其他版本可能有细微不同。更多详情请<a href="http://guide.daocloud.io/dcs/daocloud-9153151.html" target="_blank" rel="external">访问文档</a>。</p>
+<ol>
+<li>阿里云加载器  </li>
+</ol>
+<p>阿里云加载器是你用阿里云账号登录后，在产品与服务中有一个加速器，点击加速器出现如下内容：<br>他会给没一个账号弄一个专属的加载器：我的是 专属加速器地址： <a href="https://1i186hp0.mirror.aliyuncs.com" target="_blank" rel="external">https://1i186hp0.mirror.aliyuncs.com</a></p>
+<p>安装或升级Docker</p>
+<p>您可以通过阿里云的镜像仓库下载： mirrors.aliyun.com/help/docker-engine</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -</div></pre></td></tr></table></figure>
+<p>配置Docker加速器</p>
+<p>您可以使用如下的脚本将mirror的配置添加到docker daemon的启动参数中。<br><strong>系统要求 CentOS 7 以上，Docker 1.9 以上。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo cp -n /lib/systemd/system/docker.service /etc/systemd/system/docker.service</div><div class="line">sudo sed -i &quot;s|ExecStart=/usr/bin/docker daemon|ExecStart=/usr/bin/docker daemon --registry-mirror=https://1i186hp0.mirror.aliyuncs.com|g&quot; /etc/systemd/system/docker.service</div><div class="line">sudo systemctl daemon-reload</div><div class="line">sudo service docker restart</div></pre></td></tr></table></figure>
+<h4 id="通过-docker-compose运行jenkins"><a href="#通过-docker-compose运行jenkins" class="headerlink" title="通过 docker-compose运行jenkins"></a>通过 docker-compose运行jenkins</h4><h5 id="docker-compose文件内容："><a href="#docker-compose文件内容：" class="headerlink" title="docker-compose文件内容："></a>docker-compose文件内容：</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">[root@registry-jenkins ~]<span class="comment"># vim docker-compose.yml</span></div><div class="line"><span class="comment">#docker run -p 8080:8080 -p 50000:50000 -v /your/home:/var/jenkins_home jenkins</span></div><div class="line">jenkins:</div><div class="line">  image: jenkins:2.32.1-alpine</div><div class="line">  container_name: jenkins</div><div class="line">  ports:</div><div class="line">    - <span class="string">"8080:8080"</span></div><div class="line">    - <span class="string">"50000:50000"</span></div><div class="line">  volumes:</div><div class="line">    - /opt/data/jenkins_home:/var/jenkins_home</div><div class="line">  extra_hosts: </div><div class="line">    - <span class="string">"repo.topsec.com:172.19.6.42"</span></div><div class="line">  user: root</div><div class="line">  restart: always</div><div class="line"><span class="comment">#docker run -d --restart=always -p 5000:5000 -v /opt/devdata/registry:/var/lib/registry --name devregistry registry</span></div><div class="line">registry:</div><div class="line">  image: registry</div><div class="line">  container_name: devregistry</div><div class="line">  ports:</div><div class="line">    - <span class="string">"5000:5000"</span></div><div class="line">  volumes:</div><div class="line">    - /opt/devdata/registry:/var/lib/registry</div><div class="line">  restart: always</div><div class="line">  </div><div class="line">[root@registry-jenkins ~]<span class="comment"># docker-compose up -d</span></div><div class="line">[root@registry-jenkins devdata]<span class="comment"># docker-compose ps</span></div><div class="line">   Name                  Command               State                        Ports                       </div><div class="line">-------------------------------------------------------------------------------------------------------</div><div class="line">devregistry   /entrypoint.sh /etc/docker ...   Up      0.0.0.0:5000-&gt;5000/tcp                           </div><div class="line">jenkins       /bin/tini -- /usr/<span class="built_in">local</span>/bi ...   Up      0.0.0.0:50000-&gt;50000/tcp, 0.0.0.0:8080-&gt;8080/tcp</div></pre></td></tr></table></figure>
+<h5 id="迁移jenkins工作内容"><a href="#迁移jenkins工作内容" class="headerlink" title="迁移jenkins工作内容"></a>迁移jenkins工作内容</h5><p>如果是之前有运行了老版本的jenkins持续集成的内容，docker环境会有一个volumes的映射目录，只有从老的jenkins映射的目录，打包，拷贝到新的指定目录，然后在docker-compose.yml文件中在volumes中指定你拷贝的新的目录就行。后面的操作和上面一样。</p>
+<p>registry和jenkns类似，都有一个挂载的目录存储着镜像内容，只有将该文件下的内容拷贝到新的环境目录，然后在docker-compose文件指定目录位置就行。如上 docker-compose.yml文件中的内容</p>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="http://www.dockerinfo.net/?s=registry" target="_blank" rel="external">docker registry v2 认证服务器</a><br><a href="http://www.dockerinfo.net/2457.html" target="_blank" rel="external">从零开始搭建Jenkins+Docker自动化集成环境</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;p&gt;最近项目中也是一直在用jenkins做持续集成，正好更新jenkins为最新版本及迁移原来的老环境。顺手把它记录下来，和大家一起分享（本文同
+    
+    </summary>
+    
+      <category term="docker" scheme="http://www.troylc.cc/categories/docker/"/>
+    
+    
+      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
+    
+      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
+    
+      <category term="jenkins" scheme="http://www.troylc.cc/tags/jenkins/"/>
+    
+      <category term="registry" scheme="http://www.troylc.cc/tags/registry/"/>
+    
+  </entry>
   
   <entry>
     <title>docker系列-docker、docker-compse最新版本安装及版本升级</title>
