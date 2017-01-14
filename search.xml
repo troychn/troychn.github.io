@@ -51,6 +51,7 @@
 <li>查看direct-lvm是本配置成功</li>
 </ul>
 <p>用docker命令pull下载一个镜像，你会发现thinpool的Data%会增加<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[root@docker-master ~]<span class="comment"># lvs</span></div><div class="line">  LV       VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert</div><div class="line">  home     centos -wi-ao----   1.00t                                                    </div><div class="line">  root     centos -wi-ao---- 300.00g                                                    </div><div class="line">  swap     centos -wi-ao----  48.00g                                                    </div><div class="line">  thinpool docker twi-aot---   1.32t             0.23   0.02</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>linux命令创建PV/VG/LV：<a href="http://man.linuxde.net/pvcreate" title="linux命令创建PV/VG/LV" target="_blank" rel="external">http://man.linuxde.net/pvcreate</a><br>docker devicemapper存储驱动官方说明: <a href="https://docs.docker.com/engine/userguide/storagedriver/device-mapper-driver/" title="docker devicemapper存储驱动官方说明" target="_blank" rel="external">(https://docs.docker.com/engine/userguide/storagedriver/device-mapper-driver/</a></p>
 ]]></content>
     </entry>
     
