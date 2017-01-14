@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/docker/2017/01/14/Docker06devicemapper.html</loc>
+    <lastmod>2017-01-14T15:25:42.000Z</lastmod>
+    <data>
+        <display>
+        <title>CENTOS7上配置Docker存储驱动devicemapper</title>
+        <pubTime>2017-01-14T15:25:42.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+         
+           
+             
+              <breadCrumb title="docker" url="http://www.troylc.cc/categories/docker/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/docker/2017/01/08/Docker05registry-jenkins.html</loc>
     <lastmod>2017-01-08T04:33:43.000Z</lastmod>
     <data>
