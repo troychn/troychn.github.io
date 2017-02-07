@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-02-07T01:08:32.000Z</updated>
+  <updated>2017-02-07T01:59:45.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>jenkins-registry持续集成-jenkins相关操作(二)</title>
+    <title>jenkins-registry持续集成-jenkins管理与registry集成打包上传镜像(二)</title>
     <link href="http://www.troylc.cc/docker/2017/02/01/Docker06registry-jenkins.html"/>
     <id>http://www.troylc.cc/docker/2017/02/01/Docker06registry-jenkins.html</id>
     <published>2017-02-01T11:19:41.000Z</published>
-    <updated>2017-02-07T01:08:32.000Z</updated>
+    <updated>2017-02-07T01:59:45.000Z</updated>
     
     <content type="html"><![CDATA[<p>通过上一篇 <a href="http://www.troylc.cc/docker/2017/01/08/Docker05registry-jenkins.html">jenkins-registry持续集成-jenkins-registry安装与数据迁移(一)</a>，已经把jenkins和registry的环境准备好了。接下来可以通过jenkins来操作怎么做到从版本库中的代码下载-&gt;编译-&gt;打包docker镜像-&gt;上传到docker-registry私有仓库，然后就可以在其它有docker的环境中直接pull打包好的docker镜像。</p>
 <h3 id="初始化jenkins及安装插件"><a href="#初始化jenkins及安装插件" class="headerlink" title="初始化jenkins及安装插件"></a>初始化jenkins及安装插件</h3><p>启动完jenkins后通过浏览器输入地址<a href="http://部署jenkins主机IP:端口" target="_blank" rel="external">http://部署jenkins主机IP:端口</a><br><img src="/images/docker/jenkins/jenkins2-1.png" alt="jenkins初始化界面2-1"><br>根据提示从输入administrator password 或者可以通过启动日志查看这个password 如：<br><img src="/images/docker/jenkins/jenkins2-2.png" alt="jenkins初始化界面2-2"><br>选择安装插件方式，这里我是默认第一个<br><img src="/images/docker/jenkins/jenkins2-3.png" alt="jenkins初始化界面2-3"><br>进入插件安装界面，连网等待插件安装<br><img src="/images/docker/jenkins/jenkins2-4.png" alt="jenkins初始化界面2-4"><br>安装完插件后，进入创建管理员界面<br><img src="/images/docker/jenkins/jenkins2-5.png" alt="jenkins初始化界面2-5"><br>输入完管理员账号后，点击continue as admin 进入管理界面点击系统管理-插件管理中安装docker构建插件和角色管理插件<br><img src="/images/docker/jenkins/jenkins2-6.png" alt="jenkins初始化界面2-6"><br>安装docker构建插件，在可选插件中查找docker build step plugin<br><img src="/images/docker/jenkins/jenkins2-7.png" alt="jenkins初始化界面2-7"><br>安装角色管理插件，在可选插件中查找Role-based Authorization Strategy<br><img src="/images/docker/jenkins/jenkins2-8.png" alt="jenkins初始化界面2-8"> </p>
