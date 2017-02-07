@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-02-07T08:09:59.000Z</updated>
+  <updated>2017-02-07T08:19:37.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -20,19 +20,19 @@
     <link href="http://www.troylc.cc/docker/2017/02/07/Docker07docker-swarm01.html"/>
     <id>http://www.troylc.cc/docker/2017/02/07/Docker07docker-swarm01.html</id>
     <published>2017-02-07T08:09:24.000Z</published>
-    <updated>2017-02-07T08:09:59.000Z</updated>
+    <updated>2017-02-07T08:19:37.000Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="1-前言："><a href="#1-前言：" class="headerlink" title="1.前言："></a>1.前言：</h1><p>Docker Engine 1.12或更高版本中内置了集群管理和编排功能。Swarm模式侧重于微服务架构。它支持服务协调，负载平衡，服务发现，内置证书循环等。Swarm模式是Docker以简化的服务编排工具。  </p>
-<h2 id="功能特点："><a href="#功能特点：" class="headerlink" title="功能特点："></a>功能特点：</h2><h3 id="a-与Docker-Engine集成的集群管理："><a href="#a-与Docker-Engine集成的集群管理：" class="headerlink" title="a.与Docker Engine集成的集群管理："></a>a.与Docker Engine集成的集群管理：</h3><p>使用Docker Engine CLI创建一组Docker引擎，您可以在其中部署应用程序服务。您不需要其他编排软件来创建或管理群集。</p>
-<h3 id="b-节点分散式设计："><a href="#b-节点分散式设计：" class="headerlink" title="b.节点分散式设计："></a>b.节点分散式设计：</h3><p>Docker Engine不是在部署时处理节点角色之间的差异，而是在运行时处理角色变化。您可以使用Docker Engine部署两种类型的节点，管理节点和工作节点。这意味着您可以从单个服务器构建整个群集。</p>
-<h3 id="c-声明性服务模型："><a href="#c-声明性服务模型：" class="headerlink" title="c.声明性服务模型："></a>c.声明性服务模型：</h3><p>Docker Engine使用声明性方法来定义应用程序堆栈中各种服务的所需状态。例如，您可以描述由具有消息队列服务和数据库后端的Web前端服务组成的应用程序。</p>
-<h3 id="d-可扩容与缩放容器："><a href="#d-可扩容与缩放容器：" class="headerlink" title="d.可扩容与缩放容器："></a>d.可扩容与缩放容器：</h3><p>对于每个服务，您可以声明要运行的任务数。当您向上或向下缩放时，swarm管理器通过添加或删除任务来自动适应，以保持所需的任务数量来保证集群的可靠状态。</p>
-<h3 id="e-容器容错状态协调："><a href="#e-容器容错状态协调：" class="headerlink" title="e.容器容错状态协调："></a>e.容器容错状态协调：</h3><p>群集管理器节点不断监视群集状态，并协调您表示的期望状态的实际状态之间的任何差异。例如，如果设置一个服务以运行容器的10个副本，并且托管其中两个副本的工作程序计算机崩溃，则管理器将创建两个新副本以替换崩溃的副本。 swarm管理器将新副本分配给正在运行和可用的worker节点上。</p>
-<h3 id="f-多主机网络："><a href="#f-多主机网络：" class="headerlink" title="f.多主机网络："></a>f.多主机网络：</h3><p>您可以为服务指定覆盖网络。当swarm管理器初始化或更新应用程序时，它会自动为覆盖网络上的容器分配地址。</p>
-<h3 id="g-服务发现："><a href="#g-服务发现：" class="headerlink" title="g.服务发现："></a>g.服务发现：</h3><p>Swarm管理器节点为swarm中的每个服务分配唯一的DNS名称，并负载平衡运行的容器。您可以通过嵌入在swarm中的DNS服务器查询在群中运行的每个容器。</p>
-<h3 id="h-负载平衡："><a href="#h-负载平衡：" class="headerlink" title="h.负载平衡："></a>h.负载平衡：</h3><p>您可以将服务的端口公开给外部负载平衡器。在内部，swarm允许您指定如何在节点之间分发服务容器。</p>
-<h3 id="m-缺省安全："><a href="#m-缺省安全：" class="headerlink" title="m.缺省安全："></a>m.缺省安全：</h3><p>群中的每个节点强制执行TLS相互验证和加密，以保护其自身与所有其他节点之间的通信。您可以选择使用自签名根证书或来自自定义根CA的证书。</p>
-<h3 id="n-滚动更新："><a href="#n-滚动更新：" class="headerlink" title="n.滚动更新："></a>n.滚动更新：</h3><p>在已经运行期间，您可以增量地应用服务更新到节点。 swarm管理器允许您控制将服务部署到不同节点集之间的延迟。如果出现任何问题，您可以将任务回滚到服务的先前版本。</p>
+    <content type="html"><![CDATA[<p>Docker Engine 1.12或更高版本中内置了集群管理和编排功能。Swarm模式侧重于微服务架构。它支持服务协调，负载平衡，服务发现，内置证书循环等。Swarm模式是Docker以简化的服务编排工具。  </p>
+<h1 id="功能特点："><a href="#功能特点：" class="headerlink" title="功能特点："></a>功能特点：</h1><h2 id="a-与Docker-Engine集成的集群管理："><a href="#a-与Docker-Engine集成的集群管理：" class="headerlink" title="a.与Docker Engine集成的集群管理："></a>a.与Docker Engine集成的集群管理：</h2><p>使用Docker Engine CLI创建一组Docker引擎，您可以在其中部署应用程序服务。您不需要其他编排软件来创建或管理群集。</p>
+<h2 id="b-节点分散式设计："><a href="#b-节点分散式设计：" class="headerlink" title="b.节点分散式设计："></a>b.节点分散式设计：</h2><p>Docker Engine不是在部署时处理节点角色之间的差异，而是在运行时处理角色变化。您可以使用Docker Engine部署两种类型的节点，管理节点和工作节点。这意味着您可以从单个服务器构建整个群集。</p>
+<h2 id="c-声明性服务模型："><a href="#c-声明性服务模型：" class="headerlink" title="c.声明性服务模型："></a>c.声明性服务模型：</h2><p>Docker Engine使用声明性方法来定义应用程序堆栈中各种服务的所需状态。例如，您可以描述由具有消息队列服务和数据库后端的Web前端服务组成的应用程序。</p>
+<h2 id="d-可扩容与缩放容器："><a href="#d-可扩容与缩放容器：" class="headerlink" title="d.可扩容与缩放容器："></a>d.可扩容与缩放容器：</h2><p>对于每个服务，您可以声明要运行的任务数。当您向上或向下缩放时，swarm管理器通过添加或删除任务来自动适应，以保持所需的任务数量来保证集群的可靠状态。</p>
+<h2 id="e-容器容错状态协调："><a href="#e-容器容错状态协调：" class="headerlink" title="e.容器容错状态协调："></a>e.容器容错状态协调：</h2><p>群集管理器节点不断监视群集状态，并协调您表示的期望状态的实际状态之间的任何差异。例如，如果设置一个服务以运行容器的10个副本，并且托管其中两个副本的工作程序计算机崩溃，则管理器将创建两个新副本以替换崩溃的副本。 swarm管理器将新副本分配给正在运行和可用的worker节点上。</p>
+<h2 id="f-多主机网络："><a href="#f-多主机网络：" class="headerlink" title="f.多主机网络："></a>f.多主机网络：</h2><p>您可以为服务指定覆盖网络。当swarm管理器初始化或更新应用程序时，它会自动为覆盖网络上的容器分配地址。</p>
+<h2 id="g-服务发现："><a href="#g-服务发现：" class="headerlink" title="g.服务发现："></a>g.服务发现：</h2><p>Swarm管理器节点为swarm中的每个服务分配唯一的DNS名称，并负载平衡运行的容器。您可以通过嵌入在swarm中的DNS服务器查询在群中运行的每个容器。</p>
+<h2 id="h-负载平衡："><a href="#h-负载平衡：" class="headerlink" title="h.负载平衡："></a>h.负载平衡：</h2><p>您可以将服务的端口公开给外部负载平衡器。在内部，swarm允许您指定如何在节点之间分发服务容器。</p>
+<h2 id="m-缺省安全："><a href="#m-缺省安全：" class="headerlink" title="m.缺省安全："></a>m.缺省安全：</h2><p>群中的每个节点强制执行TLS相互验证和加密，以保护其自身与所有其他节点之间的通信。您可以选择使用自签名根证书或来自自定义根CA的证书。</p>
+<h2 id="n-滚动更新："><a href="#n-滚动更新：" class="headerlink" title="n.滚动更新："></a>n.滚动更新：</h2><p>在已经运行期间，您可以增量地应用服务更新到节点。 swarm管理器允许您控制将服务部署到不同节点集之间的延迟。如果出现任何问题，您可以将任务回滚到服务的先前版本。</p>
 <h1 id="2-环境准备："><a href="#2-环境准备：" class="headerlink" title="2. 环境准备："></a>2. 环境准备：</h1><table>
 <thead>
 <tr>
@@ -116,7 +116,8 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;1-前言：&quot;&gt;&lt;a href=&quot;#1-前言：&quot; class=&quot;headerlink&quot; title=&quot;1.前言：&quot;&gt;&lt;/a&gt;1.前言：&lt;/h1&gt;&lt;p&gt;Docker Engine 1.12或更高版本中内置了集群管理和编排功能。Swarm模式侧重于微服务架构。它支持服务
+      &lt;p&gt;Docker Engine 1.12或更高版本中内置了集群管理和编排功能。Swarm模式侧重于微服务架构。它支持服务协调，负载平衡，服务发现，内置证书循环等。Swarm模式是Docker以简化的服务编排工具。  &lt;/p&gt;
+&lt;h1 id=&quot;功能特点：&quot;&gt;&lt;a href=&quot;#功
     
     </summary>
     
