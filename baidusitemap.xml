@@ -3,9 +3,10 @@
 
 
     
+    
   <url>
     <loc>http://www.troylc.cc/docker/2017/02/07/Docker07docker-swarm01.html</loc>
-    <lastmod>2017-02-08T07:37:20.000Z</lastmod>
+    <lastmod>2017-02-08T07:40:07.000Z</lastmod>
     <data>
         <display>
         <title>docker1.12.3 docker-swarm创建与管理集群（一）</title>
@@ -26,7 +27,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>http://www.troylc.cc/docker/2017/01/08/Docker05registry-jenkins.html</loc>
