@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.troylc.cc/java/2017/02/15/java01-thread-tools.html</loc>
+    
+    <lastmod>2017-02-14T16:09:19.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/docker/2017/02/07/Docker07docker-swarm01.html</loc>
     
     <lastmod>2017-02-08T08:03:10.000Z</lastmod>
@@ -72,13 +79,6 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/tags/index.html</loc>
-    
-    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.troylc.cc/search/index.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
@@ -107,6 +107,13 @@
   </url>
   
   <url>
+    <loc>http://www.troylc.cc/tags/index.html</loc>
+    
+    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/docker/2016/08/07/docker-03.html</loc>
     
     <lastmod>2016-08-07T12:33:06.000Z</lastmod>
@@ -121,14 +128,14 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
+    <loc>http://www.troylc.cc/about/index.html</loc>
     
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/about/index.html</loc>
+    <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
     
