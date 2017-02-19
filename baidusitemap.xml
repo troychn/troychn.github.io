@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/docker/2017/02/19/Docker07docker-swarm02.html</loc>
+    <lastmod>2017-02-19T14:22:13.000Z</lastmod>
+    <data>
+        <display>
+        <title>docker1.12.3 docker-swarm集群服务部署与维护（二）</title>
+        <pubTime>2017-02-19T14:14:52.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+         
+           
+             
+              <breadCrumb title="docker" url="http://www.troylc.cc/categories/docker/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/java/2017/02/15/java01-thread-tools.html</loc>
     <lastmod>2017-02-14T16:09:19.000Z</lastmod>
     <data>
@@ -262,7 +284,6 @@
     </url>
 
     
-    
   <url>
     <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
@@ -284,6 +305,7 @@
     </data>
     </url>
 
+    
     
   <url>
     <loc>http://www.troylc.cc/docker/2016/07/17/docker-01.html</loc>
