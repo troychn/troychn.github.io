@@ -50,7 +50,29 @@
 <li>restart_policy：定义服务的重启条件 （v1/v2中restart指令不再支持）</li>
 <li>service：定义服务的标签</li>
 </ul>
-<h4 id="部署服务的操作"><a href="#部署服务的操作" class="headerlink" title="部署服务的操作"></a>部署服务的操作</h4><p>Swarm模式允许创建一个Docker Engines集群。在1.13版本中， docker stack deploy命令可以用来部署一个Compose文件到Swarm模式。Docker Compose带给我们多容器应用，<br>命令 | 说明<br>—|—<br>docker stack deploy –compose-file=docker-compose.yml dws | 启动服务通过compose文件 stack命名为dws<br>docker service scale xxx=n | 伸缩服务,需要指定服务名称和伸缩副本数<br>docker stack rm | 删除服务</p>
+<h4 id="部署服务的操作"><a href="#部署服务的操作" class="headerlink" title="部署服务的操作"></a>部署服务的操作</h4><p>Swarm模式允许创建一个Docker Engines集群。在1.13版本中， docker stack deploy命令可以用来部署一个Compose文件到Swarm模式。Docker Compose带给我们多容器应用，  </p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>docker stack deploy –compose-file=docker-compose.yml dws</td>
+<td>启动服务通过compose文件 stack命名为dws</td>
+</tr>
+<tr>
+<td>docker service scale xxx=n</td>
+<td>伸缩服务,需要指定服务名称和伸缩副本数  </td>
+</tr>
+<tr>
+<td>docker stack rm</td>
+<td>删除服务</td>
+</tr>
+</tbody>
+</table>
 <h4 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[root@tsccloud01 docker-compose]<span class="comment"># docker stack deploy --compose-file=docker-compose.yml dws</span></div><div class="line">Ignoring deprecated options:</div><div class="line"></div><div class="line">expose: Exposing ports is unnecessary - services on the same network can access each other<span class="string">'s containers on any port.</span></div><div class="line">Creating service dws_nginx</div><div class="line">Creating service dws_mysql </div><div class="line">Creating service dws_bootService</div><div class="line"></div><div class="line">[root@tsccloud01 docker-compose]# docker stack ps dws</div><div class="line">ID            NAME               IMAGE                               NODE        DESIRED STATE  CURRENT STATE               ERROR  PORTS</div><div class="line">khfdjfs5wycw  dws_bootService.1  tcr:5000/myhub/bootservice:1.0-dws  tsccloud02  Running        Running about a minute ago         </div><div class="line">omo3n8ftk8g3  dws_nginx.1        tcr:5000/myhub/nginx:1.11-dws       tsccloud03  Running        Running about a minute ago         </div><div class="line">e8mmigd1tj9e  dws_mysql.1        tcr:5000/myhub/mysql:5.7-dws        tsccloud01  Running        Running about an hour ago          </div><div class="line">xzlubd2fou4f  dws_bootService.2  tcr:5000/myhub/bootservice:1.0-dws  tsccloud03  Running        Running about a minute ago         </div><div class="line">5ws9o7xwmbpd  dws_nginx.2        tcr:5000/myhub/nginx:1.11-dws       tsccloud02  Running        Running about a minute ago         </div><div class="line">5gzncbpq9626  dws_bootService.3  tcr:5000/myhub/bootservice:1.0-dws  tsccloud01  Running        Running about a minute ago</div><div class="line"></div><div class="line">[root@tsccloud01 docker-compose]# docker service ls</div><div class="line">ID            NAME             MODE        REPLICAS  IMAGE</div><div class="line">b63us2e2eksg  dws_nginx        replicated  2/2       tcr:5000/myhub/nginx:1.11-dws</div><div class="line">kqo1g3s1z0mr  dws_bootService  replicated  3/3       tcr:5000/myhub/bootservice:1.0-dws</div><div class="line">rvlfnogtgtso  dws_mysql        replicated  1/1       tcr:5000/myhub/mysql:5.7-dws</div></pre></td></tr></table></figure>
 <p>通过以上操作，和之前用命令在swarm集群中部署一样，</p>
 ]]></content>
