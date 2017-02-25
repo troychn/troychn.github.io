@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-02-19T14:22:13.000Z</updated>
+  <updated>2017-02-25T15:19:11.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -14,6 +14,79 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>docker-compose部署swarm服务(docker1.13.1)</title>
+    <link href="http://www.troylc.cc/docker-compose/2017/02/25/Docker08docker-compose01.html"/>
+    <id>http://www.troylc.cc/docker-compose/2017/02/25/Docker08docker-compose01.html</id>
+    <published>2017-02-25T15:18:08.000Z</published>
+    <updated>2017-02-25T15:19:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在2017年发布的 Docker 1.13版本中的Docker Compose v3 规范，已经全面支持 Swarm mode 概念。而且从 1.13 开始，Docker 命令行工具支持直接使用 v3 版本的 docker-compose.yml 通过docker stack deploy **进行部署管理，这大大简化了容器编排使用的复杂性。</p>
+<h3 id="部署环境"><a href="#部署环境" class="headerlink" title="部署环境"></a>部署环境</h3><table>
+<thead>
+<tr>
+<th>IP</th>
+<th>主机名</th>
+<th>角色</th>
+<th>安装软件  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>172.193.6.222</td>
+<td>cloud01</td>
+<td>manager</td>
+<td>centos7.2/docker1.13/docker-compose1,11</td>
+</tr>
+<tr>
+<td>172.193.6.223</td>
+<td>cloud02</td>
+<td>worker</td>
+<td>centos7.2/docker1.13/docker-compose1,11</td>
+</tr>
+<tr>
+<td>172.193.6.224</td>
+<td>cloud03</td>
+<td>worker</td>
+<td>centos7.2/docker1.13/docker-compose1,11  </td>
+</tr>
+</tbody>
+</table>
+<p>安装请参考 <a href="http://www.toutiao.com/i6385354267686863361/" target="_blank" rel="external">docker1.13.x及docker-compose1.11.x的安装与升级</a>  </p>
+<h3 id="服务部署"><a href="#服务部署" class="headerlink" title="服务部署"></a>服务部署</h3><p>服务部署示意图请参考 <a href="http://www.toutiao.com/i6384915440631546370/" target="_blank" rel="external">swarm集群服务部署与维护</a> 如下图所示：<br><img src="http://www.troylc.cc/images/docker/swarm/2-4.png" alt="image"></p>
+<h3 id="docker-compose在swarm模式中部署服务"><a href="#docker-compose在swarm模式中部署服务" class="headerlink" title="docker-compose在swarm模式中部署服务"></a>docker-compose在swarm模式中部署服务</h3><h4 id="compose文件定义："><a href="#compose文件定义：" class="headerlink" title="compose文件定义："></a>compose文件定义：</h4><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#docker-compose v3版本规范</span></div><div class="line"><span class="symbol">version:</span> <span class="string">"3.1"</span></div><div class="line"><span class="symbol"></span></div><div class="line">services:</div><div class="line"><span class="symbol">  mysql:</span></div><div class="line"><span class="symbol">    image:</span> <span class="string">"test:5000/myhub/mysql:5.7-dws"</span></div><div class="line">    <span class="meta">#container_name: dcmysql</span></div><div class="line"><span class="symbol">    networks:</span></div><div class="line">      - my-overlay-network</div><div class="line"><span class="symbol">    deploy:</span></div><div class="line"><span class="symbol">      update_config:</span></div><div class="line"><span class="symbol">        parallelism:</span> <span class="number">1</span></div><div class="line"><span class="symbol">        delay:</span> <span class="number">2</span>s</div><div class="line"><span class="symbol">      restart_policy:</span></div><div class="line"><span class="symbol">        condition:</span> on-failure</div><div class="line"><span class="symbol">    environment:</span></div><div class="line"><span class="symbol">      MYSQL_ROOT_PASSWORD:</span> talent</div><div class="line"><span class="symbol">      MYSQL_DATABASE:</span> citydb</div><div class="line"><span class="symbol">    volumes:</span></div><div class="line">      - <span class="meta-keyword">/nfsdata/</span>data/mysql:<span class="meta-keyword">/var/</span>lib/mysql</div><div class="line"><span class="symbol">    expose:</span></div><div class="line">     - <span class="string">"3306"</span></div><div class="line"><span class="symbol">  bootService:</span></div><div class="line"><span class="symbol">    image:</span> <span class="string">"test:5000/myhub/bootservice:2.0-dws"</span></div><div class="line"><span class="symbol">    networks:</span></div><div class="line">      - my-overlay-network</div><div class="line"><span class="symbol">    deploy:</span></div><div class="line"><span class="symbol">      replicas:</span> <span class="number">3</span></div><div class="line"><span class="symbol">      update_config:</span></div><div class="line"><span class="symbol">        parallelism:</span> <span class="number">1</span></div><div class="line"><span class="symbol">        delay:</span> <span class="number">2</span>s</div><div class="line"><span class="symbol">      restart_policy:</span></div><div class="line"><span class="symbol">        condition:</span> on-failure</div><div class="line"><span class="symbol">    expose:</span></div><div class="line">      - <span class="string">"8888"</span> </div><div class="line"><span class="symbol">  nginx:</span></div><div class="line"><span class="symbol">    image:</span> <span class="string">"test:5000/myhub/nginx:1.11-dws"</span></div><div class="line"><span class="symbol">    networks:</span></div><div class="line">      - my-overlay-network</div><div class="line"><span class="symbol">    deploy:</span></div><div class="line"><span class="symbol">      replicas:</span> <span class="number">2</span></div><div class="line"><span class="symbol">      update_config:</span></div><div class="line"><span class="symbol">        parallelism:</span> <span class="number">1</span></div><div class="line"><span class="symbol">        delay:</span> <span class="number">2</span>s</div><div class="line"><span class="symbol">      restart_policy:</span></div><div class="line"><span class="symbol">        condition:</span> on-failure  </div><div class="line"><span class="symbol">    ports:</span></div><div class="line">      - <span class="string">"172.19.6.223:80:80"</span></div><div class="line"><span class="symbol">networks:</span></div><div class="line">  my-overlay-network:</div><div class="line"><span class="symbol">    driver:</span> overlay</div><div class="line"><span class="symbol">    ipam:</span></div><div class="line"><span class="symbol">      config:</span></div><div class="line">        - subnet: <span class="string">"10.0.7.0/24"</span></div></pre></td></tr></table></figure>
+<p><strong>说明：</strong><br>v3 中引入了 deploy 指令，可对Swarm mode中服务部署的进行细粒度控制，包括  </p>
+<ul>
+<li>resources：定义  cpu_shares, cpu_quota, cpuset, mem_limit, memswap_limit 等容器资源控制。（v1/v2中相应指令不再支持）</li>
+<li>mode：支持 global 和 replicated (缺省) 模式的服务；</li>
+<li>replicas：定义 replicated 模式的服务的复本数量</li>
+<li>placement：定义服务容器的部署放置约束条件</li>
+<li>update_config：定义服务的更新方式</li>
+<li>restart_policy：定义服务的重启条件 （v1/v2中restart指令不再支持）</li>
+<li>service：定义服务的标签</li>
+</ul>
+<h4 id="部署服务的操作"><a href="#部署服务的操作" class="headerlink" title="部署服务的操作"></a>部署服务的操作</h4><p>Swarm模式允许创建一个Docker Engines集群。在1.13版本中， docker stack deploy命令可以用来部署一个Compose文件到Swarm模式。Docker Compose带给我们多容器应用，<br>命令 | 说明<br>—|—<br>docker stack deploy –compose-file=docker-compose.yml dws | 启动服务通过compose文件 stack命名为dws<br>docker service scale xxx=n | 伸缩服务,需要指定服务名称和伸缩副本数<br>docker stack rm | 删除服务</p>
+<h4 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[root@tsccloud01 docker-compose]<span class="comment"># docker stack deploy --compose-file=docker-compose.yml dws</span></div><div class="line">Ignoring deprecated options:</div><div class="line"></div><div class="line">expose: Exposing ports is unnecessary - services on the same network can access each other<span class="string">'s containers on any port.</span></div><div class="line">Creating service dws_nginx</div><div class="line">Creating service dws_mysql </div><div class="line">Creating service dws_bootService</div><div class="line"></div><div class="line">[root@tsccloud01 docker-compose]# docker stack ps dws</div><div class="line">ID            NAME               IMAGE                               NODE        DESIRED STATE  CURRENT STATE               ERROR  PORTS</div><div class="line">khfdjfs5wycw  dws_bootService.1  tcr:5000/myhub/bootservice:1.0-dws  tsccloud02  Running        Running about a minute ago         </div><div class="line">omo3n8ftk8g3  dws_nginx.1        tcr:5000/myhub/nginx:1.11-dws       tsccloud03  Running        Running about a minute ago         </div><div class="line">e8mmigd1tj9e  dws_mysql.1        tcr:5000/myhub/mysql:5.7-dws        tsccloud01  Running        Running about an hour ago          </div><div class="line">xzlubd2fou4f  dws_bootService.2  tcr:5000/myhub/bootservice:1.0-dws  tsccloud03  Running        Running about a minute ago         </div><div class="line">5ws9o7xwmbpd  dws_nginx.2        tcr:5000/myhub/nginx:1.11-dws       tsccloud02  Running        Running about a minute ago         </div><div class="line">5gzncbpq9626  dws_bootService.3  tcr:5000/myhub/bootservice:1.0-dws  tsccloud01  Running        Running about a minute ago</div><div class="line"></div><div class="line">[root@tsccloud01 docker-compose]# docker service ls</div><div class="line">ID            NAME             MODE        REPLICAS  IMAGE</div><div class="line">b63us2e2eksg  dws_nginx        replicated  2/2       tcr:5000/myhub/nginx:1.11-dws</div><div class="line">kqo1g3s1z0mr  dws_bootService  replicated  3/3       tcr:5000/myhub/bootservice:1.0-dws</div><div class="line">rvlfnogtgtso  dws_mysql        replicated  1/1       tcr:5000/myhub/mysql:5.7-dws</div></pre></td></tr></table></figure>
+<p>通过以上操作，和之前用命令在swarm集群中部署一样，</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在2017年发布的 Docker 1.13版本中的Docker Compose v3 规范，已经全面支持 Swarm mode 概念。而且从 1.13 开始，Docker 命令行工具支持直接使用 v3 版本的 docker-compose.yml 通过docker stac
+    
+    </summary>
+    
+      <category term="docker-compose" scheme="http://www.troylc.cc/categories/docker-compose/"/>
+    
+    
+      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
+    
+      <category term="swarm" scheme="http://www.troylc.cc/tags/swarm/"/>
+    
+      <category term="docker-compose" scheme="http://www.troylc.cc/tags/docker-compose/"/>
+    
+  </entry>
   
   <entry>
     <title>docker1.12.3 docker-swarm集群服务部署与维护（二）</title>
@@ -1844,44 +1917,6 @@
     
     
       <category term="hexo" scheme="http://www.troylc.cc/tags/hexo/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hexo博客折腾记</title>
-    <link href="http://www.troylc.cc/experience/2016/05/30/Hexo-0.html"/>
-    <id>http://www.troylc.cc/experience/2016/05/30/Hexo-0.html</id>
-    <published>2016-05-30T05:50:23.000Z</published>
-    <updated>2017-01-02T05:37:48.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>作为一名一直从事技术方面的从业者，一直想拥有一个属于自己的一个空间。虽然之前也折腾过wordpress,但最终因为不免费而放弃。近年来github越来越流行，国内越来越多的人也对开源相当热情;hexo的出现，让想拥有自己博客想法的人成为可能。</p>
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>以下是通过别人的想法给自己打气的一些话。</p>
-<h4 id="为什么你应该（从现在开始就）写博客"><a href="#为什么你应该（从现在开始就）写博客" class="headerlink" title="为什么你应该（从现在开始就）写博客"></a>为什么你应该（从现在开始就）写博客</h4><p>用博客的形式来记录下你有价值的思考，会带来很多好处，却没有任何明显的坏处。认为写一个长期的有价值博客的最大的几点好处：</p>
-<ul>
-<li>能够交到很多志同道合的朋友：<br>在这个时代，对于生活中的绝大多数人来说，拓宽朋友圈子的途径几乎只有一个，通过网络，而如何在网络中寻找到气味相投的朋友，如何判断别人和自己是否有共同语言？显然，通过天天在SNS上碎碎念的那些日记是难以做到的。我佩服的一些朋友几乎全都是长期用博客记录想法的人，因此，和他们即便不打照面，也是心照不宣。即便素未谋面也能坐下来就聊得热火朝天。</li>
-<li>书写是为了更好的思考<br>书写是对思维的备忘，书写是对思维的缓存，书写是对思维的缓存，书写是与别人的交流，有时候，语言自己也会思考；如果你逼着自己将一些不成熟的想法写下来，看着自己写的内容，试着进一步拓展它们，就有可能在理性的道路上走得很远，很远。</li>
-<li>“教”是最好的“学”<br>如果一件事情你不能讲清楚，十有八九你还没有完全理解；为了让一个不明白的人做到明白，你必须要知道从明白到不明白他究竟需要掌握哪些概念，这就迫使我们对我们大脑中整个的知识体系来个寻根究底，把藏在水面之下的那些东西统统挖出来，把大脑中的那些我们知道、但不知道自己知道的潜在概念或假设（assumptions）都挖出来，把它们从内隐记忆拉扯到外显记忆中。因为只有完全知道、并知道自己知道一切来龙去脉的人，才能真正把一件事情讲得通通透透.<br>　　去教一个完全不懂的人，则是一种最最强大和彻底的反思途径——因为他没有任何预备的知识，所以要让他弄懂你所知道的，你就必须彻底反思你的知识体系，弄清这座大厦的根基在什么地方，弄清它的骨架在什么地方，一砖一瓦到底是怎么垒起来的，你不能自己站在11层上，然后假设你的读者站在第10层，指望着只要告诉他第11层有那些内容就让他明白。你的读者站在第一层，你必须知道你脚下踩着的另外10层到底是怎么构造的。这就迫使你对你所掌握的、或之前认为正确的那些东西作彻彻底底的、深刻的反思，你的受众越是不懂，你需要反思得就越深刻。</li>
-<li>讨论是绝佳的反思<br>很多时候我们并不是有机会说给完全不懂的人听，更大的可能性是说给同领域有一定基础的人听，这个时候并不代表就不能促使反思了，实际上，你会发现，如果你公开你的想法，几乎总能看到与你持不同意见的人，然后你通过比较你和他的观念之间的差别，会发现你们在一开始的思路上就存在差异，差异从哪里来的？在进一步讨论中你们就会不断地迫使对方拿出更深层次的理由，这同样也是一种非常有效地促使自己反思的方法，在讨论的过程中双方的理由自然会变得越来越深入，越来越接近问题的本质，一些平时难以注意到的深层面的差异性就会逐渐浮现出来，你也就多了一次难得的机会去审视自己的思维中到底存放了哪些错误的信息</li>
-<li>激励你去持续学习和思考<br>如果你没有持续学习和思考的习惯，你的博客很快就会没有内容可写，就只能整点碎碎念或者转载，然后你就会失去读者，然后你就会关掉博客，然后一旦关掉博客之后你也就死了写博客的心，然后就少了一条激励你去思考和总结的途径，然后你变得更不高兴总结和思考，然后…<br>打破这个死循环，就不要永久停止更新你的博客，就算你两个月，三个月都不写，只要你每篇都是写自己思考的产物，写有价值的东西，在互联网上，金子的确总是会发光的，因为有无数的信息聚合平台在期待这些有价值的内容，有搜索引擎为你的内容提供海量的潜在读者，有海量的人肉在手动挖掘和转载那些有价值的东西。我们所能做的最差的一个决策莫过于停止做一件没有任何坏处，却有一大堆好处的事情。</li>
-<li>学会持之以恒地做一件事情<br>很多人在生活中容易觉得迷失，不知道想要做什么，是因为没有一件能够持续地做的事情，用俗话来说就是没有主心骨。用积极心理学的话来说就是没有一件能够创造流体验的事情，而书写自己的思想则是一件容易产生流体验的事情，在书写的时候，特别是理性地书写的时候，大脑逐渐进入推理分析模块，一切不愉快的情绪，烦躁感都会逐渐消隐下去。不过前提是你得开始，并且坚持过一开始的困难期，以后的一切便成了习惯成自然。</li>
-<li>一个长期的价值博客是一份很好的简历<br>这里的“简历”并非是狭义上的求职简历，毕竟现在还没有到价值博客的时代，很多人写博客都是到处转载或者干脆碎碎念，正因此面试官未必拿个人博客当成了解一个人的更可靠窗口。这里的“简历”是指一个让别人了解自己的窗口，虽然我们未必做得到像罗永浩、Keso这样的博客，个人的影响力已经足以支撑出一份事业（牛博和5gme），但至少你会因此而结识更多的人，你的博客价值越高，你结识的人就越牛，跟牛人交流又会让你的眼界得到极大的开阔，打开一扇又一扇你原本不知道的门，于是你就变得更牛… 这是一个良性循环。</li>
-</ul>
-<h4 id="怎么做到长期写一个价值博客"><a href="#怎么做到长期写一个价值博客" class="headerlink" title="怎么做到长期写一个价值博客"></a>怎么做到长期写一个价值博客</h4><p>　　一开始的时候你是因为要写博客而去使劲地思考和总结，指望给出令人眼睛一亮的东西，到了后来，就变成了因为你习惯了思考和总结，因为你意识到书写是更好的思考，你就必须使你的想法成为文字。至此本和末就会各归原位，不再颠倒。<br>　　怎样做到长期写一个价值博客？也许有人会给出很多有趣有用的小技巧来提供动机和激励，譬如如何做SEO，如何鼓励读者留言等等，但是这些我都不想说，我只想说最最重要的，那就是：<br>　　让你自己成为一个持续学习和思考的人，并只写你真正思考和总结之后的产物，其他一切就会随之而来。<br><em><code>意志力很大程度上来源于有正确的方法，而非天生。</code></em> </p>
-<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="http://kb.cnblogs.com/page/517038/" title="为什么你应该（从现在开始就）写博客" target="_blank" rel="external">牛人是怎么思考写博客的</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;p&gt;作为一名一直从事技术方面的从业者，一直想拥有一个属于自己的一个空间。虽然之前也折腾过wordpress,但最终因为不免费而放弃。近年来git
-    
-    </summary>
-    
-      <category term="心得" scheme="http://www.troylc.cc/categories/experience/"/>
-    
-    
-      <category term="hexo" scheme="http://www.troylc.cc/tags/hexo/"/>
-    
-      <category term="心得" scheme="http://www.troylc.cc/tags/%E5%BF%83%E5%BE%97/"/>
     
   </entry>
   

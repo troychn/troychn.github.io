@@ -4,6 +4,30 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/docker-compose/2017/02/25/Docker08docker-compose01.html</loc>
+    <lastmod>2017-02-25T15:19:11.000Z</lastmod>
+    <data>
+        <display>
+        <title>docker-compose部署swarm服务(docker1.13.1)</title>
+        <pubTime>2017-02-25T15:18:08.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>docker-compose</tag>
+         
+         
+           
+             
+              <breadCrumb title="docker-compose" url="http://www.troylc.cc/categories/docker-compose/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/docker/2017/02/19/Docker07docker-swarm02.html</loc>
     <lastmod>2017-02-19T14:22:13.000Z</lastmod>
     <data>
