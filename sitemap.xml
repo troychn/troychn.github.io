@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.troylc.cc/spring-cloud/2017/03/01/spirng-cloud-eureka.html</loc>
+    
+    <lastmod>2017-03-01T14:45:11.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/docker-compose/2017/02/25/Docker08docker-compose01.html</loc>
     
     <lastmod>2017-02-25T15:22:31.000Z</lastmod>
@@ -93,6 +100,13 @@
   </url>
   
   <url>
+    <loc>http://www.troylc.cc/search/index.html</loc>
+    
+    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/categories/index.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
@@ -108,13 +122,6 @@
   
   <url>
     <loc>http://www.troylc.cc/tags/index.html</loc>
-    
-    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.troylc.cc/search/index.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
     
@@ -142,14 +149,14 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
+    <loc>http://www.troylc.cc/about/index.html</loc>
     
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/about/index.html</loc>
+    <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
     

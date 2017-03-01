@@ -4,6 +4,34 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/spring-cloud/2017/03/01/spirng-cloud-eureka.html</loc>
+    <lastmod>2017-03-01T14:45:11.000Z</lastmod>
+    <data>
+        <display>
+        <title>SpringCloud和docker之微服务-eureka(一)</title>
+        <pubTime>2017-03-01T14:35:35.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>docker-compose</tag>
+         
+        <tag>spring-boot</tag>
+         
+        <tag>spring cloud</tag>
+         
+         
+           
+             
+              <breadCrumb title="spring cloud" url="http://www.troylc.cc/categories/spring-cloud/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/docker-compose/2017/02/25/Docker08docker-compose01.html</loc>
     <lastmod>2017-02-25T15:22:31.000Z</lastmod>
     <data>
@@ -308,6 +336,7 @@
     </url>
 
     
+    
   <url>
     <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
@@ -329,7 +358,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>http://www.troylc.cc/docker/2016/07/17/docker-01.html</loc>
