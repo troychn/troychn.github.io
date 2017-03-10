@@ -4,6 +4,36 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/spring-cloud/2017/03/11/spirng-cloud-productservice.html</loc>
+    <lastmod>2017-03-10T16:44:18.000Z</lastmod>
+    <data>
+        <display>
+        <title>SpringCloud和docker之微服务-consumer(三)</title>
+        <pubTime>2017-03-10T16:39:41.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>docker-compose</tag>
+         
+        <tag>java</tag>
+         
+        <tag>spring-boot</tag>
+         
+        <tag>spring cloud</tag>
+         
+         
+           
+             
+              <breadCrumb title="spring cloud" url="http://www.troylc.cc/categories/spring-cloud/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/spring-cloud/2017/03/09/spirng-cloud-userservice.html</loc>
     <lastmod>2017-03-09T08:52:05.000Z</lastmod>
     <data>
