@@ -4,6 +4,36 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/spring-cloud/2017/03/19/spirng-cloud-apigateway.html</loc>
+    <lastmod>2017-03-19T14:48:24.000Z</lastmod>
+    <data>
+        <display>
+        <title>SpringCloud和docker之微服务-apigateway(四)</title>
+        <pubTime>2017-03-19T14:43:44.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>docker-compose</tag>
+         
+        <tag>java</tag>
+         
+        <tag>spring-boot</tag>
+         
+        <tag>spring cloud</tag>
+         
+         
+           
+             
+              <breadCrumb title="spring cloud" url="http://www.troylc.cc/categories/spring-cloud/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/spring-cloud/2017/03/11/spirng-cloud-productservice.html</loc>
     <lastmod>2017-03-10T16:44:18.000Z</lastmod>
     <data>
