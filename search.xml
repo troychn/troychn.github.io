@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title><![CDATA[SpringCloud构微服务之-配置中配置中心(六)]]></title>
+      <title><![CDATA[SpringCloud构微服务之-配置中心(六)]]></title>
       <url>http://www.troylc.cc/spring-cloud/2017/04/16/spirng-cloud-config.html</url>
       <content type="html"><![CDATA[<p>通过前面的章节介绍，我们使用Eureka实现了服务中心；通过Feign实现服务间的消费，为了使服务更为健壮，使用Hystrix的熔断来避免在微服务架构中因个别服务出现异常而引起的故障蔓延，我们通过zuul实现了外部系统访问微服务的路由以及相关的权限控制，为了整合异构平台提供的微服务，我们通过sidecar组件把异构平台的微服务集成到了整个微服务的环境中。<br>当我们的业务系统越来越庞大复杂的时候，各种配置就会层出不群。一旦配置修改了，那么我们就是必须修改后停服务，然后再上线，如果服务少，我们可以手动来操作，如果是成千上百的服务，如果是手动操作，肯定就不合适宜了，这个时候我们就需要考虑分布式配置管理，spring cloud config配置中心就是为了解决这个问题的组件， </p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><table>
