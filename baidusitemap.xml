@@ -4,8 +4,34 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/spring-cloud/2017/04/24/spring-cloud-deploy.html</loc>
+    <lastmod>2017-04-24T09:22:47.000Z</lastmod>
+    <data>
+        <display>
+        <title>用docker构建与部署spring-cloud的微服务(七)</title>
+        <pubTime>2017-04-24T01:17:43.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>docker-compose</tag>
+         
+        <tag>spring cloud</tag>
+         
+         
+           
+             
+              <breadCrumb title="spring cloud" url="http://www.troylc.cc/categories/spring-cloud/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/spring-cloud/2017/04/16/spirng-cloud-config.html</loc>
-    <lastmod>2017-04-16T10:50:23.000Z</lastmod>
+    <lastmod>2017-04-16T10:51:53.000Z</lastmod>
     <data>
         <display>
         <title>SpringCloud构微服务之-配置中心(六)</title>
@@ -488,7 +514,6 @@
     </url>
 
     
-    
   <url>
     <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
@@ -510,6 +535,7 @@
     </data>
     </url>
 
+    
     
   <url>
     <loc>http://www.troylc.cc/docker/2016/07/17/docker-01.html</loc>
