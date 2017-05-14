@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/mysql/2017/05/14/docker-swarm-mysql-ha.html</loc>
+    <lastmod>2017-05-14T07:54:45.000Z</lastmod>
+    <data>
+        <display>
+        <title>docker-swarm下部署mysql高可用(主从复制)</title>
+        <pubTime>2017-05-14T07:50:47.000Z</pubTime>
+        
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>docker-compose</tag>
+         
+        <tag>mysql</tag>
+         
+         
+           
+             
+              <breadCrumb title="mysql" url="http://www.troylc.cc/categories/mysql/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/spring-cloud/2017/04/24/spring-cloud-deploy.html</loc>
     <lastmod>2017-04-24T10:53:48.000Z</lastmod>
     <data>

@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.troylc.cc/mysql/2017/05/14/docker-swarm-mysql-ha.html</loc>
+    
+    <lastmod>2017-05-14T07:54:45.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/spring-cloud/2017/04/24/spring-cloud-deploy.html</loc>
     
     <lastmod>2017-04-24T10:53:48.000Z</lastmod>
@@ -142,13 +149,6 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/search/index.html</loc>
-    
-    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.troylc.cc/categories/index.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
@@ -171,6 +171,13 @@
   
   <url>
     <loc>http://www.troylc.cc/baidu_verify_2m9YZg2PjM.html</loc>
+    
+    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.troylc.cc/search/index.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
     
