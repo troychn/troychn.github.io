@@ -4,6 +4,87 @@
   
     
     <entry>
+      <title><![CDATA[如何在linux配置DockerSwarm的Linux防火墙]]></title>
+      <url>http://www.troylc.cc/docker-swarm/2017/05/16/docker-swarm-firewalld.html</url>
+      <content type="html"><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Docker Swarm是Docker的一个功能，可以轻松地在规模上运行Docker主机和容器。Docker Swarm或Docker集群由一个或多个Dockerized主机组成，它们作为管理器节点和任意数量的工作节点。设置这样的系统需要仔细操纵Linux防火墙。</p>
+<p>Docker Swarm正常工作所需的网络端口有： </p>
+<p><strong>TCP端口 2376 </strong><br>用于安全Docker客户端通信。Docker Machine可以使用此端口。Docker Machine用于编排Docker主机。<br><strong>TCP端口 2377 </strong><br>。该端口用于Docker群集或群集节点之间的通信。它只需要在管理器节点上打开。<br><strong>TCP和UDP端口7946</strong><br>用于节点间的通信（容器网络发现）。<br><strong>4789</strong><br>用于覆盖网络流量的UDP端口（容器入口组网）。<br>注意：除了这些端口之外，<br><strong>端口22  </strong><br>（用于SSH流量）和特定服务在集群上运行所需的任何其他端口都必须打开。</p>
+<p>在本文中，您将学习如何使用所有Linux发行版上可用的不同防火墙管理应用程序在Ubuntu 16.04上配置Linux防火墙。这些防火墙管理应用程序是防火墙，IPTables工具和UFW，简单防火墙。UFW是Ubuntu发行版上的默认防火墙应用程序，包括Ubuntu 16.04。虽然本教程涵盖三种方法，但每种方法都会产生相同的结果，因此您可以选择您最熟悉的方法。</p>
+<h1 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a><strong>先决条件</strong></h1><p>在继续阅读本文之前，您应该：</p>
+<p>设置构成集群的主机，包括至少一个群组管理器和一个群组工作程序。您可以按照本教程如何在Ubuntu 16.04上使用Docker Machine配置和管理远程Docker主机进行设置。<br><strong>注意：</strong><br>你会注意到命令（和本文中的所有命令）不是前缀sudo。这是因为假设您<br>docker-machine ssh<br>使用Docker Machine配置之后，使用该命令登录到服务器。</p>
+<h3 id="方法1-使用UFW打开Docker-Swarm端口"><a href="#方法1-使用UFW打开Docker-Swarm端口" class="headerlink" title="方法1 - 使用UFW打开Docker Swarm端口"></a>方法1 - 使用UFW打开Docker Swarm端口</h3><p>如果您只是设置Docker主机，则UFW已经安装。您只需要启用和配置它。按照本指南了解有关在Ubuntu 16.04上使用UFW的更多信息。</p>
+<p>在将用作Swarm管理器的节点上执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ufw allow 22/tcp</div><div class="line">ufw allow 2376/tcp</div><div class="line">ufw allow 2377/tcp</div><div class="line">ufw allow 7946/tcp</div><div class="line">ufw allow 7946/udp</div><div class="line">ufw allow 4789/udp</div></pre></td></tr></table></figure>
+<p>之后，重新加载UFW：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ufw reload</div></pre></td></tr></table></figure>
+<p>如果UFW未启用，请使用以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ufw enable</div></pre></td></tr></table></figure>
+<p>这可能不是必需的，但是无论何时更改并重新启动防火墙，都不会重新启动Docker守护程序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart docker</div></pre></td></tr></table></figure>
+<p>然后在作为工作者的每个节点上执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ufw allow 22/tcp</div><div class="line">ufw allow 2376/tcp</div><div class="line">ufw allow 7946/tcp</div><div class="line">ufw allow 7946/udp</div><div class="line">ufw allow 4789/udp</div></pre></td></tr></table></figure>
+<p>之后，重新加载UFW：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ufw reload</div></pre></td></tr></table></figure>
+<p>如果UFW未启用，请启用它：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ufw enable</div></pre></td></tr></table></figure>
+<p>然后重新启动Docker守护进程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart docker</div></pre></td></tr></table></figure>
+<p>这就是您需要做的，使用UFW打开Docker Swarm的必要端口。</p>
+<h3 id="方法2-使用FirewallD打开Docker-Swarm端口"><a href="#方法2-使用FirewallD打开Docker-Swarm端口" class="headerlink" title="方法2 - 使用FirewallD打开Docker Swarm端口"></a>方法2 - 使用FirewallD打开Docker Swarm端口</h3><p>FirewallD是基于Fedora，CentOS和其他Linux发行版的默认防火墙应用程序。但是FirewallD也可以在其他Linux发行版中使用，包括Ubuntu 16.04。</p>
+<p>如果您选择使用FirewallD而不是UFW，请先卸载UFW：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-get purge ufw</div></pre></td></tr></table></figure>
+<p>然后安装FirewallD：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-get install firewalld</div></pre></td></tr></table></figure>
+<p>验证它是否正在运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl status firewalld</div></pre></td></tr></table></figure>
+<p>如果没有运行，启动它：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl start firewalld</div></pre></td></tr></table></figure>
+<p>然后启用它，以便它在启动时启动：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl enable firewalld</div></pre></td></tr></table></figure>
+<p>在作为Swarm管理器的节点上，使用以下命令打开必要的端口：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --add-port=22/tcp --permanent</div><div class="line">firewall-cmd --add-port=2376/tcp --permanent</div><div class="line">firewall-cmd --add-port=2377/tcp --permanent</div><div class="line">firewall-cmd --add-port=7946/tcp --permanent</div><div class="line">firewall-cmd --add-port=7946/udp --permanent</div><div class="line">firewall-cmd --add-port=4789/udp --permanent</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">注意：如果您犯了错误，需要删除条目，请键入：。</div><div class="line"></div><div class="line">firewall-cmd --remove-port=port-number/tcp —permanent</div></pre></td></tr></table></figure>
+<p>之后，重新加载防火墙：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --reload</div></pre></td></tr></table></figure>
+<p>然后重新启动Docker。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart docker</div></pre></td></tr></table></figure>
+<p>然后在将作为Swarm工作器的每个节点上执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --add-port=22/tcp --permanent</div><div class="line">firewall-cmd --add-port=2376/tcp --permanent</div><div class="line">firewall-cmd --add-port=7946/tcp --permanent</div><div class="line">firewall-cmd --add-port=7946/udp --permanent</div><div class="line">firewall-cmd --add-port=4789/udp --permanent</div></pre></td></tr></table></figure>
+<p>之后，重新加载防火墙：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">firewall-cmd --reload</div></pre></td></tr></table></figure>
+<p>然后重新启动Docker。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl restart docker</div></pre></td></tr></table></figure>
+<p>您已成功使用FirewallD打开Docker Swarm所需的端口。</p>
+<h3 id="方法3-使用IPTables打开Docker群集端口"><a href="#方法3-使用IPTables打开Docker群集端口" class="headerlink" title="方法3 - 使用IPTables打开Docker群集端口"></a>方法3 - 使用IPTables打开Docker群集端口</h3><p>要在任何Linux发行版上使用IPtables，您必须先卸载任何其他防火墙工具。如果您正在从FirewallD或UFW切换，请先卸载它们。</p>
+<p>然后安装iptables-persistent软件包，管理自动加载IPtables规则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-get install iptables-persistent</div></pre></td></tr></table></figure>
+<p>接下来，使用以下命令刷新现有规则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netfilter-persistent flush</div></pre></td></tr></table></figure>
+<p>现在您可以使用该iptables实用程序添加规则。该第一组命令应该在作为Swarm管理器的节点上执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">iptables -A INPUT -p tcp --dport 22 -j ACCEPT</div><div class="line">iptables -A INPUT -p tcp --dport 2376 -j ACCEPT</div><div class="line">iptables -A INPUT -p tcp --dport 2377 -j ACCEPT</div><div class="line">iptables -A INPUT -p tcp --dport 7946 -j ACCEPT</div><div class="line">iptables -A INPUT -p udp --dport 7946 -j ACCEPT</div><div class="line">iptables -A INPUT -p udp --dport 4789 -j ACCEPT</div></pre></td></tr></table></figure>
+<p>输入所有命令后，将规则保存到磁盘：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netfilter-persistent save</div></pre></td></tr></table></figure>
+<p>然后重新启动Docker。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl restart docker</div></pre></td></tr></table></figure>
+<p>在将用作Swarm工作的节点上，执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">iptables -A INPUT -p tcp --dport 22 -j ACCEPT</div><div class="line">iptables -A INPUT -p tcp --dport 2376 -j ACCEPT</div><div class="line">iptables -A INPUT -p tcp --dport 7946 -j ACCEPT</div><div class="line">iptables -A INPUT -p udp --dport 7946 -j ACCEPT</div><div class="line">iptables -A INPUT -p udp --dport 4789 -j ACCEPT</div></pre></td></tr></table></figure>
+<p>将这些新规则保存到磁盘中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netfilter-persistent save</div></pre></td></tr></table></figure>
+<p>然后重新启动Docker：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo systemctl restart docker</div></pre></td></tr></table></figure>
+<p>这就是为Docker Swarm使用IPTables打开所需的端口。您可以在教程如何使用Iptables防火墙中了解更多关于这些规则如何工作的信息。</p>
+<p>如果您希望在使用此方法后切换到FirewallD或UFW，正确的方法是先停止防火墙：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo netfilter-persistent stop</div></pre></td></tr></table></figure>
+<p>然后冲洗规则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo netfilter-persistent flush</div></pre></td></tr></table></figure>
+<p>最后，将现在的空表保存到磁盘中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo netfilter-persistent save</div></pre></td></tr></table></figure>
+<p>然后你可以切换到UFW或FirewallD。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>FirewallD，IPTables工具和UFW是Linux世界中的三个防火墙管理应用程序。你刚刚学会了如何使用它来打开设置Docker Swarm所需的网络端口。您使用哪种方法只是个人偏好的问题，因为它们都具有同等的功能。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[docker-swarm下部署mysql高可用(主从复制)]]></title>
       <url>http://www.troylc.cc/mysql/2017/05/14/docker-swarm-mysql-ha.html</url>
       <content type="html"><![CDATA[<p>在考虑MySQL数据库的高可用架构时，主要考虑以下几方面：</p>
