@@ -37,7 +37,7 @@
     </entry>
     
     <entry>
-      <title><![CDATA[linux系列(三)-rancher容器平台管理-环境构建与配置]]></title>
+      <title><![CDATA[RANCHER容器平台管理(一)-环境构建与配置]]></title>
       <url>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</url>
       <content type="html"><![CDATA[<p>rancher是什么，它能为我们做些什么？rancher是一个开源的软件平台，使企业能够在生产环境中运行容器。使用Rancher，我们不再需要使用不同的开源技术从头开始构建容器服务平台。Rancher提供管理生产环境中的容器所需的整个软件堆栈。  </p>
 <p>如下为rancher的功能图：<br><img src="/images/rancher/rancher-base/1.png" alt="rancher功能图"></p>
