@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-05-16T02:20:44.000Z</updated>
+  <updated>2017-06-02T09:26:20.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -14,6 +14,151 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux系列(三)-linux在线调整分区大小-centos7</title>
+    <link href="http://www.troylc.cc/linux/2017/06/02/linux-03.html"/>
+    <id>http://www.troylc.cc/linux/2017/06/02/linux-03.html</id>
+    <published>2017-06-02T09:26:15.000Z</published>
+    <updated>2017-06-02T09:26:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在使用和维护Linux服务器的过程中有时会出现需要调整分区大小的情况。如果配置了lvm（logical volume management）的话，<br>可以很方便使用lvextend/lvreduce无损失增加和减少lvm分区的大小。做任何磁盘操作请做好备份！</p>
+<h2 id="summary（概要）"><a href="#summary（概要）" class="headerlink" title="summary（概要）"></a>summary（概要）</h2><ul>
+<li>系统环境: centos7</li>
+<li>情况：<ol>
+<li>home：50G</li>
+<li>root：50G</li>
+<li>root分区不够用</li>
+</ol>
+</li>
+<li>思路：把home分区的空间划一部分到root分区</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 设置home分区大小为200G，释放300G空间</div><div class="line">$ lvreduce -L 200G /dev/centos/home</div><div class="line"></div><div class="line"># 将空闲空间扩展到root分区</div><div class="line">$ lvextend -l +100%FREE /dev/centos/root</div><div class="line"></div><div class="line"># 使用XFS文件系统自带的命令集增加分区空间</div><div class="line">$ xfs_growfs /dev/mapper/centos-root</div></pre></td></tr></table></figure>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h3 id="situation"><a href="#situation" class="headerlink" title="situation"></a>situation</h3><p>挂载在根目录的分区 <code>/dev/mapper/centos-root</code> 爆满，占用100%</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ df -h</div><div class="line">Filesystem               Size  Used Avail Use% Mounted on</div><div class="line">/dev/mapper/centos-root   50G   50G   19M 100% /</div><div class="line">devtmpfs                  32G     0   32G   0% /dev</div><div class="line">tmpfs                     32G     0   32G   0% /dev/shm</div><div class="line">tmpfs                     32G  2.5G   29G   8% /run</div><div class="line">tmpfs                     32G     0   32G   0% /sys/fs/cgroup</div><div class="line">/dev/mapper/centos-home  50G   33M  49G   1% /home</div><div class="line">/dev/sda1                497M  238M  259M  48% /boot</div><div class="line">tmpfs                    6.3G     0  6.3G   0% /run/user/0</div></pre></td></tr></table></figure>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>挂载在根目录的分区空间太小，只有50G，而服务器 <code>home</code> 目录为非常用目录，挂在了近50G的空间。</p>
+<p>思路：从 <code>centos-home</code> 分区划出40G空间到 <code>centos-root</code> 分区。</p>
+<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><h4 id="1-查看各分区信息"><a href="#1-查看各分区信息" class="headerlink" title="1.查看各分区信息"></a>1.查看各分区信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">[root@registry-jenkins ~]# lvdisplay</div><div class="line">  --- Logical volume ---</div><div class="line">  LV Path                /dev/centos/swap</div><div class="line">  LV Name                swap</div><div class="line">  VG Name                centos</div><div class="line">  LV UUID                16Tima-Q9Us-F2NC-sPqb-YmPo-qxjl-zQZdRB</div><div class="line">  LV Write Access        read/write</div><div class="line">  LV Creation host, time localhost.localdomain, 2016-11-09 15:45:17 +0800</div><div class="line">  LV Status              available</div><div class="line">  # open                 2</div><div class="line">  LV Size                4.00 GiB</div><div class="line">  Current LE             1024</div><div class="line">  Segments               1</div><div class="line">  Allocation             inherit</div><div class="line">  Read ahead sectors     auto</div><div class="line">  - currently set to     8192</div><div class="line">  Block device           253:1</div><div class="line">   </div><div class="line">  --- Logical volume ---</div><div class="line">  LV Path                /dev/centos/home</div><div class="line">  LV Name                home</div><div class="line">  VG Name                centos</div><div class="line">  LV UUID                r42xE3-WwVn-an7C-WQzJ-NK3R-vg10-aWnHwE</div><div class="line">  LV Write Access        read/write</div><div class="line">  LV Creation host, time localhost.localdomain, 2016-11-09 15:45:18 +0800</div><div class="line">  LV Status              available</div><div class="line">  # open                 1</div><div class="line">  LV Size                50.45 GiB</div><div class="line">  Current LE             3444</div><div class="line">  Segments               1</div><div class="line">  Allocation             inherit</div><div class="line">  Read ahead sectors     auto</div><div class="line">  - currently set to     8192</div><div class="line">  Block device           253:2</div><div class="line">   </div><div class="line">  --- Logical volume ---</div><div class="line">  LV Path                /dev/centos/root</div><div class="line">  LV Name                root</div><div class="line">  VG Name                centos</div><div class="line">  LV UUID                d74yiv-jdym-sg5h-v49g-cpxZ-6Ttn-JtUoa7</div><div class="line">  LV Write Access        read/write</div><div class="line">  LV Creation host, time localhost.localdomain, 2016-11-09 15:45:20 +0800</div><div class="line">  LV Status              available</div><div class="line">  # open                 1</div><div class="line">  LV Size                50.05 GiB</div><div class="line">  Current LE             23054</div><div class="line">  Segments               2</div><div class="line">  Allocation             inherit</div><div class="line">  Read ahead sectors     auto</div><div class="line">  - currently set to     8192</div><div class="line">  Block device           253:0</div></pre></td></tr></table></figure>
+<h4 id="2-umount卸载-home目录"><a href="#2-umount卸载-home目录" class="headerlink" title="2.umount卸载/home目录"></a>2.umount卸载/home目录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# umount /home/</div></pre></td></tr></table></figure>
+<h4 id="3-减少-home分区空间"><a href="#3-减少-home分区空间" class="headerlink" title="3.减少/home分区空间"></a>3.减少/home分区空间</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 释放 /dev/centos/home 分区 40G 的空间</div><div class="line"># 命令设置 /dev/centos/home 分区 10G空间</div><div class="line">$ lvreduce -L 10G /dev/centos/home</div><div class="line">WARNING: Reducing active logical volume to 200.00 GiB.</div><div class="line"> THIS MAY DESTROY YOUR DATA (filesystem etc.)</div><div class="line">Do you really want to reduce centos/home? [y/n]: y</div><div class="line"> Size of logical volume centos/home changed from 50.70 GiB (121778 extents) to 10.00 GiB (51200 extents).</div><div class="line"> Logical volume centos/home successfully resized.</div></pre></td></tr></table></figure>
+<h4 id="4-增加-root分区空间"><a href="#4-增加-root分区空间" class="headerlink" title="4.增加/root分区空间"></a>4.增加/root分区空间</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ lvextend -l +100%FREE /dev/centos/root</div><div class="line">Size of logical volume centos/root changed from 50.06 GiB (12816 extents) to 90.76 GiB (83394 extents).</div><div class="line">Logical volume centos/root successfully resized.</div></pre></td></tr></table></figure>
+<h4 id="5-扩展XFS文件空间大小"><a href="#5-扩展XFS文件空间大小" class="headerlink" title="5.扩展XFS文件空间大小"></a>5.扩展XFS文件空间大小</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ xfs_growfs /dev/mapper/centos-root</div><div class="line">meta-data=/dev/mapper/centos-root isize=256    agcount=4, agsize=3276800 blks</div><div class="line">         =                       sectsz=512   attr=2, projid32bit=1</div><div class="line">         =                       crc=0        finobt=0 spinodes=0</div><div class="line">data     =                       bsize=4096   blocks=13107200, imaxpct=25</div><div class="line">         =                       sunit=0      swidth=0 blks</div><div class="line">naming   =version 2              bsize=4096   ascii-ci=0 ftype=0</div><div class="line">log      =internal               bsize=4096   blocks=6400, version=2</div><div class="line">         =                       sectsz=512   sunit=0 blks, lazy-count=1</div><div class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</div><div class="line">data blocks changed from 13107200 to 85395456</div></pre></td></tr></table></figure>
+<p>由于xfs文件系统不能执行分区减小的调整！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# xfs_growfs /dev/mapper/centos-home</div><div class="line">xfs_growfs: /dev/mapper/centos-home is not a mounted XFS filesystem</div><div class="line">[root@localhost ~]# mount /dev/mapper/centos-home /home/</div><div class="line">mount: /dev/mapper/centos-home：不能读超级块</div></pre></td></tr></table></figure>
+<p>这样，只能通过重新格式化这个分区，格式化后才能再次挂载到home下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# mkfs.xfs /dev/mapper/centos-home -f</div><div class="line">meta-data=/dev/mapper/centos-home isize=512    agcount=4, agsize=41156608 blks</div><div class="line">         =                       sectsz=512   attr=2, projid32bit=1</div><div class="line">         =                       crc=1        finobt=0, sparse=0</div><div class="line">data     =                       bsize=4096   blocks=164626432, imaxpct=25</div><div class="line">         =                       sunit=0      swidth=0 blks</div><div class="line">naming   =version 2              bsize=4096   ascii-ci=0 ftype=1</div><div class="line">log      =internal log           bsize=4096   blocks=80384, version=2</div><div class="line">         =                       sectsz=512   sunit=0 blks, lazy-count=1</div><div class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</div><div class="line">  </div><div class="line">[root@localhost ~]# mount /dev/mapper/centos-home /home/</div><div class="line"></div><div class="line">[root@localhost ~]# reboot</div></pre></td></tr></table></figure>
+<p>再次查看分区，发现home分区已经减小了100G,只不过这个分区里之前的数据都没有了。</p>
+<p>完成</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在使用和维护Linux服务器的过程中有时会出现需要调整分区大小的情况。如果配置了lvm（logical volume management）的话，&lt;br&gt;可以很方便使用lvextend/lvreduce无损失增加和减少lvm分区的大小。做任何磁盘操作请做好备份！&lt;/p&gt;
+&lt;
+    
+    </summary>
+    
+      <category term="linux" scheme="http://www.troylc.cc/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
+    
+      <category term="shell" scheme="http://www.troylc.cc/tags/shell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux系列(三)-rancher容器平台管理-环境构建与配置</title>
+    <link href="http://www.troylc.cc/rancher/2017/06/02/rancher-01.html"/>
+    <id>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</id>
+    <published>2017-06-02T09:26:15.000Z</published>
+    <updated>2017-06-02T09:26:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>rancher是什么，它能为我们做些什么？rancher是一个开源的软件平台，使企业能够在生产环境中运行容器。使用Rancher，我们不再需要使用不同的开源技术从头开始构建容器服务平台。Rancher提供管理生产环境中的容器所需的整个软件堆栈。  </p>
+<p>如下为rancher的功能图：<br><img src="/images/rancher/rancher-base/1.png" alt="rancher功能图"></p>
+<h2 id="安装Rancher服务器"><a href="#安装Rancher服务器" class="headerlink" title="安装Rancher服务器"></a>安装Rancher服务器</h2><p>Rancher被部署为一组Docker容器。运行的牧场主是简单的启动两个容器。一个容器作为管理服务器，另一个容器在节点上作为代理。</p>
+<p><strong>运行Rancher的要求：</strong>  </p>
+<ul>
+<li>任何具有受支持版本的Docker的现代Linux发行版。如：RancherOS，Ubuntu，RHEL / CentOS 7，这些都进行了更严格的测试。<ul>
+<li>对于RHEL / CentOS，Docker不推荐使用默认存储驱动程序，即使用环回的devicemapper 。请参考Docker文档，了解如何更改。</li>
+<li>对于RHEL / CentOS，如果要启用SELinux，则需要安装其他SELinux模块。</li>
+</ul>
+</li>
+<li>1GB RAM</li>
+<li>MySQL服务器应该有一个max_connections设置&gt; 150<ul>
+<li>MYSQL配置要求<ul>
+<li>选项1：用Antelope文件格式运行，默认值为 COMPACT</li>
+<li>选项2：使用Barracuda运行MySQL5.7，默认ROW_FORMAT值为Dynamic  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>rancher目前的版本情况：</strong><br>Rancher服务器端的容器有2个不同的版本。</p>
+<ul>
+<li>rancher/server:latest标签将是我们最新的开发版本。这些构建将通过我们的CI自动化框架进行验证。这些版本不适用于部署在生产中。</li>
+<li>rancher/server:stable标签将是我们最新的稳定发布版本。此标签是我们推荐用于生产的版本。  </li>
+</ul>
+<p>请不要使用任何带有rc{n}后缀的版本。这些rc构建意味着Rancher团队测试构建。</p>
+<h3 id="安装一个单容器rancher-service"><a href="#安装一个单容器rancher-service" class="headerlink" title="安装一个单容器rancher service"></a>安装一个单容器rancher service</h3><ul>
+<li>运行一个单容器的rancher service，<br>如果要将容器内的数据库保存到主机上的卷上，请通过绑定MySQL卷来启动Rancher服务器  <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run <span class="_">-d</span> -v &lt;宿主机目录&gt;:/var/lib/mysql --restart=unless-stopped -p 8080:8080 rancher/server:stable</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="用户界面"><a href="#用户界面" class="headerlink" title="用户界面"></a>用户界面</h3><p>UI和API将在暴露端口上可用8080。在Docker镜像下载完成之后，Rancher成功启动后可能需要一两分钟的时间才能查看。<br>导航到以下网址：http://<server_ip>:8080。该<server_ip>是运行牧场主服务器主机的公网IP地址。</server_ip></server_ip></p>
+<p>一旦UI启动并运行，您可以通过添加主机或从基础架构目录中选择一个容器编排。默认情况下，如果不选择不同的容器编排类型，环境将使用rancher默认的编排模型Cattle。将主机添加到Rancher之后，您可以从Rancher目录开始添加服务或启动模板。  </p>
+<p>用浏览器打开<a href="http://hostsname:8080/，如果你看到如下页面，则说明你的Rancher" target="_blank" rel="external">http://hostsname:8080/，如果你看到如下页面，则说明你的Rancher</a> Server搭建成功了  </p>
+<p><img src="/images/rancher/rancher-base/2.png" alt="rancher">  </p>
+<h2 id="RANCHER管理"><a href="#RANCHER管理" class="headerlink" title="RANCHER管理"></a>RANCHER管理</h2><h3 id="设置权限访问"><a href="#设置权限访问" class="headerlink" title="设置权限访问"></a>设置权限访问</h3><p>第一次启动rancher后，它本身是没有给权限控制，所有人都可以访问，并且访问的权限是一样的。在RANCHER UI中我们可以看到系统管理旁边有一个红色的“！”，其实际标识当前的RANCHER是没有权限控制的，需要我们在系统管理下的二级菜单中选择访问控制，添加相应的管理用户后来启动访问权限的控制，Rancher支持多种权限控制方案，分别是：Active Directory、Azure AD、GitHub、Local Auth、OpenLDAP和SHIBBOLETH。我们这里选择简单的本地数据权限local Auth,即设置一个用户名密码，然后启动本地权限控制。<br><img src="/images/rancher/rancher-base/3.png" alt="访问权限"><br><img src="/images/rancher/rancher-base/4.png" alt="本地控制"><br>启动本地权限控制后，我们可以点击账号管理来添加更多的管理账号<br><img src="/images/rancher/rancher-base/5.png" alt="账号添加"><br>或者在系统管理的二级菜单中找到账号设置：<br><img src="/images/rancher/rancher-base/6.png" alt="账号设置"><br>点击添加账号，添加更多的管理账号：<br><img src="/images/rancher/rancher-base/7.png" alt="添加账号信息">  </p>
+<h3 id="RANCHER环境管理"><a href="#RANCHER环境管理" class="headerlink" title="RANCHER环境管理"></a>RANCHER环境管理</h3><p>Rancher支持将资源分组到多个环境中。每个环境都从用于创建环境的环境模板定义的一组基础结构服务开始。每个环境都有自己的资源集，由一个或多个用户或组拥有。例如，您可以创建单独的“开发”，“测试”和“生产”环境，以保持彼此的隔离，并为您的整个组织提供“开发”访问权限，但将“生产”环境限制为较小的团队。所有主机和任何Rancher资源（如容器，基础设施服务等）都可以在环境中创建。</p>
+<ol>
+<li><p>添加RANCHER环境<br><img src="/images/rancher/rancher-base/8.png" alt="环境管理"><br><img src="/images/rancher/rancher-base/9.png" alt="环境管理界面"><br>点击添加环境界面，输入名称与描述，从rancher预制的模板中选择一个模板。然后添加具有访问权限的用户<br><img src="/images/rancher/rancher-base/10.png" alt="添加环境"><br><img src="/images/rancher/rancher-base/11.png" alt="给环境授权用户"><br>在添加完环境的列表中，也可以编辑对应的环境，编辑环境的内容和添加一样。<br><img src="/images/rancher/rancher-base/12.png" alt="编辑环境"></p>
+</li>
+<li><p>添加主机到RANCHER环境<br>主机是Rancher中最基本的资源单元，并且表示为虚拟或物理的任何Linux服务器，具有以下最低要求：</p>
+</li>
+</ol>
+<ul>
+<li>任何具有受支持版本的Docker的现代Linux发行版。RancherOS，Ubuntu，RHEL / CentOS 7进行了更严格的测试。</li>
+<li><ul>
+<li>对于RHEL / CentOS，Docker不推荐使用默认存储驱动程序，即使用环回的devicemapper 。请参考Docker文档，了解如何更改。</li>
+</ul>
+</li>
+<li><ul>
+<li>对于RHEL / CentOS，如果要启用SELinux，则需要安装其他SELinux模块。</li>
+</ul>
+</li>
+<li><ul>
+<li>对于RHEL / CentOS，请使用内核版本3.10.0-514.2.2.el7.x86_64或更高版本。使用7.3版或更高版本时包括。</li>
+</ul>
+</li>
+<li>1GB RAM</li>
+<li>推荐CPU / AES-NI</li>
+<li>能够通过预先配置的端口通过http或https与Rancher服务器进行通信。默认值为8080。</li>
+<li>能够在同一环境下路由到任何其他主机，以利用Rancher对Docker容器的跨主机网络。</li>
+<li>Rancher还支持Docker Machine，并允许您通过任何支持的驱动程序添加主机。</li>
+<li>主机上必须安装rancher所支持的版本，可参考<a href="http://docs.rancher.com/rancher/v1.5/en/hosts/#supported-docker-versions" target="_blank" rel="external">rancher支持的docker版本</a></li>
+</ul>
+<p>从基础设施 - &gt; 主机选项卡，单击添加主机。<br><img src="/images/rancher/rancher-base/13.png" alt="添加主机"><br>点击保存，进入添加主机界面，选择不同类型的主机，这里添加本地服务器，可以给每个主机添加不同的labels<br><img src="/images/rancher/rancher-base/14.png" alt="添加主机1"><br><img src="/images/rancher/rancher-base/15.png" alt="添加主机2"><br>点击复制链接，在指定的本地的服务器上粘贴复制的内容，等待下截rancher agent下载运行后，关闭rancher的复制页面，在主机界面就会出现对应的主机信息：<br><img src="/images/rancher/rancher-base/16.png" alt="主机"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;rancher是什么，它能为我们做些什么？rancher是一个开源的软件平台，使企业能够在生产环境中运行容器。使用Rancher，我们不再需要使用不同的开源技术从头开始构建容器服务平台。Rancher提供管理生产环境中的容器所需的整个软件堆栈。  &lt;/p&gt;
+&lt;p&gt;如下为ra
+    
+    </summary>
+    
+      <category term="rancher" scheme="http://www.troylc.cc/categories/rancher/"/>
+    
+    
+      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
+    
+      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
+    
+      <category term="swarm" scheme="http://www.troylc.cc/tags/swarm/"/>
+    
+      <category term="rancher" scheme="http://www.troylc.cc/tags/rancher/"/>
+    
+  </entry>
   
   <entry>
     <title>如何在linux配置DockerSwarm的Linux防火墙</title>
@@ -1767,537 +1912,6 @@
       <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
     
       <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>docker系列(二)使用Docker-Remote-API</title>
-    <link href="http://www.troylc.cc/docker/2016/07/31/docker-02.html"/>
-    <id>http://www.troylc.cc/docker/2016/07/31/docker-02.html</id>
-    <published>2016-07-31T05:10:36.000Z</published>
-    <updated>2016-07-31T05:10:40.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Docker Remote API是一个取代远程命令行界面（rcli）的REST API。我们将使用命令行工具curl来处理url相关操作。curl可以发送请求、获取以及发送数据、检索信息。是docker自带的一个rest api 管理docker所有的操作都有对应的http rest API可供操作。下面简单说一下API的操作</p>
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><table>
-<thead>
-<tr>
-<th>主机</th>
-<th>安装软件</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>192.168.253.129</td>
-<td>安装docker，打开docker的API访问端口，主机</td>
-</tr>
-<tr>
-<td>192.168.253.131</td>
-<td>安装docker,远程通过API访问docker主机的客户端</td>
-</tr>
-</tbody>
-</table>
-<h4 id="配置-192-168-253-129-启动Remote-API"><a href="#配置-192-168-253-129-启动Remote-API" class="headerlink" title="配置(192.168.253.129)启动Remote API"></a>配置(192.168.253.129)启动Remote API</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># vim /usr/lib/systemd/system/docker.service</span></div><div class="line">[Unit]</div><div class="line">Description=Docker Application Container Engine</div><div class="line">Documentation=http://docs.docker.com</div><div class="line">After=network.target</div><div class="line">Wants=docker-storage-setup.service</div><div class="line"></div><div class="line">[Service]</div><div class="line">Type=notify</div><div class="line">EnvironmentFile=-/etc/sysconfig/docker</div><div class="line">EnvironmentFile=-/etc/sysconfig/docker-storage</div><div class="line">EnvironmentFile=-/etc/sysconfig/docker-network</div><div class="line">Environment=GOTRACEBACK=crash</div><div class="line">ExecStart=/usr/bin/docker daemon -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock \</div><div class="line">          <span class="variable">$OPTIONS</span> \</div><div class="line">          <span class="variable">$DOCKER_STORAGE_OPTIONS</span> \</div><div class="line">          <span class="variable">$DOCKER_NETWORK_OPTIONS</span> \</div><div class="line">          <span class="variable">$ADD_REGISTRY</span> \</div><div class="line">          <span class="variable">$BLOCK_REGISTRY</span> \</div><div class="line">          <span class="variable">$INSECURE_REGISTRY</span></div><div class="line">LimitNOFILE=1048576</div><div class="line">LimitNPROC=1048576</div><div class="line">LimitCORE=infinity</div><div class="line">MountFlags=slave</div><div class="line">TimeoutStartSec=1min</div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure>
-<p>说明：<br>上面那句话，在不同的版本，设置有可能不一样，<br>重启docker<br>[root@localhost ~]# systemctl daemon-reload<br>[root@localhost ~]# systemctl restart docker</p>
-<p>在本机(192.168.253.129)测试：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># docker -H 192.168.253.129:2375 images</span></div><div class="line">REPOSITORY                              TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</div><div class="line">myhub/mysql                             latest              d298157e388e        2 days ago          359.9 MB</div><div class="line">troylc/maven                            latest              0d244f5623e3        4 days ago          831.8 MB</div><div class="line">jenkins                                 latest              988e2e1b7418        9 days ago          707.8 MB</div><div class="line">registry                                latest              a8706c2bfd21        10 days ago         422.8 MB</div><div class="line">maven                                   latest              e6a340bb7d58        2 weeks ago         651.9 MB</div><div class="line">kubetomcat                              latest              d7b68af6b003        4 weeks ago         395.6 MB</div><div class="line">kubenginx                               latest              3820887c73d5        4 weeks ago         223.4 MB</div><div class="line">dmptomcat                               latest              82775047bc5e        6 weeks ago         395.5 MB</div><div class="line">toptomcat                               latest              06666482da5f        6 weeks ago         395.5 MB</div><div class="line">daocloud.io/daocloud/daocloud-toolset   latest              4a115833bcba        6 weeks ago         145.8 MB</div><div class="line">topsecssh                               latest              ac2ba2efcaf2        6 weeks ago         302.5 MB</div><div class="line">topsecnginx                             latest              0694365f1f87        6 weeks ago         223.4 MB</div><div class="line">tomcat                                  latest              e4b99e523705        7 weeks ago         347.8 MB</div><div class="line">mysql                                   latest              196db1908492        7 weeks ago         359.8 MB</div><div class="line">nginx                                   latest              5135500ec6a1        7 weeks ago         132.7 MB</div><div class="line">redis                                   latest              05babbd460f7        8 weeks ago         109.1 MB</div><div class="line">ubuntu                                  latest              a5a467fddcb8        8 weeks ago         187.9 MB</div><div class="line">centos                                  latest              ce20c473<span class="built_in">cd</span>8a        9 weeks ago         172.3 MB</div><div class="line">gcr.io/google_containers/pause          0.8.0               2c40b0526b63        8 months ago        241.7 kB</div></pre></td></tr></table></figure></p>
-<p>在docker客户端机(192.168.253.130)上访问<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># docker -H 192.168.253.129:2375 images</span></div><div class="line">REPOSITORY                              TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</div><div class="line">myhub/mysql                             latest              d298157e388e        2 days ago          359.9 MB</div><div class="line">troylc/maven                            latest              0d244f5623e3        4 days ago          831.8 MB</div><div class="line">jenkins                                 latest              988e2e1b7418        9 days ago          707.8 MB</div><div class="line">registry                                latest              a8706c2bfd21        10 days ago         422.8 MB</div><div class="line">maven                                   latest              e6a340bb7d58        2 weeks ago         651.9 MB</div><div class="line">kubetomcat                              latest              d7b68af6b003        4 weeks ago         395.6 MB</div><div class="line">kubenginx                               latest              3820887c73d5        4 weeks ago         223.4 MB</div><div class="line">dmptomcat                               latest              82775047bc5e        6 weeks ago         395.5 MB</div><div class="line">toptomcat                               latest              06666482da5f        6 weeks ago         395.5 MB</div><div class="line">daocloud.io/daocloud/daocloud-toolset   latest              4a115833bcba        6 weeks ago         145.8 MB</div><div class="line">topsecssh                               latest              ac2ba2efcaf2        6 weeks ago         302.5 MB</div><div class="line">topsecnginx                             latest              0694365f1f87        6 weeks ago         223.4 MB</div><div class="line">tomcat                                  latest              e4b99e523705        7 weeks ago         347.8 MB</div><div class="line">mysql                                   latest              196db1908492        7 weeks ago         359.8 MB</div><div class="line">nginx                                   latest              5135500ec6a1        7 weeks ago         132.7 MB</div><div class="line">redis                                   latest              05babbd460f7        8 weeks ago         109.1 MB</div><div class="line">ubuntu                                  latest              a5a467fddcb8        8 weeks ago         187.9 MB</div><div class="line">centos                                  latest              ce20c473<span class="built_in">cd</span>8a        9 weeks ago         172.3 MB</div><div class="line">gcr.io/google_containers/pause          0.8.0               2c40b0526b63        8 months ago        241.7 kB</div><div class="line"></div><div class="line"></div><div class="line">[root@localhost ~]<span class="comment"># docker -H 192.168.253.129:2375 run -d -p 80:80 -p 443:443 -p 5005:22 -v /home/nfs/data:/home/nfs/data --name dmpnginx nginxa</span></div><div class="line">997f216e969a72146b52f916ec20b2c4b892c4ea86acaa329cfd7028d974389</div><div class="line">[root@localhost ~]<span class="comment"># docker -H 192.168.253.129:2375 run -d -p 6379:6379 --name dmpredis redis</span></div><div class="line">f74477908b1767a35f8666b164c60399943bc08964423fea967a364fe79f3fea</div><div class="line">[root@localhost ~]<span class="comment"># docker -H 192.168.253.129:2375 ps -a</span></div><div class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS              PORTS           </div><div class="line">                                                 NAMESf74477908b17        redis               <span class="string">"/entrypoint.sh redis"</span>   Less than a second ago   Up 8 seconds        0.0.0.0:6379-&gt;63</div><div class="line">79/tcp                                           dmpredisa997f216e969        nginx               <span class="string">"nginx -g 'daemon off"</span>   Less than a second ago   Up 32 seconds       0.0.0.0:80-&gt;80/t</div><div class="line">cp, 0.0.0.0:443-&gt;443/tcp, 0.0.0.0:5005-&gt;22/tcp   dmpnginx</div></pre></td></tr></table></figure></p>
-<p>docker宿主机上的操作，都可以通过（docker -H 192.168.253.129:2375 命令）的方式在其它docker客户机上操作。</p>
-<h4 id="使用远程API构建镜像，运行容器，停止容器，删除容器等。"><a href="#使用远程API构建镜像，运行容器，停止容器，删除容器等。" class="headerlink" title="使用远程API构建镜像，运行容器，停止容器，删除容器等。"></a>使用远程API构建镜像，运行容器，停止容器，删除容器等。</h4><h5 id="使用info接入点-类似在宿主机上输入docker-info"><a href="#使用info接入点-类似在宿主机上输入docker-info" class="headerlink" title="使用info接入点(类似在宿主机上输入docker info)"></a>使用info接入点(类似在宿主机上输入docker info)</h5><p>curl <a href="http://192.168.253.129:2375/info" target="_blank" rel="external">http://192.168.253.129:2375/info</a><br><img src="/images/docker/clipboard.png" alt="dockerinfo"></p>
-<h5 id="通过API获取远程docker主机上的镜像列表（类似于输入docker-images"><a href="#通过API获取远程docker主机上的镜像列表（类似于输入docker-images" class="headerlink" title="通过API获取远程docker主机上的镜像列表（类似于输入docker images)"></a>通过API获取远程docker主机上的镜像列表（类似于输入docker images)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># curl http://192.168.253.129:2375/images/json | python -mjson.tool</span></div><div class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">100  5504    0  5504    0     0  43744      0 --:--:-- --:--:-- --:--:-- 44032</div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        <span class="string">"Created"</span>: 1450623232,</div><div class="line">        <span class="string">"Id"</span>: <span class="string">"03b5e135264764e8b51a2f13f174e541ec3b8952d64762495e369cbb6ca9bdad"</span>,</div><div class="line">        <span class="string">"Labels"</span>: null,</div><div class="line">        <span class="string">"ParentId"</span>: <span class="string">"711aef0427ed0b2f77486a8c884294319b5aaca96c698d288a56d71148e6c0b4"</span>,</div><div class="line">        <span class="string">"RepoDigests"</span>: [],</div><div class="line">        <span class="string">"RepoTags"</span>: [</div><div class="line">            <span class="string">"myhub/education:latest"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"Size"</span>: 0,</div><div class="line">        <span class="string">"VirtualSize"</span>: 506413396</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="string">"Created"</span>: 1450376000,</div><div class="line">        <span class="string">"Id"</span>: <span class="string">"d298157e388ed0e6edd000a1234b3f84abbc1463a8f0ece6f2c539034a1e2573"</span>,</div><div class="line">        <span class="string">"Labels"</span>: null,</div><div class="line">        <span class="string">"ParentId"</span>: <span class="string">"ac704f6f8363d123001de9dd604e4cb1b476d012f0a809c4bf86e0cd60631753"</span>,</div><div class="line">        <span class="string">"RepoDigests"</span>: [],</div><div class="line">        <span class="string">"RepoTags"</span>: [</div><div class="line">            <span class="string">"myhub/mysql:latest"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"Size"</span>: 0,</div><div class="line">        <span class="string">"VirtualSize"</span>: 359871512</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="string">"Created"</span>: 1450215230,</div><div class="line">        <span class="string">"Id"</span>: <span class="string">"0d244f5623e3dc64d7f6428069c5dea3cd77299068b3ed2cb3d4eb56fd6f21b4"</span>,</div><div class="line">        <span class="string">"Labels"</span>: null,</div><div class="line">        <span class="string">"ParentId"</span>: <span class="string">"7605008fbf7d7470810df0c41f6422db254181f4f2eb2f02827f3fb62c9f79b3"</span>,</div><div class="line">        <span class="string">"RepoDigests"</span>: [],</div><div class="line">        <span class="string">"RepoTags"</span>: [</div><div class="line">            <span class="string">"troylc/maven:latest"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"Size"</span>: 87225781,</div><div class="line">        <span class="string">"VirtualSize"</span>: 831831039</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="string">"Created"</span>: 1449771164,</div><div class="line">        <span class="string">"Id"</span>: <span class="string">"988e2e1b74182c986873eb4b5ebce2f9dcc8f9ec156e41ec881aaa1074c7d489"</span>,</div><div class="line">        <span class="string">"Labels"</span>: null,</div><div class="line">        <span class="string">"ParentId"</span>: <span class="string">"d67b67d804fff392fd88e2ba601b6e3cafc117a89c8783f1bf0780b58bc19713"</span>,</div><div class="line">        <span class="string">"RepoDigests"</span>: [],</div><div class="line">        <span class="string">"RepoTags"</span>: [</div><div class="line">            <span class="string">"jenkins:latest"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"Size"</span>: 861,</div><div class="line">        <span class="string">"VirtualSize"</span>: 707786365</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
-<h5 id="获取指定的镜像："><a href="#获取指定的镜像：" class="headerlink" title="获取指定的镜像："></a>获取指定的镜像：</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># curl http://192.168.253.129:2375/images/2c40b0526b6358710fd09e7b8c022429268cc61703b4777e528ac9d469a07ca1/json | python -mjson.tool  </span></div><div class="line"><span class="comment">#2c40b0526b6358710fd09e7b8c022429268cc61703b4777e528ac9d469a07ca1为镜像的ID号，可以通过上面的（curl http://192.168.253.129:2375/images/json | python -mjson.tool）查询获得。</span></div><div class="line">% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">100  1661  100  1661    0     0  83337      0 --:--:-- --:--:-- --:--:-- 87421</div><div class="line">&#123;</div><div class="line">    <span class="string">"Architecture"</span>: <span class="string">"amd64"</span>,</div><div class="line">    <span class="string">"Author"</span>: <span class="string">""</span>,</div><div class="line">    <span class="string">"Comment"</span>: <span class="string">""</span>,</div><div class="line">    <span class="string">"Config"</span>: &#123;</div><div class="line">        <span class="string">"AttachStderr"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"AttachStdin"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"AttachStdout"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"Cmd"</span>: null,</div><div class="line">        <span class="string">"Domainname"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"Entrypoint"</span>: [</div><div class="line">            <span class="string">"/pause"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"Env"</span>: [</div><div class="line">            <span class="string">"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"ExposedPorts"</span>: null,</div><div class="line">        <span class="string">"Hostname"</span>: <span class="string">"d0eb442be084"</span>,</div><div class="line">        <span class="string">"Image"</span>: <span class="string">"56ba5533a2dbf18b017ed12d99c6c83485f7146ed0eb3a2e9966c27fc5a5dd7b"</span>,</div><div class="line">        <span class="string">"Labels"</span>: null,</div><div class="line">        <span class="string">"MacAddress"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"NetworkDisabled"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"OnBuild"</span>: [],</div><div class="line">        <span class="string">"OpenStdin"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"PublishService"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"StdinOnce"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"Tty"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"User"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"VolumeDriver"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"Volumes"</span>: null,</div><div class="line">        <span class="string">"WorkingDir"</span>: <span class="string">""</span></div><div class="line">    &#125;,</div><div class="line">    <span class="string">"Container"</span>: <span class="string">"c63e747118f6582698545c10277ce8412088258b62601908ed5f0f2accfeb2b3"</span>,</div><div class="line">    <span class="string">"ContainerConfig"</span>: &#123;</div><div class="line">        <span class="string">"AttachStderr"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"AttachStdin"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"AttachStdout"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"Cmd"</span>: [</div><div class="line">            <span class="string">"/bin/sh"</span>,</div><div class="line">            <span class="string">"-c"</span>,</div><div class="line">            <span class="string">"#(nop) ENTRYPOINT [/pause]"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"Domainname"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"Entrypoint"</span>: [</div><div class="line">            <span class="string">"/pause"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"Env"</span>: [</div><div class="line">            <span class="string">"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"ExposedPorts"</span>: null,</div><div class="line">        <span class="string">"Hostname"</span>: <span class="string">"d0eb442be084"</span>,</div><div class="line">        <span class="string">"Image"</span>: <span class="string">"56ba5533a2dbf18b017ed12d99c6c83485f7146ed0eb3a2e9966c27fc5a5dd7b"</span>,</div><div class="line">        <span class="string">"Labels"</span>: null,</div><div class="line">        <span class="string">"MacAddress"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"NetworkDisabled"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"OnBuild"</span>: [],</div><div class="line">        <span class="string">"OpenStdin"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"PublishService"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"StdinOnce"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"Tty"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"User"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"VolumeDriver"</span>: <span class="string">""</span>,</div><div class="line">        <span class="string">"Volumes"</span>: null,</div><div class="line">        <span class="string">"WorkingDir"</span>: <span class="string">""</span></div><div class="line">    &#125;,</div><div class="line">    <span class="string">"Created"</span>: <span class="string">"2015-03-31T22:05:45.140369385Z"</span>,</div><div class="line">    <span class="string">"DockerVersion"</span>: <span class="string">"1.3.3"</span>,</div><div class="line">    <span class="string">"GraphDriver"</span>: &#123;</div><div class="line">        <span class="string">"Data"</span>: &#123;</div><div class="line">            <span class="string">"DeviceId"</span>: <span class="string">"763"</span>,</div><div class="line">            <span class="string">"DeviceName"</span>: <span class="string">"docker-253:0-34749673-2c40b0526b6358710fd09e7b8c022429268cc61703b4777e528ac9d469a07ca1"</span>,</div><div class="line">            <span class="string">"DeviceSize"</span>: <span class="string">"107374182400"</span></div><div class="line">        &#125;,</div><div class="line">        <span class="string">"Name"</span>: <span class="string">"devicemapper"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"2c40b0526b6358710fd09e7b8c022429268cc61703b4777e528ac9d469a07ca1"</span>,</div><div class="line">    <span class="string">"Os"</span>: <span class="string">"linux"</span>,</div><div class="line">    <span class="string">"Parent"</span>: <span class="string">"56ba5533a2dbf18b017ed12d99c6c83485f7146ed0eb3a2e9966c27fc5a5dd7b"</span>,</div><div class="line">    <span class="string">"Size"</span>: 0,</div><div class="line">    <span class="string">"VirtualSize"</span>: 241656</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="通过API搜索镜像（类似于docker-search-查询的是docker-hub上的镜像）"><a href="#通过API搜索镜像（类似于docker-search-查询的是docker-hub上的镜像）" class="headerlink" title="通过API搜索镜像（类似于docker search:查询的是docker hub上的镜像）"></a>通过API搜索镜像（类似于docker search:查询的是docker hub上的镜像）</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment">#  curl "http://192.168.253.129:2375/images/search?term=tomcat" | python -mjson.tool</span></div><div class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</div><div class="line">                                 Dload  Upload   Total   Spent    Left  Speed</div><div class="line">100  5130    0  5130    0     0   2513      0 --:--:--  0:00:02 --:--:--  2513</div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        <span class="string">"description"</span>: <span class="string">"Apache Tomcat is an open source implementation of the Java Servlet and JavaServer Pages technologies"</span>,</div><div class="line">        <span class="string">"index_name"</span>: <span class="string">"docker.io"</span>,</div><div class="line">        <span class="string">"is_automated"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"is_official"</span>: <span class="literal">true</span>,</div><div class="line">        <span class="string">"is_trusted"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"name"</span>: <span class="string">"tomcat"</span>,</div><div class="line">        <span class="string">"registry_name"</span>: <span class="string">"docker.io"</span>,</div><div class="line">        <span class="string">"star_count"</span>: 390</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="string">"description"</span>: <span class="string">"Tomcat 7.0.57, 8080, \"admin/admin\""</span>,</div><div class="line">        <span class="string">"index_name"</span>: <span class="string">"docker.io"</span>,</div><div class="line">        <span class="string">"is_automated"</span>: <span class="literal">true</span>,</div><div class="line">        <span class="string">"is_official"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"is_trusted"</span>: <span class="literal">true</span>,</div><div class="line">        <span class="string">"name"</span>: <span class="string">"consol/tomcat-7.0"</span>,</div><div class="line">        <span class="string">"registry_name"</span>: <span class="string">"docker.io"</span>,</div><div class="line">        <span class="string">"star_count"</span>: 14</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        <span class="string">"description"</span>: <span class="string">"Tomcat 8.0.15, 8080, \"admin/admin\""</span>,</div><div class="line">        <span class="string">"index_name"</span>: <span class="string">"docker.io"</span>,</div><div class="line">        <span class="string">"is_automated"</span>: <span class="literal">true</span>,</div><div class="line">        <span class="string">"is_official"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="string">"is_trusted"</span>: <span class="literal">true</span>,</div><div class="line">        <span class="string">"name"</span>: <span class="string">"consol/tomcat-8.0"</span>,</div><div class="line">        <span class="string">"registry_name"</span>: <span class="string">"docker.io"</span>,</div><div class="line">        <span class="string">"star_count"</span>: 12</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
-<h5 id="列出正在运行的容器（docker-ps-和docker-ps-a"><a href="#列出正在运行的容器（docker-ps-和docker-ps-a" class="headerlink" title="列出正在运行的容器（docker ps 和docker ps -a)"></a>列出正在运行的容器（docker ps 和docker ps -a)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment">#</span></div><div class="line">curl <span class="_">-s</span> <span class="string">"http://192.168.253.129:2375/containers/json"</span>| python -mjson.tool(docker ps)</div><div class="line">curl http://192.168.253.129:2375/containers/json?all=1 | python -mjson.tool(docker ps <span class="_">-a</span>)</div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        <span class="string">"Command"</span>: <span class="string">"nginx"</span>,</div><div class="line">        <span class="string">"Created"</span>: 1436573284,</div><div class="line">        <span class="string">"Id"</span>: <span class="string">"e5cac80914cbd41f390b0892324d71505e50ac35485b89374030ec3e65ae470c"</span>,</div><div class="line">        <span class="string">"Image"</span>: <span class="string">"pengji/nginx:latest"</span>,</div><div class="line">        <span class="string">"Labels"</span>: &#123;&#125;,</div><div class="line">        <span class="string">"Names"</span>: [</div><div class="line">            <span class="string">"/website"</span></div><div class="line">        ],</div><div class="line">        <span class="string">"Ports"</span>: [</div><div class="line">            &#123;</div><div class="line">                <span class="string">"IP"</span>: <span class="string">"0.0.0.0"</span>,</div><div class="line">                <span class="string">"PrivatePort"</span>: 80,</div><div class="line">                <span class="string">"PublicPort"</span>: 32768,</div><div class="line">                <span class="string">"Type"</span>: <span class="string">"tcp"</span></div><div class="line">            &#125;</div><div class="line">        ],</div><div class="line">        <span class="string">"Status"</span>: <span class="string">"Up 57 seconds"</span></div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
-<h5 id="创建与启动容器"><a href="#创建与启动容器" class="headerlink" title="创建与启动容器"></a>创建与启动容器</h5><p>创建容器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment">#  curl -X POST -H "Content-Type: application/json""http://192.168.253.129:2375/containers/create"-d '&#123;"Image":"pengji/nginx","Hostname":"remote_nginx"&#125;'</span></div><div class="line">&#123;<span class="string">"Id"</span>:<span class="string">"91784daaf79e87652142f9293dd82ef5716968db5b251ec761566759c0c529c6"</span>,<span class="string">"Warnings"</span>:null&#125;</div></pre></td></tr></table></figure></p>
-<p>启动容器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment">#  curl -X POST -H "Content-Type: application/json""http://192.168.253.129:2375/containers/91784daaf79e87652142f9293dd82ef5716968db5b251ec761566759c0c529c6/start"-d '&#123;"PublishAllPorts":true&#125;'</span></div><div class="line">Usage of loopback devices is strongly discouraged forproduction use. Either use `--storage-opt dm.thinpooldev` or use `--storage-opt dm.no_warn_on_loop_devices=<span class="literal">true</span>` to suppress this warning.</div></pre></td></tr></table></figure></p>
-<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;p&gt;Docker Remote API是一个取代远程命令行界面（rcli）的REST API。我们将使用命令行工具curl来处理url相关操作。
-    
-    </summary>
-    
-      <category term="docker" scheme="http://www.troylc.cc/categories/docker/"/>
-    
-    
-      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
-    
-      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux系列(二)-linux相关系统进程查看及管理</title>
-    <link href="http://www.troylc.cc/linux/2016/07/23/linux-02.html"/>
-    <id>http://www.troylc.cc/linux/2016/07/23/linux-02.html</id>
-    <published>2016-07-23T09:26:15.000Z</published>
-    <updated>2016-07-23T09:26:20.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>接上一篇linux文章，最近一直在学习linux相关的知识，之前也有看过相关对linux系统进程的文章，但一直没有总结和归纳。趁再次学习，把相关的知识记录下来。</p>
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>基于linux系统的相关进程管理命令有：ps、top、kill、</p>
-<h4 id="ps命令："><a href="#ps命令：" class="headerlink" title="ps命令："></a>ps命令：</h4><ul>
-<li><strong>ps aux 查看系统中所有进程，使用BSD操作系统格式</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[root@iZ23kbqqy35Z ~]<span class="comment"># ps aux</span></div><div class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</div><div class="line">root         1  0.0  0.0  19284  1508 ?        Ss    2015   0:01 /sbin/init</div><div class="line">root         2  0.0  0.0      0     0 ?        S     2015   0:00 [kthreadd]</div><div class="line">root         3  0.0  0.0      0     0 ?        S     2015   4:23 [ksoftirqd/0]</div><div class="line">root         5  0.0  0.0      0     0 ?        S&lt;    2015   0:00 [kworker/0:0H]</div><div class="line">root         7  0.0  0.0      0     0 ?        S     2015   0:01 [migration/0]</div><div class="line">root         8  0.0  0.0      0     0 ?        S     2015   0:00 [rcu_bh]</div><div class="line">root         9  0.0  0.0      0     0 ?        S     2015  25:32 [rcu_sched]</div><div class="line">root        10  0.0  0.0      0     0 ?        S     2015   1:59 [watchdog/0]</div><div class="line">root        11  0.0  0.0      0     0 ?        S     2015   1:42 [watchdog/1]</div><div class="line">root        12  0.0  0.0      0     0 ?        S     2015   0:01 [migration/1]</div><div class="line">root        13  0.0  0.0      0     0 ?        S     2015   3:36 [ksoftirqd/1]</div><div class="line">root        15  0.0  0.0      0     0 ?        S&lt;    2015   0:00 [kworker/1:0H]</div><div class="line">root        16  0.0  0.0      0     0 ?        S     2015   1:43 [watchdog/2]</div><div class="line">root        17  0.0  0.0      0     0 ?        S     2015   0:01 [migration/2]</div><div class="line">root        18  0.0  0.0      0     0 ?        S     2015   1:50 [ksoftirqd/2]</div><div class="line">......</div></pre></td></tr></table></figure>
-<p><strong>ps命令的输出格式说明：</strong></p>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th>含意</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> USER</td>
-<td>该进程是由那个用户产生的；</td>
-</tr>
-<tr>
-<td> PID</td>
-<td>进程的ID号</td>
-</tr>
-<tr>
-<td> %CPU</td>
-<td>该进程占用的CPU资源的百分比，占用越高，进程越耗费资源</td>
-</tr>
-<tr>
-<td> %MEM</td>
-<td>该进程占用物理内存的百分比，占用越高，进程越耗费资源</td>
-</tr>
-<tr>
-<td> VSZ</td>
-<td>该进程占用虚拟内存的大小，单位KB</td>
-</tr>
-<tr>
-<td> RSS</td>
-<td>该进程占用实际物理内存的大小，单位KB</td>
-</tr>
-<tr>
-<td> TTY</td>
-<td>该进程是在那个终端中运行的，其中tty1-tty7代表本地控制台终端，tty1-tty6是本地的字符界面终端，tty7是图形终端。 pts/0-255代表虚拟终端</td>
-</tr>
-<tr>
-<td> STAT</td>
-<td>进程状态，常见的状态有：R：运行、S：睡眠、T：停止状态、s:包含子进程、+：位于后台</td>
-</tr>
-<tr>
-<td> START</td>
-<td>该进程的启动时间</td>
-</tr>
-<tr>
-<td> TIME</td>
-<td>该进程占用CPU的运算时间，注意不是系统时间</td>
-</tr>
-<tr>
-<td> COMMAND</td>
-<td>产生此进程的命令名</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><strong>ps -le 查看系统中所有进程，使用linux标准命令格式</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> a</td>
-<td>显示一个终端的所有进程，除了会话引线</td>
-</tr>
-<tr>
-<td> u</td>
-<td>显示进程的归属用户及内存的使用情况</td>
-</tr>
-<tr>
-<td> x</td>
-<td>显示没有控制终端的进程</td>
-</tr>
-<tr>
-<td>-l</td>
-<td>长格式显示，显示更加详细的信息</td>
-</tr>
-<tr>
-<td>-e</td>
-<td>显示所有进程，和-A作用一致</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@iZ23kbqqy35Z ~]<span class="comment"># ps -le</span></div><div class="line">F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD</div><div class="line">4 S     0     1     0  0  80   0 -  4821 poll_s ?        00:00:01 init</div><div class="line">1 S     0     2     0  0  80   0 -     0 kthrea ?        00:00:00 kthreadd</div><div class="line">1 S     0     3     2  0  80   0 -     0 smpboo ?        00:04:23 ksoftirqd/0</div><div class="line">1 S     0     5     2  0  60 -20 -     0 worker ?        00:00:00 kworker/0:0H</div><div class="line">1 S     0     7     2  0 -40   - -     0 smpboo ?        00:00:01 migration/0</div><div class="line">1 S     0     8     2  0  80   0 -     0 rcu_gp ?        00:00:00 rcu_bh</div><div class="line">1 S     0     9     2  0  80   0 -     0 rcu_gp ?        00:25:32 rcu_sched</div><div class="line">5 S     0    10     2  0 -40   - -     0 smpboo ?        00:01:59 watchdog/0</div><div class="line">5 S     0    11     2  0 -40   - -     0 smpboo ?        00:01:42 watchdog/1</div><div class="line">1 S     0    12     2  0 -40   - -     0 smpboo ?        00:00:01 migration/1</div><div class="line">1 S     0    13     2  0  80   0 -     0 smpboo ?        00:03:36 ksoftirqd/1</div><div class="line">1 S     0    15     2  0  60 -20 -     0 worker ?        00:00:00 kworker/1:0H</div><div class="line">......</div></pre></td></tr></table></figure>
-<ul>
-<li><strong>查看进程树：pstree[选项]</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>-p</td>
-<td>显示进程的PID</td>
-</tr>
-<tr>
-<td>-u</td>
-<td>显示进程的所属用户</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[root@iZ23kbqqy35Z ~]<span class="comment"># pstree -p</span></div><div class="line">init(1)─┬─AliHids(9903)─┬─&#123;AliHids&#125;(9904)</div><div class="line">        │               ├─&#123;AliHids&#125;(9905)</div><div class="line">        │               ├─&#123;AliHids&#125;(9907)</div><div class="line">        │               ├─&#123;AliHids&#125;(9908)</div><div class="line">        │               ├─&#123;AliHids&#125;(9909)</div><div class="line">        │               ├─&#123;AliHids&#125;(9911)</div><div class="line">        │               ├─&#123;AliHids&#125;(9912)</div><div class="line">        │               └─&#123;AliHids&#125;(9915)</div><div class="line">        ├─AliYunDun(20201)─┬─&#123;AliYunDun&#125;(20202)</div><div class="line">        │                  ├─&#123;AliYunDun&#125;(20203)</div><div class="line">        │                  ├─&#123;AliYunDun&#125;(20204)</div><div class="line">        │                  ├─&#123;AliYunDun&#125;(20205)</div><div class="line">        │                  ├─&#123;AliYunDun&#125;(20206)</div><div class="line">        │                  ├─&#123;AliYunDun&#125;(20207)</div><div class="line">        │                  ├─&#123;AliYunDun&#125;(20208)</div><div class="line">        │                  └─&#123;AliYunDun&#125;(20209)</div><div class="line">        ├─AliYunDunUpdate(19913)─┬─&#123;AliYunDunUpdat&#125;(19914)</div><div class="line">        │                        ├─&#123;AliYunDunUpdat&#125;(19915)</div><div class="line">        │                        └─&#123;AliYunDunUpdat&#125;(19921)</div><div class="line">        ├─crond(2028)</div><div class="line">        ├─gshelld(2075)─┬─&#123;gshelld&#125;(2082)</div></pre></td></tr></table></figure>
-<h4 id="top命令"><a href="#top命令" class="headerlink" title="top命令"></a>top命令</h4><ul>
-<li><strong>top [选项]</strong></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[root@iZ23kbqqy35Z ~]<span class="comment"># top</span></div><div class="line">top - 18:30:57 up 255 days,  7:28,  1 user,  load average: 0.00, 0.01, 0.05</div><div class="line">Tasks:  87 total,   1 running,  86 sleeping,   0 stopped,   0 zombie</div><div class="line">Cpu(s):  0.0%us,  0.2%sy,  0.0%ni, 99.7%id,  0.0%wa,  0.0%hi,  0.0%si,  0.2%st</div><div class="line">Mem:    377672k total,   322332k used,    55340k free,    32592k buffers</div><div class="line">Swap:   397308k total,    67192k used,   330116k free,    71900k cached</div><div class="line"></div><div class="line">  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                                                                                                          </div><div class="line"> 6902 root      20   0 4372m 338m  12m S  0.3  4.4 135:51.36 java                                                                                                                              </div><div class="line"> 9903 root      20   0  881m  10m 6988 S  0.3  0.1 256:33.01 AliHids                                                                                                                           </div><div class="line">20201 root      20   0 63696 5596 3896 S  0.3  0.1  10:07.02 AliYunDun                                                                                                                         </div><div class="line">23664 root      20   0 15084 1136  848 R  0.3  0.0   0:00.01 top                                                                                                                               </div><div class="line">    1 root      20   0 19284 1508 1228 S  0.0  0.0   0:01.45 init                                                                                                                              </div><div class="line">    2 root      20   0     0    0    0 S  0.0  0.0   0:00.02 kthreadd                                                                                                                          </div><div class="line">    3 root      20   0     0    0    0 S  0.0  0.0   4:23.54 ksoftirqd/0                                                                                                                       </div><div class="line">    5 root       0 -20     0    0    0 S  0.0  0.0   0:00.00 kworker/0:0H                                                                                                                      </div><div class="line">    7 root      RT   0     0    0    0 S  0.0  0.0   0:01.79 migration/0                                                                                                                       </div><div class="line">    8 root      20   0     0    0    0 S  0.0  0.0   0:00.00 rcu_bh                                                                                                                            </div><div class="line">    9 root      20   0     0    0    0 S  0.0  0.0  25:32.77 rcu_sched                                                                                                                         </div><div class="line">   10 root      RT   0     0    0    0 S  0.0  0.0   1:59.69 watchdog/0                                                                                                                        </div><div class="line">   11 root      RT   0     0    0    0 S  0.0  0.0   1:42.38 watchdog/1                                                                                                                        </div><div class="line">   12 root      RT   0     0    0    0 S  0.0  0.0   0:01.76 migration/1</div></pre></td></tr></table></figure>
-<ul>
-<li><strong>第一行：</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> 18: 30 :57</td>
-<td>系统当前时间 </td>
-</tr>
-<tr>
-<td> up 255 days,  7:28</td>
-<td>系统开机到现在经过了多少时间 </td>
-</tr>
-<tr>
-<td>1 users</td>
-<td>当前2用户在线 </td>
-</tr>
-<tr>
-<td>load average: 0.00, 0.01, 0.05</td>
-<td>系统1分钟、5分钟、15分钟的CPU负载信息</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><strong>第二行：</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Tasks</td>
-<td>任务; </td>
-</tr>
-<tr>
-<td>87 total</td>
-<td>很好理解，就是当前有87个任务，也就是87个进程。 </td>
-</tr>
-<tr>
-<td>1 running</td>
-<td>1个进程正在运行 </td>
-</tr>
-<tr>
-<td>86 sleeping</td>
-<td>86个进程睡眠 </td>
-</tr>
-<tr>
-<td>0 stopped</td>
-<td>停止的进程数 </td>
-</tr>
-<tr>
-<td>0 zombie</td>
-<td>僵死的进程数</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><strong>第三行：</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cpu(s)</td>
-<td>表示这一行显示CPU总体信息 </td>
-</tr>
-<tr>
-<td>0.0%us</td>
-<td>用户态进程占用CPU时间百分比，不包含renice值为负的任务占用的CPU的时间。 </td>
-</tr>
-<tr>
-<td>0.7%sy</td>
-<td>内核占用CPU时间百分比 </td>
-</tr>
-<tr>
-<td>0.0%ni</td>
-<td>改变过优先级的进程占用CPU的百分比 </td>
-</tr>
-<tr>
-<td>99.3%id</td>
-<td>空闲CPU时间百分比 </td>
-</tr>
-<tr>
-<td>0.0%wa</td>
-<td>等待I/O的CPU时间百分比 </td>
-</tr>
-<tr>
-<td>0.0%hi</td>
-<td>CPU硬中断时间百分比 </td>
-</tr>
-<tr>
-<td>0.0%si</td>
-<td>CPU软中断时间百分比 </td>
-</tr>
-</tbody>
-</table>
-<p>注：这里显示数据是所有cpu的平均值，如果想看每一个cpu的处理情况，按1即可；折叠，再次按1；</p>
-<ul>
-<li><strong>第四行：</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Men</td>
-<td>内存的意思 </td>
-</tr>
-<tr>
-<td>8175320kk total</td>
-<td>物理内存总量 </td>
-</tr>
-<tr>
-<td>8058868k used</td>
-<td>使用的物理内存量 </td>
-</tr>
-<tr>
-<td>116452k free</td>
-<td>空闲的物理内存量 </td>
-</tr>
-<tr>
-<td>283084k buffers</td>
-<td>用作内核缓存的物理内存量</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><strong>第五行：</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Swap</td>
-<td>交换空间 </td>
-</tr>
-<tr>
-<td>6881272k total</td>
-<td>交换区总量 </td>
-</tr>
-<tr>
-<td>4010444k used</td>
-<td>使用的交换区量 </td>
-</tr>
-<tr>
-<td>2870828k free</td>
-<td>空闲的交换区量 </td>
-</tr>
-<tr>
-<td>4336992k cached</td>
-<td>缓冲交换区总量</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><strong>第六行：进程信息</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PID</td>
-<td>进程的ID </td>
-</tr>
-<tr>
-<td>USER</td>
-<td>进程所有者 </td>
-</tr>
-<tr>
-<td>PR</td>
-<td>进程的优先级别，越小越优先被执行 </td>
-</tr>
-<tr>
-<td>NInice</td>
-<td>值 </td>
-</tr>
-<tr>
-<td>VIRT</td>
-<td>进程占用的虚拟内存 </td>
-</tr>
-<tr>
-<td>RES</td>
-<td>进程占用的物理内存 </td>
-</tr>
-<tr>
-<td>SHR</td>
-<td>进程使用的共享内存 </td>
-</tr>
-<tr>
-<td>S</td>
-<td>进程的状态。S表示休眠，R表示正在运行，Z表示僵死状态，N表示该进程优先值为负数 </td>
-</tr>
-<tr>
-<td>%CPU</td>
-<td>进程占用CPU的使用率 </td>
-</tr>
-<tr>
-<td>%MEM</td>
-<td>进程使用的物理内存和总内存的百分比 </td>
-</tr>
-<tr>
-<td>TIME+</td>
-<td>该进程启动后占用的总的CPU时间，即占用CPU使用时间的累加值。 </td>
-</tr>
-<tr>
-<td>COMMAND</td>
-<td>进程启动命令名称</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><strong>top命令交互操作指令</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th>含意  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>q</td>
-<td>退出top命令</td>
-</tr>
-<tr>
-<td><space></space></td>
-<td>立即刷新</td>
-</tr>
-<tr>
-<td>s</td>
-<td>设置刷新时间间隔</td>
-</tr>
-<tr>
-<td>c</td>
-<td>显示命令完全模式</td>
-</tr>
-<tr>
-<td>t:</td>
-<td>显示或隐藏进程和CPU状态信息</td>
-</tr>
-<tr>
-<td>m</td>
-<td>显示或隐藏内存状态信息</td>
-</tr>
-<tr>
-<td>l</td>
-<td>显示或隐藏uptime信息</td>
-</tr>
-<tr>
-<td>f</td>
-<td>增加或减少进程显示标志</td>
-</tr>
-<tr>
-<td>S</td>
-<td>累计模式，会把已完成或退出的子进程占用的CPU时间累计到父进程的MITE+</td>
-</tr>
-<tr>
-<td>P</td>
-<td>按%CPU使用率排行</td>
-</tr>
-<tr>
-<td>T</td>
-<td>按MITE+排行</td>
-</tr>
-<tr>
-<td>M</td>
-<td>按%MEM排行</td>
-</tr>
-<tr>
-<td>u</td>
-<td>指定显示用户进程</td>
-</tr>
-<tr>
-<td>r</td>
-<td>修改进程renice值</td>
-</tr>
-<tr>
-<td>k</td>
-<td>kill进程</td>
-</tr>
-<tr>
-<td>i</td>
-<td>只显示正在运行的进程</td>
-</tr>
-<tr>
-<td>W</td>
-<td>保存对top的设置到文件~/.toprc，下次启动将自动调用toprc文件的设置。</td>
-</tr>
-<tr>
-<td>h</td>
-<td>帮助命令。</td>
-</tr>
-<tr>
-<td>q</td>
-<td>退出</td>
-</tr>
-</tbody>
-</table>
-<p><strong>注：</strong>强调一下，使用频率最高的是P、T、M，因为通常使用top，我们就想看看是哪些进程最耗cpu资源、占用的内存最多；<br>注：通过”shift + &gt;”或”shift + &lt;”可以向右或左改变排序列<br>如果只需要查看内存：可用free命令。只查看uptime信息（第一行），可用uptime命令；</p>
-<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="http://jingyan.baidu.com/article/4d58d5412917cb9dd4e9c0ed.html" title="没创新" target="_blank" rel="external">linux怎样使用top命令查看系统状态</a></p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;p&gt;接上一篇linux文章，最近一直在学习linux相关的知识，之前也有看过相关对linux系统进程的文章，但一直没有总结和归纳。趁再次学习，把
-    
-    </summary>
-    
-      <category term="linux" scheme="http://www.troylc.cc/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
-    
-      <category term="shell" scheme="http://www.troylc.cc/tags/shell/"/>
     
   </entry>
   

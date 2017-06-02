@@ -4,6 +4,54 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
+    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>linux系列(三)-rancher容器平台管理-环境构建与配置</title>
+        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>rancher</tag>
+         
+         
+           
+             
+              <breadCrumb title="rancher" url="http://www.troylc.cc/categories/rancher/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
+    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>linux系列(三)-linux在线调整分区大小-centos7</title>
+        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>shell</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="http://www.troylc.cc/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/docker-swarm/2017/05/16/docker-swarm-firewalld.html</loc>
     <lastmod>2017-05-16T02:20:44.000Z</lastmod>
     <data>
