@@ -4,25 +4,51 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
-    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
+    <loc>http://www.troylc.cc/macOs/2017/06/11/macos-01.html</loc>
+    <lastmod>2017-06-11T09:26:20.000Z</lastmod>
     <data>
         <display>
-        <title>RANCHER容器平台管理(一)-环境构建与配置</title>
-        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
+        <title>macOs终端工具优化iTerm2+oh my zsh</title>
+        <pubTime>2017-06-11T09:26:15.000Z</pubTime>
         
         <tag>linux</tag>
          
-        <tag>docker</tag>
+        <tag>macOs</tag>
          
-        <tag>swarm</tag>
+        <tag>git</tag>
          
-        <tag>rancher</tag>
+        <tag>zsh</tag>
          
          
            
              
-              <breadCrumb title="rancher" url="http://www.troylc.cc/categories/rancher/"/>
+              <breadCrumb title="macOs" url="http://www.troylc.cc/categories/macOs/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.troylc.cc/macOs/2017/06/11/macos-02.html</loc>
+    <lastmod>2017-06-11T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>macOs环境下搭建hexo静态博客</title>
+        <pubTime>2017-06-11T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>hexo</tag>
+         
+        <tag>macOs</tag>
+         
+        <tag>git</tag>
+         
+         
+           
+             
+              <breadCrumb title="macOs" url="http://www.troylc.cc/categories/macOs/"/>
           
         </display>
     </data>
@@ -45,6 +71,32 @@
            
              
               <breadCrumb title="linux" url="http://www.troylc.cc/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
+    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>RANCHER容器平台管理(一)-环境构建与配置</title>
+        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>rancher</tag>
+         
+         
+           
+             
+              <breadCrumb title="rancher" url="http://www.troylc.cc/categories/rancher/"/>
           
         </display>
     </data>
@@ -612,7 +664,6 @@
     </url>
 
     
-    
   <url>
     <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
@@ -634,6 +685,7 @@
     </data>
     </url>
 
+    
     
   <url>
     <loc>http://www.troylc.cc/docker/2016/07/17/docker-01.html</loc>
@@ -706,12 +758,12 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/hexo/2016/06/16/Hexo-4.html</loc>
+    <loc>http://www.troylc.cc/hexo/2016/06/15/Hexo-3.html</loc>
     <lastmod>2016-06-23T05:09:23.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo教程(四)-hexo博客被搜索引擎收录</title>
-        <pubTime>2016-06-16T14:09:23.000Z</pubTime>
+        <title>Hexo教程(三)-hexo博客同时托管到github和coding</title>
+        <pubTime>2016-06-15T14:09:23.000Z</pubTime>
         
         <tag>hexo</tag>
          
@@ -728,12 +780,12 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/hexo/2016/06/15/Hexo-3.html</loc>
+    <loc>http://www.troylc.cc/hexo/2016/06/16/Hexo-4.html</loc>
     <lastmod>2016-06-23T05:09:23.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo教程(三)-hexo博客同时托管到github和coding</title>
-        <pubTime>2016-06-15T14:09:23.000Z</pubTime>
+        <title>Hexo教程(四)-hexo博客被搜索引擎收录</title>
+        <pubTime>2016-06-16T14:09:23.000Z</pubTime>
         
         <tag>hexo</tag>
          
