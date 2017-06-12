@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/macOs/2017/06/12/macos-02.html</loc>
+    <lastmod>2017-06-12T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>macOs环境下搭建hexo静态博客</title>
+        <pubTime>2017-06-12T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>hexo</tag>
+         
+        <tag>macOs</tag>
+         
+        <tag>git</tag>
+         
+         
+           
+             
+              <breadCrumb title="macOs" url="http://www.troylc.cc/categories/macOs/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/macOs/2017/06/11/macos-01.html</loc>
     <lastmod>2017-06-11T09:26:20.000Z</lastmod>
     <data>
@@ -18,32 +44,6 @@
         <tag>git</tag>
          
         <tag>zsh</tag>
-         
-         
-           
-             
-              <breadCrumb title="macOs" url="http://www.troylc.cc/categories/macOs/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.troylc.cc/macOs/2017/06/11/macos-02.html</loc>
-    <lastmod>2017-06-11T09:26:20.000Z</lastmod>
-    <data>
-        <display>
-        <title>macOs环境下搭建hexo静态博客</title>
-        <pubTime>2017-06-11T09:26:15.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>hexo</tag>
-         
-        <tag>macOs</tag>
-         
-        <tag>git</tag>
          
          
            
