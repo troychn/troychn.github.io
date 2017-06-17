@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/IntelliJ-IDEA/2017/06/16/idea-01.html</loc>
+    <lastmod>2017-06-12T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>IntelliJ IDEA For Mac 快捷键</title>
+        <pubTime>2017-06-16T09:26:15.000Z</pubTime>
+        
+        <tag>macOs</tag>
+         
+        <tag>IntelliJ IDEA</tag>
+         
+         
+           
+             
+              <breadCrumb title="IntelliJ IDEA" url="http://www.troylc.cc/categories/IntelliJ-IDEA/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/macOs/2017/06/12/macos-02.html</loc>
     <lastmod>2017-06-12T09:26:20.000Z</lastmod>
     <data>
@@ -56,28 +78,6 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
-    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
-    <data>
-        <display>
-        <title>linux系列(三)-linux在线调整分区大小-centos7</title>
-        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>shell</tag>
-         
-         
-           
-             
-              <breadCrumb title="linux" url="http://www.troylc.cc/categories/linux/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
     <lastmod>2017-06-02T09:26:20.000Z</lastmod>
     <data>
@@ -97,6 +97,28 @@
            
              
               <breadCrumb title="rancher" url="http://www.troylc.cc/categories/rancher/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
+    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>linux系列(三)-linux在线调整分区大小-centos7</title>
+        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>shell</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="http://www.troylc.cc/categories/linux/"/>
           
         </display>
     </data>
@@ -664,7 +686,6 @@
     </url>
 
     
-    
   <url>
     <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
@@ -686,6 +707,7 @@
     </data>
     </url>
 
+    
     
   <url>
     <loc>http://www.troylc.cc/docker/2016/07/17/docker-01.html</loc>
@@ -758,12 +780,12 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/hexo/2016/06/16/Hexo-4.html</loc>
+    <loc>http://www.troylc.cc/hexo/2016/06/15/Hexo-3.html</loc>
     <lastmod>2016-06-23T05:09:23.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo教程(四)-hexo博客被搜索引擎收录</title>
-        <pubTime>2016-06-16T14:09:23.000Z</pubTime>
+        <title>Hexo教程(三)-hexo博客同时托管到github和coding</title>
+        <pubTime>2016-06-15T14:09:23.000Z</pubTime>
         
         <tag>hexo</tag>
          
@@ -780,12 +802,12 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/hexo/2016/06/15/Hexo-3.html</loc>
+    <loc>http://www.troylc.cc/hexo/2016/06/16/Hexo-4.html</loc>
     <lastmod>2016-06-23T05:09:23.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo教程(三)-hexo博客同时托管到github和coding</title>
-        <pubTime>2016-06-15T14:09:23.000Z</pubTime>
+        <title>Hexo教程(四)-hexo博客被搜索引擎收录</title>
+        <pubTime>2016-06-16T14:09:23.000Z</pubTime>
         
         <tag>hexo</tag>
          
