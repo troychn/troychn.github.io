@@ -6,10 +6,7 @@
     <entry>
       <title><![CDATA[IntelliJ IDEA For Mac 快捷键]]></title>
       <url>http://www.troylc.cc/IntelliJ-IDEA/2017/06/17/idea-01.html</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>建议将 Mac 系统中与 IntelliJ IDEA 冲突的快捷键取消或更改，不建议改 IntelliJ IDEA 的默认快捷键。本文参考以下内容摘记下来，方便自己记忆。</p>
-</blockquote>
-<p><strong>参考地址：</strong><br><a href="https://github.com/judasn/IntelliJ-IDEA-Tutorial" target="_blank" rel="external">IntelliJ IDEA 简体中文专题教程</a><br><a href="https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf" target="_blank" rel="external">IntelliJ IDEA 官方快捷键说明</a></p>
+      <content type="html"><![CDATA[<p>建议将 Mac 系统中与 IntelliJ IDEA 冲突的快捷键取消或更改，不建议改 IntelliJ IDEA 的默认快捷键。本文参考以下内容摘记下来，方便自己记忆。<br><strong>参考地址：</strong><br><a href="https://github.com/judasn/IntelliJ-IDEA-Tutorial" target="_blank" rel="external">IntelliJ IDEA 简体中文专题教程</a><br><a href="https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf" target="_blank" rel="external">IntelliJ IDEA 官方快捷键说明</a></p>
 <h4 id="Mac键盘符号和修饰键说明"><a href="#Mac键盘符号和修饰键说明" class="headerlink" title="Mac键盘符号和修饰键说明"></a>Mac键盘符号和修饰键说明</h4><ul>
 <li><code>⌘</code> Command</li>
 <li><code>⇧</code> Shift</li>
