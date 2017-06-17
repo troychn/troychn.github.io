@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-06-12T09:26:20.000Z</updated>
+  <updated>2017-06-17T09:26:20.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -17,15 +17,15 @@
   
   <entry>
     <title>IntelliJ IDEA For Mac 快捷键</title>
-    <link href="http://www.troylc.cc/IntelliJ-IDEA/2017/06/16/idea-01.html"/>
-    <id>http://www.troylc.cc/IntelliJ-IDEA/2017/06/16/idea-01.html</id>
-    <published>2017-06-16T09:26:15.000Z</published>
-    <updated>2017-06-12T09:26:20.000Z</updated>
+    <link href="http://www.troylc.cc/IntelliJ-IDEA/2017/06/17/idea-01.html"/>
+    <id>http://www.troylc.cc/IntelliJ-IDEA/2017/06/17/idea-01.html</id>
+    <published>2017-06-17T09:26:15.000Z</published>
+    <updated>2017-06-17T09:26:20.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>建议将 Mac 系统中与 IntelliJ IDEA 冲突的快捷键取消或更改，不建议改 IntelliJ IDEA 的默认快捷键。本文参考以下内容摘记下来，方便自己记忆。</p>
 </blockquote>
-<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="https://github.com/judasn/IntelliJ-IDEA-Tutorial" target="_blank" rel="external">IntelliJ IDEA 简体中文专题教程</a><br><a href="https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf" target="_blank" rel="external">IntelliJ IDEA 官方快捷键说明</a></p>
+<p><strong>参考地址：</strong><br><a href="https://github.com/judasn/IntelliJ-IDEA-Tutorial" target="_blank" rel="external">IntelliJ IDEA 简体中文专题教程</a><br><a href="https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf" target="_blank" rel="external">IntelliJ IDEA 官方快捷键说明</a></p>
 <h4 id="Mac键盘符号和修饰键说明"><a href="#Mac键盘符号和修饰键说明" class="headerlink" title="Mac键盘符号和修饰键说明"></a>Mac键盘符号和修饰键说明</h4><ul>
 <li><code>⌘</code> Command</li>
 <li><code>⇧</code> Shift</li>
@@ -204,7 +204,7 @@
       &lt;blockquote&gt;
 &lt;p&gt;建议将 Mac 系统中与 IntelliJ IDEA 冲突的快捷键取消或更改，不建议改 IntelliJ IDEA 的默认快捷键。本文参考以下内容摘记下来，方便自己记忆。&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h3 id=&quot;参考：&quot;&gt;&lt;a href
+&lt;p&gt;&lt;strong&gt;参考地址：&lt;/st
     
     </summary>
     
@@ -213,7 +213,7 @@
     
       <category term="macOs" scheme="http://www.troylc.cc/tags/macOs/"/>
     
-      <category term="IntelliJ IDEA" scheme="http://www.troylc.cc/tags/IntelliJ-IDEA/"/>
+      <category term="IntelliJIDEA" scheme="http://www.troylc.cc/tags/IntelliJIDEA/"/>
     
   </entry>
   
