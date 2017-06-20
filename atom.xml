@@ -105,6 +105,8 @@
     
       <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
     
+      <category term="registry" scheme="http://www.troylc.cc/tags/registry/"/>
+    
       <category term="docker-compose" scheme="http://www.troylc.cc/tags/docker-compose/"/>
     
   </entry>
