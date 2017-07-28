@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.troylc.cc/docker/2017/07/28/dockerfile-alpine-tz-curl.html</loc>
+    
+    <lastmod>2017-07-28T09:26:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/docker/2017/06/20/docker-registry-web.html</loc>
     
     <lastmod>2017-06-20T09:26:20.000Z</lastmod>
@@ -30,14 +37,14 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
+    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
     
     <lastmod>2017-06-02T09:26:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
+    <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
     
     <lastmod>2017-06-02T09:26:20.000Z</lastmod>
     
@@ -198,13 +205,6 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/search/index.html</loc>
-    
-    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.troylc.cc/tags/index.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
@@ -233,6 +233,13 @@
   </url>
   
   <url>
+    <loc>http://www.troylc.cc/search/index.html</loc>
+    
+    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/docker/2016/08/07/docker-03.html</loc>
     
     <lastmod>2016-08-07T12:33:06.000Z</lastmod>
@@ -247,14 +254,14 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
+    <loc>http://www.troylc.cc/about/index.html</loc>
     
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/about/index.html</loc>
+    <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
     

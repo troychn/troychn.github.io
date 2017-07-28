@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-06-20T09:26:20.000Z</updated>
+  <updated>2017-07-28T09:26:20.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -14,6 +14,40 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Dockerfile制作openjdk-8u131-jdk-alpine带有时区与curl的基础镜像</title>
+    <link href="http://www.troylc.cc/docker/2017/07/28/dockerfile-alpine-tz-curl.html"/>
+    <id>http://www.troylc.cc/docker/2017/07/28/dockerfile-alpine-tz-curl.html</id>
+    <published>2017-07-28T09:26:15.000Z</published>
+    <updated>2017-07-28T09:26:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="下载openjdk-8u131-jdk-alpine基础镜像"><a href="#下载openjdk-8u131-jdk-alpine基础镜像" class="headerlink" title="下载openjdk:8u131-jdk-alpine基础镜像"></a>下载openjdk:8u131-jdk-alpine基础镜像</h2><p>从dockerhub上下载openjdk:8u131-jdk-alpine本身是一个轻量级的操作系统，只带有jre，不带任何jre外的软件，如果想增加其它软件就需要我们自己在此基础上再构建自己想的基础镜像。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@registry-jenkins ~]<span class="comment"># docker images</span></div><div class="line">REPOSITORY                      TAG                    IMAGE ID            CREATED             SIZE</div><div class="line">openjdk-8-time                  latest                 ab859b2c2910        14 hours ago        107.8 MB</div><div class="line">nginx                           1.13.3-alpine          ba60b24dbad5        2 weeks ago         15.51 MB</div><div class="line">openjdk                         8u131-jdk-alpine       478bf389b75b        4 weeks ago         101 MB</div></pre></td></tr></table></figure>
+<p>本次在openjdk:8u131-jdk-alpine基础上增加时区文件和CURL、TREE等工具。</p>
+<hr>
+<h2 id="编写Dockerfile文件，并构建alpine基础镜像"><a href="#编写Dockerfile文件，并构建alpine基础镜像" class="headerlink" title="编写Dockerfile文件，并构建alpine基础镜像"></a>编写Dockerfile文件，并构建alpine基础镜像</h2><p>由于docker构建的时候要到alpine官网上下载软件，因我的构建服务器不能上外网，所在在构建的时候特殊增加http_proxy代理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">[root@registry-jenkins ~]# vim Dockerfile</div><div class="line">FROM openjdk:8u131-jdk-alpine</div><div class="line"># MAINTAINER指令允许你给将要制作的镜像设置作者信息</div><div class="line">MAINTAINER iucheng &lt;liu_cheng@topsec.com.cn&gt;</div><div class="line"></div><div class="line">#ADD cacerts /etc/ssl/certs/java/cacerts</div><div class="line"></div><div class="line">ARG http_proxy</div><div class="line"></div><div class="line">ENV http_proxy=$&#123;http_proxy&#125;</div><div class="line">ENV https_proxy=$&#123;http_proxy&#125;</div><div class="line"></div><div class="line"># 设置时区 中国的时区有多种表述 分别为: UTC+8:00 GMT+8 # 写/etc/TZ, 不要设置TZ环境变量 ENV TZ UTC+8:00</div><div class="line">RUN  apk update \</div><div class="line">    &amp;&amp; apk add --no-cache \</div><div class="line">    &amp;&amp; apk add curl bash tree tzdata &amp;&amp; \</div><div class="line">    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &amp;&amp; \</div><div class="line">    echo &quot;Asia/Shanghai&quot; &gt; /etc/timezone</div><div class="line"></div><div class="line">ENV http_proxy=</div><div class="line">ENV https_proxy=</div><div class="line"></div><div class="line">[root@registry-jenkins ~]# docker build --build-arg http_proxy=http://192.168.72.188:808 -t openjdk:8u131-jdk-tz-curl-alpine .</div><div class="line">Sending build context to Docker daemon 49.15 kB</div><div class="line">Step 1 : FROM openjdk:8u131-jdk-alpine</div><div class="line"> ---&gt; 478bf389b75b</div><div class="line">Step 2 : MAINTAINER iucheng &lt;liu_cheng@topsec.com.cn&gt;</div><div class="line"> ---&gt; Using cache</div><div class="line"> ---&gt; 0fe3b8ac71b7</div><div class="line">Step 3 : ARG http_proxy</div><div class="line"> ---&gt; Running in 2069da05a659</div><div class="line"> ---&gt; 74c725e41083</div><div class="line">Removing intermediate container 2069da05a659</div><div class="line">Step 4 : ENV http_proxy $&#123;http_proxy&#125;</div><div class="line"> ---&gt; Running in ac0bf48d4b6c</div><div class="line"> ---&gt; 8c058688cfa8</div><div class="line">Removing intermediate container ac0bf48d4b6c</div><div class="line">Step 5 : ENV https_proxy $&#123;http_proxy&#125;</div><div class="line"> ---&gt; Running in 55e645b7c4b8</div><div class="line"> ---&gt; df34875db960</div><div class="line">Removing intermediate container 55e645b7c4b8</div><div class="line">Step 6 : RUN apk update     &amp;&amp; apk add --no-cache     &amp;&amp; apk add curl bash tree tzdata &amp;&amp;     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &amp;&amp;     echo &quot;Asia/Shanghai&quot; &gt; /etc/timezone</div><div class="line"> ---&gt; Running in 387ca24a223a</div><div class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/main/x86_64/APKINDEX.tar.gz</div><div class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/community/x86_64/APKINDEX.tar.gz</div><div class="line">v3.6.2-40-gf1c202674f [http://dl-cdn.alpinelinux.org/alpine/v3.6/main]</div><div class="line">v3.6.2-32-g6f53cfcccd [http://dl-cdn.alpinelinux.org/alpine/v3.6/community]</div><div class="line">OK: 8436 distinct packages available</div><div class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/main/x86_64/APKINDEX.tar.gz</div><div class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/community/x86_64/APKINDEX.tar.gz</div><div class="line">OK: 99 MiB in 51 packages</div><div class="line">(1/10) Installing ncurses-terminfo-base (6.0-r7)</div><div class="line">(2/10) Installing ncurses-terminfo (6.0-r7)</div><div class="line">(3/10) Installing ncurses-libs (6.0-r7)</div><div class="line">(4/10) Installing readline (6.3.008-r5)</div><div class="line">(5/10) Installing bash (4.3.48-r1)</div><div class="line">Executing bash-4.3.48-r1.post-install</div><div class="line">(6/10) Installing libssh2 (1.8.0-r1)</div><div class="line">(7/10) Installing libcurl (7.54.0-r0)</div><div class="line">(8/10) Installing curl (7.54.0-r0)</div><div class="line">(9/10) Installing tree (1.7.0-r0)</div><div class="line">(10/10) Installing tzdata (2017a-r0)</div><div class="line">Executing busybox-1.26.2-r5.trigger</div><div class="line">OK: 111 MiB in 61 packages</div><div class="line"> ---&gt; d2ed313ab5f3</div><div class="line">Removing intermediate container 387ca24a223a</div><div class="line">Step 7 : ENV http_proxy</div><div class="line"> ---&gt; Running in 104af5cd52df</div><div class="line"> ---&gt; 7c2f38e0d8fd</div><div class="line">Removing intermediate container 104af5cd52df</div><div class="line">Step 8 : ENV https_proxy</div><div class="line"> ---&gt; Running in d93dd0df2c4a</div><div class="line"> ---&gt; 4ad2436778d3</div><div class="line">Removing intermediate container d93dd0df2c4a</div><div class="line">Successfully built 4ad2436778d3</div></pre></td></tr></table></figure>
+<p>构建命中中增加了<code>--build-arg http_proxy=http://192.168.72.188:808</code>，主要是为了构建过程中通过代理上外网，从外网下载所需的软件。</p>
+<h2 id="验证构建的镜像是否成功"><a href="#验证构建的镜像是否成功" class="headerlink" title="验证构建的镜像是否成功"></a>验证构建的镜像是否成功</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">root@registry-jenkins ~]# docker run -it --rm --name jdk-test openjdk:8u131-jdk-tz-curl-alpine /bin/bash</div><div class="line">bash-4.3# date</div><div class="line">Fri Jul 28 09:44:59 CST 2017</div><div class="line">bash-4.3# curl</div><div class="line">curl: try &apos;curl --help&apos; or &apos;curl --manual&apos; for more information</div><div class="line">bash-4.3# exit</div><div class="line">exit</div><div class="line">[root@registry-jenkins ~]#</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;下载openjdk-8u131-jdk-alpine基础镜像&quot;&gt;&lt;a href=&quot;#下载openjdk-8u131-jdk-alpine基础镜像&quot; class=&quot;headerlink&quot; title=&quot;下载openjdk:8u131-jdk-alpine基础镜像&quot;&gt;
+    
+    </summary>
+    
+      <category term="docker" scheme="http://www.troylc.cc/categories/docker/"/>
+    
+    
+      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
+    
+      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
+    
+      <category term="Dockerfile" scheme="http://www.troylc.cc/tags/Dockerfile/"/>
+    
+  </entry>
   
   <entry>
     <title>docker-registry私有仓库及web ui镜像管理</title>
@@ -2036,56 +2070,6 @@
       <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
     
       <category term="swarm" scheme="http://www.troylc.cc/tags/swarm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>jenkins-registry持续集成-jenkins管理与registry集成打包上传镜像(二)</title>
-    <link href="http://www.troylc.cc/docker/2017/02/01/Docker06registry-jenkins.html"/>
-    <id>http://www.troylc.cc/docker/2017/02/01/Docker06registry-jenkins.html</id>
-    <published>2017-02-01T11:19:41.000Z</published>
-    <updated>2017-02-07T02:04:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>通过上一篇 <a href="http://www.troylc.cc/docker/2017/01/08/Docker05registry-jenkins.html">jenkins-registry持续集成-jenkins-registry安装与数据迁移(一)</a>，已经把jenkins和registry的环境准备好了。接下来可以通过jenkins来操作怎么做到从版本库中的代码下载-&gt;编译-&gt;打包docker镜像-&gt;上传到docker-registry私有仓库，然后就可以在其它有docker的环境中直接pull打包好的docker镜像。</p>
-<h3 id="初始化jenkins及安装插件"><a href="#初始化jenkins及安装插件" class="headerlink" title="初始化jenkins及安装插件"></a>初始化jenkins及安装插件</h3><p>启动完jenkins后通过浏览器输入地址<a href="http://部署jenkins主机IP:端口" target="_blank" rel="external">http://部署jenkins主机IP:端口</a><br><img src="/images/docker/jenkins/jenkins2-1.png" alt="jenkins初始化界面2-1"><br>根据提示从输入administrator password 或者可以通过启动日志查看这个password 如：<br><img src="/images/docker/jenkins/jenkins2-2.png" alt="jenkins初始化界面2-2"><br>选择安装插件方式，这里我是默认第一个<br><img src="/images/docker/jenkins/jenkins2-3.png" alt="jenkins初始化界面2-3"><br>进入插件安装界面，连网等待插件安装<br><img src="/images/docker/jenkins/jenkins2-4.png" alt="jenkins初始化界面2-4"><br>安装完插件后，进入创建管理员界面<br><img src="/images/docker/jenkins/jenkins2-5.png" alt="jenkins初始化界面2-5"><br>输入完管理员账号后，点击continue as admin 进入管理界面点击系统管理-插件管理中安装docker构建插件和角色管理插件<br><img src="/images/docker/jenkins/jenkins2-6.png" alt="jenkins初始化界面2-6"><br>安装docker构建插件，在可选插件中查找docker build step plugin<br><img src="/images/docker/jenkins/jenkins2-7.png" alt="jenkins初始化界面2-7"><br>安装角色管理插件，在可选插件中查找Role-based Authorization Strategy<br><img src="/images/docker/jenkins/jenkins2-8.png" alt="jenkins初始化界面2-8"> </p>
-<p>如果在初始化过程中，有些jenkins推荐的插件安装失败，也可以在可选插件中查找再次安装，选择好要安装的插件后，可以选择直接安装和下载后重启安装，我这里下载后重启安装，重启安装完后，之前出现的安装失败的提示就没有了。</p>
-<h3 id="配置jenkins相关权限及属性"><a href="#配置jenkins相关权限及属性" class="headerlink" title="配置jenkins相关权限及属性"></a>配置jenkins相关权限及属性</h3><h4 id="配置maven安装路径和docker-remote-API接口地址"><a href="#配置maven安装路径和docker-remote-API接口地址" class="headerlink" title="配置maven安装路径和docker remote API接口地址"></a>配置maven安装路径和docker remote API接口地址</h4><p>点击系统管理-&gt;Global Tool Configuration-&gt;找到maven点击新增按钮<br><img src="/images/docker/jenkins/jenkins2-9.png" alt="配置jenkins相关权限及属性2-9"><br>点击系统管理-&gt;系统配置-&gt;找到docker builder-&gt;在Docker URL栏中输入docker远程访问的地址，如：<br><img src="/images/docker/jenkins/jenkins2-10.png" alt="配置jenkins相关权限及属性2-10"><br>设置docker主机可以被远程访问，<a href="http://www.troylc.cc/docker/2016/07/31/docker-02.html">请参考：docker系列(二)使用Docker-Remote-API</a></p>
-<h4 id="配置用户角色及权限"><a href="#配置用户角色及权限" class="headerlink" title="配置用户角色及权限"></a>配置用户角色及权限</h4><ol>
-<li><p>选择系统管理-&gt;Configuration Global Security-&gt;进入选择启用安全：<br>TCP port for JNLP agents -&gt;禁用，访问控制-安全域-&gt;jenkins专有用户数据库，访问控制-授权策略-&gt;Role-Based Strategy 如：<br><img src="/images/docker/jenkins/jenkins2-11.png" alt="配置jenkins相关权限及属性2-11">   </p>
-</li>
-<li><p>选择系统管理-&gt;Manage and Assign Roles-&gt;Manage Roles：  </p>
-</li>
-</ol>
-<ul>
-<li>添加Global Roles(admin、member、ops、others)，<br>设置全局角色（全局角色可以对jenkins系统进行设置与项目的操作）<br>admin:对整个jenkins都可以进行操作<br>ops:可以对所有的job进行管理<br>other/member:只有读的权限   </li>
-<li>添加project Roles(dmp-manager、dmp-view、tsc-manager、tsc-view)并且给添加的角色分配如下权限<br><img src="/images/docker/jenkins/jenkins2-12.png" alt="配置jenkins相关权限及属性2-12"><br><strong>- 注意</strong>：在添加project Roles时，如果想让不同的用户看到不同的job,必须设置Pattern,如上dmp_manager角色就只能查看以dmp开头的job,Pattern规则必须是“dmp.<em>”，注意是以“.</em>”结尾的匹配规则，tsc亦是如此。</li>
-</ul>
-<ol>
-<li><p>选择系统管理-&gt;管理用户:新建几个管理员用户如：dmpadmin、tscadmin<br><img src="/images/docker/jenkins/jenkins2-13.png" alt="配置jenkins相关权限及属性2-13"> </p>
-</li>
-<li><p>选择系统管理-&gt;Manage and Assign Roles-&gt;Assign Relos:把第三步的用户加到user/group中并授于对应的角色权限 如：<br><img src="/images/docker/jenkins/jenkins2-14.png" alt="配置jenkins相关权限及属性2-14"> </p>
-</li>
-</ol>
-<h3 id="创建-编译-打包-上传docker镜像任务"><a href="#创建-编译-打包-上传docker镜像任务" class="headerlink" title="创建-编译-打包-上传docker镜像任务"></a>创建-编译-打包-上传docker镜像任务</h3><p>进入主界面-&gt;新建-&gt;输入job名称-&gt;选择构建一个maven项目-&gt;点击OK-&gt;进入项目配置如下图：<br><img src="/images/docker/jenkins/jenkins2-15.png" alt="jenkins创建-编译-打包-上传2-15"><br>点击保存-&gt;选择立即构建-&gt;jenkins进入构建流量-&gt;build histroy中的时间，可以查看构建过程及错误信息，如果构建一次不成功可以通过日志查看错误原因，来调整job的配置内容。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://www.jianshu.com/p/7e148bcfb96e" target="_blank" rel="external">Jenkins使用教程之用户权限管理（包含插件的安装）</a><br><a href="http://shaofan.org/docker-jenkins/" target="_blank" rel="external">Docker学习笔记：Java、Maven、Jenkins Docker插件持续集成简单部署</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;通过上一篇 &lt;a href=&quot;http://www.troylc.cc/docker/2017/01/08/Docker05registry-jenkins.html&quot;&gt;jenkins-registry持续集成-jenkins-registry安装与数据迁移(一)&lt;/a&gt;，
-    
-    </summary>
-    
-      <category term="docker" scheme="http://www.troylc.cc/categories/docker/"/>
-    
-    
-      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
-    
-      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
-    
-      <category term="jenkins" scheme="http://www.troylc.cc/tags/jenkins/"/>
-    
-      <category term="registry" scheme="http://www.troylc.cc/tags/registry/"/>
     
   </entry>
   
