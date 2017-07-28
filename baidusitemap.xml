@@ -8,7 +8,7 @@
     <lastmod>2017-07-28T09:26:20.000Z</lastmod>
     <data>
         <display>
-        <title>Dockerfile制作openjdk-8u131-jdk-alpine带有时区与curl的基础镜像</title>
+        <title>Dockerfile制作openjdk-8u131-jdk-alpine基础镜像</title>
         <pubTime>2017-07-28T09:26:15.000Z</pubTime>
         
         <tag>linux</tag>
