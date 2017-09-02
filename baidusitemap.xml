@@ -4,6 +4,36 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/rancher/2017/09/03/docker-kvm-win7.html</loc>
+    <lastmod>2017-09-03T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>ranchervm上运行kvm的win7-docker容器</title>
+        <pubTime>2017-09-03T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>rancher</tag>
+         
+        <tag>Dockerfile</tag>
+         
+        <tag>kvm</tag>
+         
+        <tag>win7</tag>
+         
+         
+           
+             
+              <breadCrumb title="rancher" url="http://www.troylc.cc/categories/rancher/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/docker/2017/07/28/dockerfile-alpine-tz-curl.html</loc>
     <lastmod>2017-07-28T09:26:20.000Z</lastmod>
     <data>
