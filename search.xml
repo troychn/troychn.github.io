@@ -15,10 +15,8 @@
 <ul>
 <li>安装KVM以及相关组件  </li>
 </ul>
-<blockquote>
-<p>安装 kvm 基础包    </p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@bogon ~]<span class="comment"># sudo yum install -y kvm  </span></div><div class="line">```  </div><div class="line">  </div><div class="line">&gt; 安装kvm 管理工具  </div><div class="line"></div><div class="line">```bash</div><div class="line">[root@bogon ~]<span class="comment"># sudo yum install -y qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer bridge-utils</span></div></pre></td></tr></table></figure>
+<p>安装 kvm 基础包:  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@bogon ~]<span class="comment"># sudo yum install -y kvm  </span></div><div class="line">```  </div><div class="line">  </div><div class="line">安装kvm 管理工具:  </div><div class="line"></div><div class="line">```bash  </div><div class="line">[root@bogon ~]<span class="comment"># sudo yum install -y qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer bridge-utils</span></div></pre></td></tr></table></figure>
 <ul>
 <li>开启并运行libvirtd 服务，以及检查kvm是否加载成功</li>
 </ul>
