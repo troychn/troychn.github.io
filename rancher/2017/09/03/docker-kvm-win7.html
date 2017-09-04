@@ -7,8 +7,8 @@
 <ul>
 <li>安装KVM以及相关组件  </li>
 </ul>
-<p>安装 kvm 基础包:  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@bogon ~]<span class="comment"># sudo yum install -y kvm  </span></div><div class="line">```  </div><div class="line">  </div><div class="line">安装kvm 管理工具:  </div><div class="line"></div><div class="line">```bash  </div><div class="line">[root@bogon ~]<span class="comment"># sudo yum install -y qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer bridge-utils</span></div></pre></td></tr></table></figure>
+<p>安装kvm基础包:  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@bogon ~]<span class="comment"># sudo yum install -y kvm  </span></div><div class="line">```  </div><div class="line">  </div><div class="line">安装kvm管理工具:  </div><div class="line"></div><div class="line">```bash  </div><div class="line">[root@bogon ~]<span class="comment"># sudo yum install -y qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer bridge-utils</span></div></pre></td></tr></table></figure>
 <ul>
 <li>开启并运行libvirtd 服务，以及检查kvm是否加载成功</li>
 </ul>
@@ -93,7 +93,12 @@ anach
 <ul>
 <li>docker run方式运行win7版的docker容器。<br>在运行了ranchervm的机器上，运行以下命令，就可以通过命令方式运行kvm的docker容器。</li>
 </ul>
-<pre><code class="bash">[root@localhost ~]<span class="comment"># docker run -d -p 3389:3389 -e "RANCHER_VM=true" --cap-add NET_ADMIN -v /var/lib/rancher/vm:/vm --device /dev/kvm:/dev/kvm --device /dev/net/tun:/dev/net/tun -v /root/docker-kvm:/base_image  --name docker-win7   rancher/vm-base -m 2048  </span>
+<pre><code class="bash">[root@localhost ~]<span class="comment"># docker run -d -p 3389:3389 -e "RANCHER_VM=true" \</span>
+--cap-add NET_ADMIN \ 
+-v /var/lib/rancher/vm:/vm \ 
+--device /dev/kvm:/dev/kvm --device /dev/ net/tun:/dev/net/tun \ 
+-v /root/docker-kvm:/base_image \ 
+--name docker-win7 rancher/vm-base -m 2048  
 37bf25f123f4301bfc0ffc7ccde09c381753d26ffb93ed6a1eae3d97ef271df3
 [root@localhost ~]<span class="comment"># docker ps -a</span>
 CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                          PORTS                  NAMES
