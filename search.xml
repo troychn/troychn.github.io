@@ -33,7 +33,7 @@
 <h2 id="docker主机运行管理"><a href="#docker主机运行管理" class="headerlink" title="docker主机运行管理"></a>docker主机运行管理</h2><ul>
 <li>主页Dashboard：</li>
 </ul>
-<p><img src="media/15055482535001.jpg" alt="主页Dashboard"></p>
+<p><img src="/images/docker/docker-ui/portainer/15055482535001.jpg" alt="主页Dashboard"></p>
 <ul>
 <li>模板管理</li>
 </ul>
@@ -81,6 +81,10 @@
 <li>其它设置</li>
 </ul>
 <p><img src="/images/docker/docker-ui/portainer/15055524234336.jpg" alt="logo、本地模板、标签设置"></p>
+<ul>
+<li>LDAP认证</li>
+</ul>
+<p><img src="/images/docker/docker-ui/15055557567875.jpg" alt="LDAP认证"></p>
 ]]></content>
     </entry>
     
