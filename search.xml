@@ -4,6 +4,87 @@
   
     
     <entry>
+      <title><![CDATA[docker及swarm-mode之docker-ui实践-portainer]]></title>
+      <url>http://www.troylc.cc/docker/2017/09/16/docker-ui-portainer.html</url>
+      <content type="html"><![CDATA[<p>portainer（基于 Go） 是一个轻量级的、开放源码的轻量级管理界面，可让您轻松管理DOCKER主机或DOCKER-SWARM集群,经过对portainer的部署与操作，个人觉得满足基本docker操作的需求，portainer支持容器、镜像、volume、network的管理，支持权限分配，支持应用容器模板操作、支持集群的简单管理，支持TLS的证书认证，支持本地用户与组和LDAP的权限管理；而且该软件轻量，消耗资源少。</p>
+<p>参考：<br>github: <a href="https://github.com/portainer/portainer" target="_blank" rel="external">https://github.com/portainer/portainer</a>  </p>
+<p>doc: <a href="http://portainer.readthedocs.io/en/latest/" target="_blank" rel="external">http://portainer.readthedocs.io/en/latest/</a>   </p>
+<p>#部署portainer<br>本篇主要是在swarm mode的环境上，通过部署一个portainer的service来运行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@docker-master ~]<span class="comment"># docker service create \</span></div><div class="line">&gt;     --name portainer \</div><div class="line">&gt;     --publish 9000:9000 \</div><div class="line">&gt;     --constraint <span class="string">'node.role == manager'</span> \</div><div class="line">&gt;     --mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/var/run/docker.sock,dst=/var/run/docker.sock \</div><div class="line">&gt;     --mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/nfs-data/swarmui/data,dst=/data \</div><div class="line">&gt;     portainer/portainer:latest \</div><div class="line">&gt;     -H unix:///var/run/docker.sock</div><div class="line">ykapxftktk0xdsdgrftgfvht</div><div class="line">[root@docker-master ~]<span class="comment"># docker service ps portainer</span></div><div class="line">ID            NAME         IMAGE                       NODE           DESIRED STATE  CURRENT STATE         ERROR  PORTS</div><div class="line">ykapxftktk0x  portainer.1  portainer/portainer:latest  docker-master  Running        Running 19 hours ago</div></pre></td></tr></table></figure>
+<p><strong>相关参数：</strong></p>
+<ul>
+<li><code>--host，-H</code>：Docker守护程序端点</li>
+<li><code>--bind，-p</code>：地址和端口提供Portainer（默认值：:9000）</li>
+<li><code>--data，-d</code>：Portainer数据将被存储的目录（默认：/data在Linux上，C:\data在Windows上）</li>
+<li><code>--tlsverify</code>：支持TLS（默认false）</li>
+<li><code>--tlscacert</code>：CA路径（默认值：/certs/ca.pem在Linux上，C:\certs\ca.pem在Windows上）</li>
+<li><code>--tlscert</code>：的路径TLS证书文件（默认：/certs/cert.pem，C:\certs\cert.pem在Windows上）</li>
+<li><code>--tlskey</code>：TLS键的路径（默认值：/certs/key.pem，C:\certs\key.pem在Windows上）</li>
+<li><code>--no-analytics</code>：禁用分析（默认值：false）</li>
+<li><code>--no-auth</code>：禁止内部认证机制（默认值：false）</li>
+<li><code>--external-endpoints</code>：通过指定文件中JSON端点源的路径来启用外部端点管理</li>
+<li><code>--sync-interval</code>：两个端点的同步请求之间的时间间隔表示为一个字符串，例如30s，5m，1h…利用所支持的time.ParseDuration方法（默认：60s）</li>
+<li><code>--admin-password</code>：表单中的管理员密码 admin:<hashed_password></hashed_password></li>
+<li><code>--ssl</code>：使用SSL安全Portainer实例（默认值：false）</li>
+<li><code>--sslcert</code>：路径的SSL证书用于保护Portainer实例（默认：/certs/portainer.crt，C:\certs\portainer.crt在Windows上）</li>
+<li><code>--sslkey</code>：路径用来固定Portainer实例的SSL密钥（默认/certs/portainer.key，C:\certs\portainer.key在Windows上）</li>
+</ul>
+<h1 id="运行portainer"><a href="#运行portainer" class="headerlink" title="运行portainer"></a>运行portainer</h1><p>在浏览器中输入<a href="http://[remote.ip]:9000,第一次会提示设置密码，设置完后进行登录界面" target="_blank" rel="external">http://[remote.ip]:9000,第一次会提示设置密码，设置完后进行登录界面</a><br><img src="/images/docker/docker-ui/portainer/15055481781929.jpg" alt="portainer登录面"></p>
+<h2 id="docker主机运行管理"><a href="#docker主机运行管理" class="headerlink" title="docker主机运行管理"></a>docker主机运行管理</h2><ul>
+<li>主页Dashboard：</li>
+</ul>
+<p><img src="media/15055482535001.jpg" alt="主页Dashboard"></p>
+<ul>
+<li>模板管理</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055525167399.jpg" alt="模板管理"></p>
+<p>根据官方文档，我们可以自己创建一个本地模板，参考：<a href="https://portainer.readthedocs.io/en/stable/templates.html" target="_blank" rel="external">构建自己的模板</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> https://github.com/portainer/templates.git portainer-templates</div><div class="line">$ <span class="built_in">cd</span> portainer-templates</div><div class="line"><span class="comment"># Edit the file templates.json</span></div><div class="line">$ docker build -t portainer-templates .</div><div class="line">$ docker run -d -p <span class="string">"8080:80"</span> portainer-templates</div></pre></td></tr></table></figure>
+<ul>
+<li>swarm service 管理页：</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055487334364.jpg" alt="管理管理"><br>点击上面的add service,进入服务的添加界面：<br><img src="/images/docker/docker-ui/portainer/15055487862443.jpg" alt="添加服务"><br>创建服务的相关参数可以直接参考docker官方文档，portainer也是通过docker API进行操作的。</p>
+<ul>
+<li>manager节点的容器管理：</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055490209966.jpg" alt="pwkk容器管理"><br>可手动选择指定的容器进行：start、stop、kill、restart、pause、resume、remove。<br>点击Add container,可以单独在manager的管理节点上运行一个容器：<br><img src="/images/docker/docker-ui/portainer/15055492476988.jpg" alt="运行容器"><br>点击具体的一个容器可以看到针对这个容器的一些配置信息和配置修改<br><img src="/images/docker/docker-ui/portainer/15055494365002.jpg" alt="容器配置"><br>查看单一容器的运行情况：<br><img src="/images/docker/docker-ui/portainer/15055495521281.jpg" alt=""><br><img src="/images/docker/docker-ui/portainer/15055507618067.jpg" alt="cpu、内存、网络、进程简单w分析"><br><img src="/images/docker/docker-ui/portainer/15055508641131.jpg" alt="日志打印"><br><img src="/images/docker/docker-ui/portainer/15055509161527.jpg" alt="进入控制台方式"><br><img src="/images/docker/docker-ui/portainer/15055509908660.jpg" alt="控制台"></p>
+<ul>
+<li>manager节点本地镜像管理：</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055510798802.jpg" alt="manager节点本地镜像管理"></p>
+<ul>
+<li>本地及集群网络管理：</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055512402124.jpg" alt="本地及集群网络管理"></p>
+<ul>
+<li>本地存储管理</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055513062965.jpg" alt="存储管理"></p>
+<ul>
+<li>docker swarm中的Secrets管理</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055516378425.jpg" alt="Secrets管理"></p>
+<ul>
+<li>docker swarm 管理</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055516936067.jpg" alt="swarm 管理"></p>
+<h2 id="portainer设置管理"><a href="#portainer设置管理" class="headerlink" title="portainer设置管理"></a>portainer设置管理</h2><ul>
+<li><p>本地用户及用户组管理<br><img src="/images/docker/docker-ui/portainer/15055519875461.jpg" alt="本地用户及用户组管理"></p>
+</li>
+<li><p>docker节点管理<br><img src="/images/docker/docker-ui/portainer/15055521110780.jpg" alt=""></p>
+</li>
+<li><p>本地镜像仓库管理<br><img src="/images/docker/docker-ui/portainer/15055521435740.jpg" alt="本地镜像仓库管理"><br><img src="/images/docker/docker-ui/portainer/15055521780267.jpg" alt="添加仓库"></p>
+</li>
+</ul>
+<p>把本地创建好的镜像仓库，添加到这里。参考<a href="http://www.troylc.cc/docker/2017/06/20/docker-registry-web.html">docker-registry私有仓库及web ui镜像管理</a></p>
+<ul>
+<li>其它设置</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055524234336.jpg" alt="logo、本地模板、标签设置"></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[ranchervm上运行kvm的win7-docker容器]]></title>
       <url>http://www.troylc.cc/rancher/2017/09/03/docker-kvm-win7.html</url>
       <content type="html"><![CDATA[<p>最近一直忙于老项目的spring boot和spring cloud改造，8月份没有任何自己的学习笔记，实在是感到惭愧。说好的每个月写几篇自己的工作与学习中的技术笔记与心得，又没完成。9月继续努力！<br>本文主要是在docker的环境下运行一个kvm版的win7虚拟机，至于为什么要在docker环境中运行win7虚拟机，这就得看各自的业务需求了，我这是因为工作中需要，所以整理成这篇文章。感谢大家的支持与关注。</p>

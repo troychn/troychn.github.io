@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/docker/2017/09/16/docker-ui-portainer.html</loc>
+    <lastmod>2017-09-16T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>docker及swarm-mode之docker-ui实践-portainer</title>
+        <pubTime>2017-09-16T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>docker-ui</tag>
+         
+         
+           
+             
+              <breadCrumb title="docker" url="http://www.troylc.cc/categories/docker/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/rancher/2017/09/03/docker-kvm-win7.html</loc>
     <lastmod>2017-09-03T09:26:20.000Z</lastmod>
     <data>
@@ -17,11 +43,11 @@
          
         <tag>rancher</tag>
          
-        <tag>Dockerfile</tag>
-         
         <tag>kvm</tag>
          
         <tag>win7</tag>
+         
+        <tag>Dockerfile</tag>
          
          
            
@@ -766,7 +792,6 @@
     </url>
 
     
-    
   <url>
     <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
@@ -788,6 +813,7 @@
     </data>
     </url>
 
+    
     
   <url>
     <loc>http://www.troylc.cc/docker/2016/07/17/docker-01.html</loc>
@@ -860,12 +886,12 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/hexo/2016/06/15/Hexo-3.html</loc>
+    <loc>http://www.troylc.cc/hexo/2016/06/16/Hexo-4.html</loc>
     <lastmod>2016-06-23T05:09:23.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo教程(三)-hexo博客同时托管到github和coding</title>
-        <pubTime>2016-06-15T14:09:23.000Z</pubTime>
+        <title>Hexo教程(四)-hexo博客被搜索引擎收录</title>
+        <pubTime>2016-06-16T14:09:23.000Z</pubTime>
         
         <tag>hexo</tag>
          
@@ -882,12 +908,12 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/hexo/2016/06/16/Hexo-4.html</loc>
+    <loc>http://www.troylc.cc/hexo/2016/06/15/Hexo-3.html</loc>
     <lastmod>2016-06-23T05:09:23.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo教程(四)-hexo博客被搜索引擎收录</title>
-        <pubTime>2016-06-16T14:09:23.000Z</pubTime>
+        <title>Hexo教程(三)-hexo博客同时托管到github和coding</title>
+        <pubTime>2016-06-15T14:09:23.000Z</pubTime>
         
         <tag>hexo</tag>
          

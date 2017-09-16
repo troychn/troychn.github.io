@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-09-03T09:26:20.000Z</updated>
+  <updated>2017-09-16T09:26:20.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -14,6 +14,109 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>docker及swarm-mode之docker-ui实践-portainer</title>
+    <link href="http://www.troylc.cc/docker/2017/09/16/docker-ui-portainer.html"/>
+    <id>http://www.troylc.cc/docker/2017/09/16/docker-ui-portainer.html</id>
+    <published>2017-09-16T09:26:15.000Z</published>
+    <updated>2017-09-16T09:26:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>portainer（基于 Go） 是一个轻量级的、开放源码的轻量级管理界面，可让您轻松管理DOCKER主机或DOCKER-SWARM集群,经过对portainer的部署与操作，个人觉得满足基本docker操作的需求，portainer支持容器、镜像、volume、network的管理，支持权限分配，支持应用容器模板操作、支持集群的简单管理，支持TLS的证书认证，支持本地用户与组和LDAP的权限管理；而且该软件轻量，消耗资源少。</p>
+<p>参考：<br>github: <a href="https://github.com/portainer/portainer" target="_blank" rel="external">https://github.com/portainer/portainer</a>  </p>
+<p>doc: <a href="http://portainer.readthedocs.io/en/latest/" target="_blank" rel="external">http://portainer.readthedocs.io/en/latest/</a>   </p>
+<p>#部署portainer<br>本篇主要是在swarm mode的环境上，通过部署一个portainer的service来运行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@docker-master ~]<span class="comment"># docker service create \</span></div><div class="line">&gt;     --name portainer \</div><div class="line">&gt;     --publish 9000:9000 \</div><div class="line">&gt;     --constraint <span class="string">'node.role == manager'</span> \</div><div class="line">&gt;     --mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/var/run/docker.sock,dst=/var/run/docker.sock \</div><div class="line">&gt;     --mount <span class="built_in">type</span>=<span class="built_in">bind</span>,src=/nfs-data/swarmui/data,dst=/data \</div><div class="line">&gt;     portainer/portainer:latest \</div><div class="line">&gt;     -H unix:///var/run/docker.sock</div><div class="line">ykapxftktk0xdsdgrftgfvht</div><div class="line">[root@docker-master ~]<span class="comment"># docker service ps portainer</span></div><div class="line">ID            NAME         IMAGE                       NODE           DESIRED STATE  CURRENT STATE         ERROR  PORTS</div><div class="line">ykapxftktk0x  portainer.1  portainer/portainer:latest  docker-master  Running        Running 19 hours ago</div></pre></td></tr></table></figure>
+<p><strong>相关参数：</strong></p>
+<ul>
+<li><code>--host，-H</code>：Docker守护程序端点</li>
+<li><code>--bind，-p</code>：地址和端口提供Portainer（默认值：:9000）</li>
+<li><code>--data，-d</code>：Portainer数据将被存储的目录（默认：/data在Linux上，C:\data在Windows上）</li>
+<li><code>--tlsverify</code>：支持TLS（默认false）</li>
+<li><code>--tlscacert</code>：CA路径（默认值：/certs/ca.pem在Linux上，C:\certs\ca.pem在Windows上）</li>
+<li><code>--tlscert</code>：的路径TLS证书文件（默认：/certs/cert.pem，C:\certs\cert.pem在Windows上）</li>
+<li><code>--tlskey</code>：TLS键的路径（默认值：/certs/key.pem，C:\certs\key.pem在Windows上）</li>
+<li><code>--no-analytics</code>：禁用分析（默认值：false）</li>
+<li><code>--no-auth</code>：禁止内部认证机制（默认值：false）</li>
+<li><code>--external-endpoints</code>：通过指定文件中JSON端点源的路径来启用外部端点管理</li>
+<li><code>--sync-interval</code>：两个端点的同步请求之间的时间间隔表示为一个字符串，例如30s，5m，1h…利用所支持的time.ParseDuration方法（默认：60s）</li>
+<li><code>--admin-password</code>：表单中的管理员密码 admin:<hashed_password></hashed_password></li>
+<li><code>--ssl</code>：使用SSL安全Portainer实例（默认值：false）</li>
+<li><code>--sslcert</code>：路径的SSL证书用于保护Portainer实例（默认：/certs/portainer.crt，C:\certs\portainer.crt在Windows上）</li>
+<li><code>--sslkey</code>：路径用来固定Portainer实例的SSL密钥（默认/certs/portainer.key，C:\certs\portainer.key在Windows上）</li>
+</ul>
+<h1 id="运行portainer"><a href="#运行portainer" class="headerlink" title="运行portainer"></a>运行portainer</h1><p>在浏览器中输入<a href="http://[remote.ip]:9000,第一次会提示设置密码，设置完后进行登录界面" target="_blank" rel="external">http://[remote.ip]:9000,第一次会提示设置密码，设置完后进行登录界面</a><br><img src="/images/docker/docker-ui/portainer/15055481781929.jpg" alt="portainer登录面"></p>
+<h2 id="docker主机运行管理"><a href="#docker主机运行管理" class="headerlink" title="docker主机运行管理"></a>docker主机运行管理</h2><ul>
+<li>主页Dashboard：</li>
+</ul>
+<p><img src="media/15055482535001.jpg" alt="主页Dashboard"></p>
+<ul>
+<li>模板管理</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055525167399.jpg" alt="模板管理"></p>
+<p>根据官方文档，我们可以自己创建一个本地模板，参考：<a href="https://portainer.readthedocs.io/en/stable/templates.html" target="_blank" rel="external">构建自己的模板</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> https://github.com/portainer/templates.git portainer-templates</div><div class="line">$ <span class="built_in">cd</span> portainer-templates</div><div class="line"><span class="comment"># Edit the file templates.json</span></div><div class="line">$ docker build -t portainer-templates .</div><div class="line">$ docker run -d -p <span class="string">"8080:80"</span> portainer-templates</div></pre></td></tr></table></figure>
+<ul>
+<li>swarm service 管理页：</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055487334364.jpg" alt="管理管理"><br>点击上面的add service,进入服务的添加界面：<br><img src="/images/docker/docker-ui/portainer/15055487862443.jpg" alt="添加服务"><br>创建服务的相关参数可以直接参考docker官方文档，portainer也是通过docker API进行操作的。</p>
+<ul>
+<li>manager节点的容器管理：</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055490209966.jpg" alt="pwkk容器管理"><br>可手动选择指定的容器进行：start、stop、kill、restart、pause、resume、remove。<br>点击Add container,可以单独在manager的管理节点上运行一个容器：<br><img src="/images/docker/docker-ui/portainer/15055492476988.jpg" alt="运行容器"><br>点击具体的一个容器可以看到针对这个容器的一些配置信息和配置修改<br><img src="/images/docker/docker-ui/portainer/15055494365002.jpg" alt="容器配置"><br>查看单一容器的运行情况：<br><img src="/images/docker/docker-ui/portainer/15055495521281.jpg" alt=""><br><img src="/images/docker/docker-ui/portainer/15055507618067.jpg" alt="cpu、内存、网络、进程简单w分析"><br><img src="/images/docker/docker-ui/portainer/15055508641131.jpg" alt="日志打印"><br><img src="/images/docker/docker-ui/portainer/15055509161527.jpg" alt="进入控制台方式"><br><img src="/images/docker/docker-ui/portainer/15055509908660.jpg" alt="控制台"></p>
+<ul>
+<li>manager节点本地镜像管理：</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055510798802.jpg" alt="manager节点本地镜像管理"></p>
+<ul>
+<li>本地及集群网络管理：</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055512402124.jpg" alt="本地及集群网络管理"></p>
+<ul>
+<li>本地存储管理</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055513062965.jpg" alt="存储管理"></p>
+<ul>
+<li>docker swarm中的Secrets管理</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055516378425.jpg" alt="Secrets管理"></p>
+<ul>
+<li>docker swarm 管理</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055516936067.jpg" alt="swarm 管理"></p>
+<h2 id="portainer设置管理"><a href="#portainer设置管理" class="headerlink" title="portainer设置管理"></a>portainer设置管理</h2><ul>
+<li><p>本地用户及用户组管理<br><img src="/images/docker/docker-ui/portainer/15055519875461.jpg" alt="本地用户及用户组管理"></p>
+</li>
+<li><p>docker节点管理<br><img src="/images/docker/docker-ui/portainer/15055521110780.jpg" alt=""></p>
+</li>
+<li><p>本地镜像仓库管理<br><img src="/images/docker/docker-ui/portainer/15055521435740.jpg" alt="本地镜像仓库管理"><br><img src="/images/docker/docker-ui/portainer/15055521780267.jpg" alt="添加仓库"></p>
+</li>
+</ul>
+<p>把本地创建好的镜像仓库，添加到这里。参考<a href="http://www.troylc.cc/docker/2017/06/20/docker-registry-web.html">docker-registry私有仓库及web ui镜像管理</a></p>
+<ul>
+<li>其它设置</li>
+</ul>
+<p><img src="/images/docker/docker-ui/portainer/15055524234336.jpg" alt="logo、本地模板、标签设置"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;portainer（基于 Go） 是一个轻量级的、开放源码的轻量级管理界面，可让您轻松管理DOCKER主机或DOCKER-SWARM集群,经过对portainer的部署与操作，个人觉得满足基本docker操作的需求，portainer支持容器、镜像、volume、netwo
+    
+    </summary>
+    
+      <category term="docker" scheme="http://www.troylc.cc/categories/docker/"/>
+    
+    
+      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
+    
+      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
+    
+      <category term="swarm" scheme="http://www.troylc.cc/tags/swarm/"/>
+    
+      <category term="docker-ui" scheme="http://www.troylc.cc/tags/docker-ui/"/>
+    
+  </entry>
   
   <entry>
     <title>ranchervm上运行kvm的win7-docker容器</title>
@@ -150,11 +253,11 @@ a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/.
     
       <category term="rancher" scheme="http://www.troylc.cc/tags/rancher/"/>
     
-      <category term="Dockerfile" scheme="http://www.troylc.cc/tags/Dockerfile/"/>
-    
       <category term="kvm" scheme="http://www.troylc.cc/tags/kvm/"/>
     
       <category term="win7" scheme="http://www.troylc.cc/tags/win7/"/>
+    
+      <category term="Dockerfile" scheme="http://www.troylc.cc/tags/Dockerfile/"/>
     
   </entry>
   
@@ -2052,51 +2155,6 @@ a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/.
       <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
     
       <category term="swarm" scheme="http://www.troylc.cc/tags/swarm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>java中并发工具包-同步器（一）</title>
-    <link href="http://www.troylc.cc/java/2017/02/15/java01-thread-tools.html"/>
-    <id>http://www.troylc.cc/java/2017/02/15/java01-thread-tools.html</id>
-    <published>2017-02-14T16:08:00.000Z</published>
-    <updated>2017-02-14T16:09:19.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>传统的多线程中并没有提供高级特性，比如：信号量、线程池、执行管理器等。而这些特殊恰恰是有助于创建更加强大的并发程序。java中并发工具处于java.util.concurrent包中，其中包括的内容包括：同步器、执行器、并发集合、Fork/join框架、atomic包和locks包。<br>下面介绍一下线程开发中的工具包内容：</p>
-<ul>
-<li>同步器：是为每种特定的同步问题提供的解决方案；</li>
-<li>执行器：用来管理线程执行，如：线程池</li>
-<li>并发集合：提供了集合框架中集合的并发版本</li>
-<li>Fork/join框架：提供了对并行编程的支持</li>
-<li>atomic包：提供了不需要锁即可完成并发环境变量使用的原子性操作。</li>
-<li>locks包：使用locks接口为并发编程提供了同步的另一种替代方案，也就相当于Synchronize关键字的替代方案。</li>
-</ul>
-<h1 id="同步器"><a href="#同步器" class="headerlink" title="同步器"></a>同步器</h1><p>同步器：是为每种特定的同步问题提供的解决方案；</p>
-<p><strong>信号量同步器</strong> ：通过计数器控制对共享资源的访问<br>步骤：<br>semaphore(int count):创建拥有count个许可证的信号量<br>acquire()/acquire(int num):获取1/num个许可证<br>release()/release(int num):释放1/num个许可证<br>如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SemaphoreDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</div><div class="line">        <span class="comment">//编写两个柜员的信号量许可证，相当于最大允许多少线程来并发。</span></div><div class="line">        Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">2</span>);</div><div class="line"></div><div class="line">        Person p1 = <span class="keyword">new</span> Person(semaphore, <span class="string">"A"</span>);</div><div class="line">        p1.start();</div><div class="line">        Person p2 = <span class="keyword">new</span> Person(semaphore, <span class="string">"B"</span>);</div><div class="line">        p2.start();</div><div class="line">        Person p3 = <span class="keyword">new</span> Person(semaphore, <span class="string">"C"</span>);</div><div class="line">        p3.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="comment">//定义一个信号量</span></div><div class="line">    <span class="keyword">private</span> Semaphore semaphore;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(Semaphore semaphore, String name)</span> </span>&#123;</div><div class="line">        setName(name);</div><div class="line">        <span class="keyword">this</span>.semaphore = semaphore;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//等待空闲柜台来服务</span></div><div class="line">        System.out.println(getName() + <span class="string">" is waiting ...."</span>);</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">//获取信号量同步器的许可证来为我服务，是否能够获取得到柜台服务，</span></div><div class="line">            <span class="comment">// 是要看银行有多少个柜台，这里相当于定义的信号最同步器最大允许的同步数。</span></div><div class="line">            semaphore.acquire();</div><div class="line">            System.out.println(getName() + <span class="string">" is servicing..."</span>);</div><div class="line">            <span class="comment">//休眠一秒表示服务的时长</span></div><div class="line">            Thread.sleep(<span class="number">1000</span>);</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        System.out.println(getName() + <span class="string">" is done!"</span>);</div><div class="line">        <span class="comment">//服务完成后，释放信号量许可给下一个客记服务。</span></div><div class="line">        semaphore.release();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>计数栓同步器</strong> :必须发生指定数量的事件后才可以继续运行<br> CountDownLatch(int count):必须发生count个数量才可以打开锁存器<br> await():等待锁存器：线程可以阻塞等待这一数量到达零<br> countDown()解发事件：每被调用一次，这一数量就减一  </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CountDownLatchDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">3</span>);</div><div class="line"></div><div class="line">        <span class="keyword">new</span> Racer(countDownLatch, <span class="string">"A"</span>).start();</div><div class="line">        <span class="keyword">new</span> Racer(countDownLatch, <span class="string">"B"</span>).start();</div><div class="line">        <span class="keyword">new</span> Racer(countDownLatch, <span class="string">"C"</span>).start();</div><div class="line"></div><div class="line">        <span class="comment">//开始计数</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Thread.sleep(<span class="number">1000</span>);</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            System.out.println(<span class="number">3</span> - i);</div><div class="line">            countDownLatch.countDown();</div><div class="line">            <span class="keyword">if</span> (i == <span class="number">2</span>)</div><div class="line">                System.out.println(<span class="string">"Start"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">/**</span></div><div class="line"> * 如运动员赛跑比赛，在裁判员喊一二三，开如跑的时候，一起跑。</div><div class="line"> */</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Racer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> CountDownLatch countDownLatch;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Racer</span><span class="params">(CountDownLatch countDownLatch, String name)</span> </span>&#123;</div><div class="line">        setName(name);</div><div class="line">        <span class="keyword">this</span>.countDownLatch = countDownLatch;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            System.out.println(getName()+ <span class="string">"线程阻塞等待"</span>);</div><div class="line">            countDownLatch.await();</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</div><div class="line">                System.out.println(getName() + <span class="string">" :"</span> + i);</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>循环屏障同步器：</strong>主要作用适用于只有多个线程都到达预定点时才可以继续执行<br> CyclicBarrier(int num):等待线程的数量<br> CyclicBarrier(int num,Runnable action):等待线程的数量以及所有线程到达后的操作<br> await():到达临界点后的暂停线程。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">cyclicBarrierDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        CyclicBarrier cyclicBarrier = <span class="keyword">new</span> CyclicBarrier(<span class="number">3</span>, <span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                System.out.println(<span class="string">"Game start"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="keyword">new</span> Player(cyclicBarrier, <span class="string">"A"</span>).start();</div><div class="line">        <span class="keyword">new</span> Player(cyclicBarrier, <span class="string">"B"</span>).start();</div><div class="line">        <span class="keyword">new</span> Player(cyclicBarrier, <span class="string">"C"</span>).start();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">/**</span></div><div class="line"> * 如斗地方游戏的场景，一个人开始，等待另两个玩家开始</div><div class="line"> */</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Player</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> CyclicBarrier cyclicBarrier;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Player</span><span class="params">(CyclicBarrier cyclicBarrier, String name)</span> </span>&#123;</div><div class="line">        setName(name);</div><div class="line">        <span class="keyword">this</span>.cyclicBarrier = cyclicBarrier;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(getName() + <span class="string">" is waiting other players...."</span>);</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            cyclicBarrier.await();</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (BrokenBarrierException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>交换器同步器：</strong> 简化两个线程间数据的交换<br> Exchanger<v>：指定进行交换的数据类型<br> V exchange(V object):等待线程到达，交换数据<br> 如：</v></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExchangerDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Exchanger&lt;String&gt; ex = <span class="keyword">new</span> Exchanger&lt;String&gt;();</div><div class="line">        <span class="keyword">new</span> A(ex).start();</div><div class="line">        <span class="keyword">new</span> B(ex).start();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Exchanger&lt;String&gt; ex;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">A</span><span class="params">(Exchanger&lt;String&gt; ex)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.ex = ex;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        String str = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            str = ex.exchange(<span class="string">"Hello?"</span>);</div><div class="line">            System.out.println(str);</div><div class="line">            str = ex.exchange(<span class="string">"A"</span>);</div><div class="line">            System.out.println(str);</div><div class="line">            str = ex.exchange(<span class="string">"B"</span>);</div><div class="line">            System.out.println(str);</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Exchanger&lt;String&gt; ex;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">B</span><span class="params">(Exchanger&lt;String&gt; ex)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.ex = ex;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        String str = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            str = ex.exchange(<span class="string">"Hi!"</span>);</div><div class="line">            System.out.println(str);</div><div class="line">            str = ex.exchange(<span class="string">"1"</span>);</div><div class="line">            System.out.println(str);</div><div class="line">            str = ex.exchange(<span class="string">"2"</span>);</div><div class="line">            System.out.println(str);</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>Phaser同步器：</strong> 工作方式与CyclicBarrier类似，但是可以定义多个阶段<br> Phaser()/Phaser(int num):使用指定0/num个party创建phaser<br> register():注册party<br> arriveAndAwaitAdvance():到达时等待到所有party到达<br> arriveAndDeregister():到达时注销线程自己</p>
-<p> 如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhaserDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Phaser phaser = <span class="keyword">new</span> Phaser(<span class="number">1</span>);</div><div class="line">        System.out.println(<span class="string">" starting ...."</span>);</div><div class="line"></div><div class="line">        <span class="keyword">new</span> Worker(phaser, <span class="string">"Fuwuyuan"</span>).start();</div><div class="line">        <span class="keyword">new</span> Worker(phaser, <span class="string">"Chushi"</span>).start();</div><div class="line">        <span class="keyword">new</span> Worker(phaser, <span class="string">"Shangcaiyuan"</span>).start();</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++) &#123;</div><div class="line">            phaser.arriveAndAwaitAdvance();</div><div class="line">            System.out.println(<span class="string">"Order "</span> + i + <span class="string">" finished!"</span>);</div><div class="line">        &#125;</div><div class="line">        phaser.arriveAndDeregister();</div><div class="line">        System.out.println(<span class="string">"All done!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Worker</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Phaser phaser;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Worker</span> <span class="params">(Phaser phaser, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.setName(name);</div><div class="line">        <span class="keyword">this</span>.phaser = phaser;</div><div class="line">        phaser.register();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++) &#123;</div><div class="line">            System.out.println(<span class="string">"current order is: "</span> + i + <span class="string">" : "</span> + getName());</div><div class="line">            <span class="keyword">if</span> (i == <span class="number">3</span>) &#123;</div><div class="line">                phaser.arriveAndDeregister();</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                phaser.arriveAndAwaitAdvance();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Thread.sleep(<span class="number">1000</span>);</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;传统的多线程中并没有提供高级特性，比如：信号量、线程池、执行管理器等。而这些特殊恰恰是有助于创建更加强大的并发程序。java中并发工具处于java.util.concurrent包中，其中包括的内容包括：同步器、执行器、并发集合、Fork/join框架、atomic包和lo
-    
-    </summary>
-    
-      <category term="java" scheme="http://www.troylc.cc/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://www.troylc.cc/tags/java/"/>
-    
-      <category term="Thread" scheme="http://www.troylc.cc/tags/Thread/"/>
     
   </entry>
   
