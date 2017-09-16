@@ -100,7 +100,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">[root@localhost win7-vm]<span class="comment"># vim Dockerfile </span></div><div class="line">FROM rancher/vm-base</div><div class="line">COPY win7-kvm-base.gz.img /base_image/win7-kvm-base.gz.img</div><div class="line">CMD [<span class="string">"-m 2048m"</span>]</div><div class="line">[root@localhost win7-vm]<span class="comment"># docker build -t rancher/win7-kvm-docker-base .</span></div><div class="line">Sending build context to Docker daemon  4.322GB</div><div class="line">Step 1/3 : FROM rancher/vm-base</div><div class="line"> ---&gt; 051656d3329d</div><div class="line">Step 2/3 : COPY win7-kvm-base.gz.img /base_image/win7-kvm-base.gz.img</div><div class="line"> ---&gt; ffbfd3b91c42</div><div class="line">Step 3/3 : CMD -m 2048m</div><div class="line"> ---&gt; Running <span class="keyword">in</span> 7fc2475f49b5</div><div class="line"> ---&gt; 80e35bd6ff43</div><div class="line">Removing intermediate container 7fc2475f49b5</div><div class="line">Successfully built 80e35bd6ff43</div><div class="line">Successfully tagged rancher/win7-kvm-docker-base:latest</div><div class="line">[root@localhost win7-vm]<span class="comment"># docker images</span></div><div class="line">REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE</div><div class="line">rancher/win7-kvm-docker-base     latest              80e35bd6ff43        9 seconds ago       4.35GB</div><div class="line">rancher/vm-base                  latest              051656d3329d        15 months ago       288MB</div><div class="line">rancher/ranchervm                latest              f3005c29aa04        21 months ago       250MB</div></pre></td></tr></table></figure>
 <h1 id="运行并测试docker中win7系统容器"><a href="#运行并测试docker中win7系统容器" class="headerlink" title="运行并测试docker中win7系统容器"></a>运行并测试docker中win7系统容器</h1><p>RancherVM镜像是Docker镜像中捆绑的标准KVM镜像，下面我们要通过ranchervm来创建并运行win7的kvm镜像。<br>首先，确保Docker和KVM都安装在您的系统上。按照分发特定的说明确保KVM工作。我们只需要在内核中启用KVM。我们不需要像任何用户空间的工具qemu-kvm或libvirt。centos7确保启用了KVM，我们最开始就已经讲过。  </p>
 <p>一旦你设置了Docker和KVM，就运行：</p>
-<pre><code class="bash">[root@localhost ~]<span class="comment"># docker run -v /var/run:/var/run -p 8080:80 -v /var/lib/rancher/vm:/vm rancher/ranchervm</span>
+<pre><code class="bash">[root@localhost ~]<span class="comment"># docker run -d -v /var/run:/var/run -p 8080:80 -v /var/lib/rancher/vm:/vm rancher/ranchervm</span>
 [root@localhost ~]<span class="comment"># docker ps</span>
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
 a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/..."</span>   2 days ago          Up 2 days           0.0.0.0:8080-&gt;80/tcp   xenodochial_b
@@ -117,11 +117,12 @@ anach
 <ul>
 <li>docker run方式运行win7版的docker容器。<br>在运行了ranchervm的机器上，运行以下命令，就可以通过命令方式运行kvm的docker容器。</li>
 </ul>
-<pre><code class="bash">[root@localhost ~]<span class="comment"># docker run -d -p 3389:3389 -e "RANCHER_VM=true" \</span>
---cap-add NET_ADMIN \ 
--v /var/lib/rancher/vm:/vm \ 
---device /dev/kvm:/dev/kvm --device /dev/ net/tun:/dev/net/tun \ 
--v /root/docker-kvm:/base_image \ 
+<pre><code class="bash">[root@localhost ~]<span class="comment"># docker run -d -p 3389:3389 -p 8183:8183 -e "RANCHER_VM=true" \</span>
+--cap-add NET_ADMIN \
+-v /var/lib/rancher/vm:/vm \
+--device /dev/kvm:/dev/kvm \
+--device /dev/net/tun:/dev/net/tun \
+-v /root/win7-vm:/base_image \
 --name docker-win7 rancher/vm-base -m 2048  
 37bf25f123f4301bfc0ffc7ccde09c381753d26ffb93ed6a1eae3d97ef271df3
 [root@localhost ~]<span class="comment"># docker ps -a</span>
