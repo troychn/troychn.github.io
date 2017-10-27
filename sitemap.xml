@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.troylc.cc/docker-swarm/docker/docker-compose/2017/10/27/docker-swarm-stack-compose-order.html</loc>
+    
+    <lastmod>2017-10-27T09:26:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/docker/2017/09/16/docker-ui-portainer.html</loc>
     
     <lastmod>2017-09-16T09:26:20.000Z</lastmod>
@@ -219,7 +226,7 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/search/index.html</loc>
+    <loc>http://www.troylc.cc/tags/index.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
     
@@ -233,13 +240,6 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/baidu_verify_2m9YZg2PjM.html</loc>
-    
-    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.troylc.cc/categories/index.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
@@ -247,7 +247,14 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/tags/index.html</loc>
+    <loc>http://www.troylc.cc/search/index.html</loc>
+    
+    <lastmod>2016-12-29T14:27:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.troylc.cc/baidu_verify_2m9YZg2PjM.html</loc>
     
     <lastmod>2016-12-29T14:27:12.000Z</lastmod>
     

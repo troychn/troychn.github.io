@@ -4,6 +4,38 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/docker-swarm/docker/docker-compose/2017/10/27/docker-swarm-stack-compose-order.html</loc>
+    <lastmod>2017-10-27T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>docker容器及swarm集群之compose健康检查与容器依赖</title>
+        <pubTime>2017-10-27T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>swarm</tag>
+         
+        <tag>docker-compose</tag>
+         
+         
+           
+             
+              <breadCrumb title="docker swarm" url="http://www.troylc.cc/categories/docker-swarm/"/>
+          
+             
+              <breadCrumb title="docker" url="http://www.troylc.cc/categories/docker-swarm/docker/"/>
+          
+             
+              <breadCrumb title="docker-compose" url="http://www.troylc.cc/categories/docker-swarm/docker/docker-compose/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/docker/2017/09/16/docker-ui-portainer.html</loc>
     <lastmod>2017-09-16T09:26:20.000Z</lastmod>
     <data>
