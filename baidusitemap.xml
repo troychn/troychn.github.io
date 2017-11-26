@@ -4,6 +4,38 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/certificate/nginx/macOs/2017/11/27/nginx-chrome-ce.html</loc>
+    <lastmod>2017-11-27T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>自签根证书和多子域名证书在浏览器上变安全绿</title>
+        <pubTime>2017-11-27T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>macOs</tag>
+         
+        <tag>certificate nginx</tag>
+         
+        <tag>chrome</tag>
+         
+         
+           
+             
+              <breadCrumb title="certificate" url="http://www.troylc.cc/categories/certificate/"/>
+          
+             
+              <breadCrumb title="nginx" url="http://www.troylc.cc/categories/certificate/nginx/"/>
+          
+             
+              <breadCrumb title="macOs" url="http://www.troylc.cc/categories/certificate/nginx/macOs/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/docker-swarm/docker/docker-compose/2017/10/27/docker-swarm-stack-compose-order.html</loc>
     <lastmod>2017-10-27T09:26:20.000Z</lastmod>
     <data>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.troylc.cc/"/>
-  <updated>2017-10-27T09:26:20.000Z</updated>
+  <updated>2017-11-27T09:26:20.000Z</updated>
   <id>http://www.troylc.cc/</id>
   
   <author>
@@ -14,6 +14,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>自签根证书和多子域名证书在浏览器上变安全绿</title>
+    <link href="http://www.troylc.cc/certificate/nginx/macOs/2017/11/27/nginx-chrome-ce.html"/>
+    <id>http://www.troylc.cc/certificate/nginx/macOs/2017/11/27/nginx-chrome-ce.html</id>
+    <published>2017-11-27T09:26:15.000Z</published>
+    <updated>2017-11-27T09:26:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在很多情况下，我们有内部开发环境中，希望用到https访问，并且如果没有正式的证书的话，都是用自签名的证书来进行一根多子的签发不同域名的证书。然后通过在浏览器配置一个根证书就可以得到多个子域名的https访问的证书安全绿的认证。<br>本文主要是用sh脚本通过openssl来生成一个自签名的根证书，然后通过这个根证书，签发出多个子域名的子证书，通过web服务器nginx上进行自签名证书的https的配置，在浏览器上通过设置信任证书可以让我们自签的证书也变成安全绿。</p>
+<h1 id="自签证书的脚本编写"><a href="#自签证书的脚本编写" class="headerlink" title="自签证书的脚本编写"></a>自签证书的脚本编写</h1><p>自签证书目录结构如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">├── certificate  <span class="comment">#存放两个子域名证书的目录</span></div><div class="line">│   ├── dev.troylc.com.cn.crt</div><div class="line">│   ├── dev.troylc.com.cn.csr</div><div class="line">│   ├── dev.troylc.com.cn.key</div><div class="line">│   ├── cloud.troylc.com.cn.crt</div><div class="line">│   ├── cloud.troylc.com.cn.csr</div><div class="line">│   └── cloud.troylc.com.cn.key</div><div class="line">├── createRootCA.sh   <span class="comment">#根证书生成脚本</span></div><div class="line">├── createselfsignedcertificate-dev.sh     <span class="comment">#dev子域名证书生成脚本</span></div><div class="line">├── createselfsignedcertificate-cloud.sh   <span class="comment">#cloud子域名证书生成脚本</span></div><div class="line">├── readme.md   <span class="comment">#说明文件</span></div><div class="line">├── rootcertificate     <span class="comment">#存放根证书的目录</span></div><div class="line">│   ├── cloudrootCA.key</div><div class="line">│   ├── cloudrootCA.pem</div><div class="line">│   └── cloudrootCA.srl</div><div class="line">├── server.csr.cnf  <span class="comment">#生成子证书需要的CN配置文件</span></div><div class="line">├── v3-dev.ext  <span class="comment">#生成子证书需要的DNS域名配置文件</span></div><div class="line">└── v3-cloud.ext  <span class="comment">#生成子证书需要的DNS域名配置文件</span></div></pre></td></tr></table></figure>
+<h2 id="根证书脚本内容"><a href="#根证书脚本内容" class="headerlink" title="根证书脚本内容"></a>根证书脚本内容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line">mkdir rootcertificate/</div><div class="line">openssl genrsa -des3 -out rootcertificate/cloudrootCA.key 2048</div><div class="line">openssl req -x509 -new -nodes -key rootcertificate/cloudrootCA.key -sha256 -days 3650 -out rootcertificate/cloudrootCA.pem</div></pre></td></tr></table></figure>
+<p>运行这个脚本后会首先让我们设置一个证书的密码。然后让我们输入CN的信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">troylc@zqy: ls</div><div class="line">certificate                          createselfsignedcertificate-cloud.sh readme.md                            server.csr.cnf                       v3-dev.ext</div><div class="line">createRootCA.sh                      createselfsignedcertificate-dev.sh   rootcertificate                      v3-cloud.ext</div><div class="line">troylc@zqy: ./createRootCA.sh </div><div class="line">mkdir: rootcertificate/: File exists</div><div class="line">Generating RSA private key, 2048 bit long modulus</div><div class="line">...................................................+++</div><div class="line">..................................+++</div><div class="line">e is 65537 (0x10001)</div><div class="line">Enter pass phrase <span class="keyword">for</span> rootcertificate/cloudrootCA.key:   <span class="comment">#输入密码 我这里全是123456</span></div><div class="line">Verifying - Enter pass phrase <span class="keyword">for</span> rootcertificate/cloudrootCA.key:   <span class="comment">#输入确认密码 123456</span></div><div class="line">Enter pass phrase <span class="keyword">for</span> rootcertificate/cloudrootCA.key:   <span class="comment">#输入上面的密码验证 123456</span></div><div class="line">You are about to be asked to enter information that will be incorporated</div><div class="line">into your certificate request.</div><div class="line">What you are about to enter is what is called a Distinguished Name or a DN.</div><div class="line">There are quite a few fields but you can leave some blank</div><div class="line">For some fields there will be a default value,</div><div class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</div><div class="line">-----   <span class="comment">#以下输入的内容需要和生成子证书所需要的CN配置文件server.csr.cnf 中的CN中的内容一致，如果不一致在浏览器上验证时会报证书与签发的信息不一致。</span></div><div class="line">Country Name (2 letter code) []:CN  </div><div class="line">State or Province Name (full name) []:Beijing</div><div class="line">Locality Name (eg, city) []:Beijing</div><div class="line">Organization Name (eg, company) []:cloud</div><div class="line">Organizational Unit Name (eg, section) []:troylc</div><div class="line">Common Name (eg, fully qualified host name) []:*.troylc.com.cn</div><div class="line">Email Address []:troylc@163.com</div><div class="line">troylc@zqy: ll rootcertificate </div><div class="line">total 16</div><div class="line">-rw-r--r--  1 troylc  wheel   1.7K Nov 25 23:22 cloudrootCA.key</div><div class="line">-rw-r--r--  1 troylc  wheel   1.3K Nov 25 23:24 cloudrootCA.pem</div></pre></td></tr></table></figure>
+<h2 id="子证书生成脚本"><a href="#子证书生成脚本" class="headerlink" title="子证书生成脚本"></a>子证书生成脚本</h2><p>在生成子证书之前，需要增加三个配置文件和两个生成子域名的脚本文件 </p>
+<h3 id="子证书配置文件"><a href="#子证书配置文件" class="headerlink" title="子证书配置文件"></a>子证书配置文件</h3><p>一个就是上面提到的server.csr.cnf生成子证书的CN配置文件，另两个是两个子域名的配置文件v3-dev.ext、v3-cloud.ext</p>
+<ul>
+<li>server.csr.cnf文件内容如下  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[req]</div><div class="line">default_bits = 2048</div><div class="line">prompt = no</div><div class="line">default_md = sha256</div><div class="line">distinguished_name = dn</div><div class="line"></div><div class="line">[dn]</div><div class="line">C= CN</div><div class="line">ST= Beijing</div><div class="line">L= Beijing</div><div class="line">O= cloud</div><div class="line">OU= troylc</div><div class="line">emailAddress= troylc@topsec.com.cn</div><div class="line">CN = *.troylc.com.cn</div></pre></td></tr></table></figure>
+<ul>
+<li>v3-dev.ext和v3-cloud.ext文件内容如下</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># v3-dev.ext:</div><div class="line">authorityKeyIdentifier=keyid,issuer</div><div class="line">basicConstraints=CA:FALSE</div><div class="line">keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment</div><div class="line">subjectAltName = @alt_names</div><div class="line"></div><div class="line">[alt_names]</div><div class="line">DNS.1 = dev.troylc.com.cn</div><div class="line"></div><div class="line"># v3-cloud.ext</div><div class="line">authorityKeyIdentifier=keyid,issuer</div><div class="line">basicConstraints=CA:FALSE</div><div class="line">keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment</div><div class="line">subjectAltName = @alt_names</div><div class="line"></div><div class="line">[alt_names]</div><div class="line">DNS.1 = cloud.troylc.com.cn</div></pre></td></tr></table></figure>
+<h3 id="子证书的生成脚本"><a href="#子证书的生成脚本" class="headerlink" title="子证书的生成脚本"></a>子证书的生成脚本</h3><p>一个生成dev.troylc.com.cn域名的证书脚本文件，一个生成cloud.troylc.com.cn域名的证书脚本文件  </p>
+<ul>
+<li>createselfsignedcertificate-dev.sh内容如下：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line">openssl req -new -sha256 -nodes -out certificate/dev.troylc.com.cn.csr -newkey rsa:2048 -keyout certificate/dev.troylc.com.cn.key -config &lt;( cat server.csr.cnf )</div><div class="line"></div><div class="line">openssl x509 -req -<span class="keyword">in</span> certificate/dev.troylc.com.cn.csr -CA rootcertificate/cloudrootCA.pem -CAkey rootcertificate/cloudrootCA.key -CAcreateserial -out certificate/dev.troylc.com.cn.crt -days 3650 -sha256 -extfile v3-dev.ext</div></pre></td></tr></table></figure>
+<ul>
+<li>createselfsignedcertificate-cloud.sh内容如下：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line">openssl req -new -sha256 -nodes -out certificate/cloud.troylc.com.cn.csr -newkey rsa:2048 -keyout certificate/cloud.troylc.com.cn.key -config &lt;( cat server.csr.cnf )</div><div class="line"></div><div class="line">openssl x509 -req -<span class="keyword">in</span> certificate/cloud.troylc.com.cn.csr -CA rootcertificate/cloudrootCA.pem -CAkey rootcertificate/cloudrootCA.key -CAcreateserial -out certificate/cloud.troylc.com.cn.crt -days 3650 -sha256 -extfile v3-cloud.ext</div></pre></td></tr></table></figure>
+<h3 id="运行子证书生成脚本"><a href="#运行子证书生成脚本" class="headerlink" title="运行子证书生成脚本"></a>运行子证书生成脚本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">troylc@zqy: ls</div><div class="line">certificate                          createselfsignedcertificate-cloud.sh readme.md                            server.csr.cnf                       v3-dev.ext</div><div class="line">createRootCA.sh                      createselfsignedcertificate-dev.sh   rootcertificate                      v3-cloud.ext</div><div class="line">troylc@zqy: ./createselfsignedcertificate-dev.sh </div><div class="line">Generating a 2048 bit RSA private key</div><div class="line">...+++</div><div class="line">.............................................+++</div><div class="line">writing new private key to <span class="string">'certificate/dev.troylc.com.cn.key'</span></div><div class="line">-----</div><div class="line">Signature ok</div><div class="line">subject=/C=CN/ST=Beijing/L=Beijing/O=cloud/OU=troylc/emailAddress=troylc@topsec.com.cn/CN=*.troylc.com.cn</div><div class="line">Getting CA Private Key</div><div class="line">Enter pass phrase <span class="keyword">for</span> rootcertificate/cloudrootCA.key:</div><div class="line">troylc@zqy: ll certificate </div><div class="line">total 24</div><div class="line">-rw-r--r--  1 troylc  wheel   1.6K Nov 25 23:49 dev.troylc.com.cn.crt</div><div class="line">-rw-r--r--  1 troylc  wheel   1.0K Nov 25 23:49 dev.troylc.com.cn.csr</div><div class="line">-rw-r--r--  1 troylc  wheel   1.7K Nov 25 23:49 dev.troylc.com.cn.key</div><div class="line">troylc@zqy: ./createselfsignedcertificate-cloud.sh </div><div class="line">Generating a 2048 bit RSA private key</div><div class="line">......................................................................................+++</div><div class="line">.................................................+++</div><div class="line">writing new private key to <span class="string">'certificate/cloud.troylc.com.cn.key'</span></div><div class="line">-----</div><div class="line">Signature ok</div><div class="line">subject=/C=CN/ST=Beijing/L=Beijing/O=cloud/OU=troylc/emailAddress=troylc@topsec.com.cn/CN=*.troylc.com.cn</div><div class="line">Getting CA Private Key</div><div class="line">Enter pass phrase <span class="keyword">for</span> rootcertificate/cloudrootCA.key:</div><div class="line">troylc@zqy: ll certificate                        </div><div class="line">total 48</div><div class="line">-rw-r--r--  1 troylc  wheel   1.6K Nov 25 23:49 cloud.troylc.com.cn.crt</div><div class="line">-rw-r--r--  1 troylc  wheel   1.0K Nov 25 23:49 cloud.troylc.com.cn.csr</div><div class="line">-rw-r--r--  1 troylc  wheel   1.7K Nov 25 23:49 cloud.troylc.com.cn.key</div><div class="line">-rw-r--r--  1 troylc  wheel   1.6K Nov 25 23:49 dev.troylc.com.cn.crt</div><div class="line">-rw-r--r--  1 troylc  wheel   1.0K Nov 25 23:49 dev.troylc.com.cn.csr</div><div class="line">-rw-r--r--  1 troylc  wheel   1.7K Nov 25 23:49 dev.troylc.com.cn.key</div></pre></td></tr></table></figure>
+<h1 id="nginx配置https"><a href="#nginx配置https" class="headerlink" title="nginx配置https"></a>nginx配置https</h1><p>nginx的默认配置default.conf中做如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">upstream nexusserver &#123;</div><div class="line"># Tomcat is listening on default 8090 port</div><div class="line">#    ip_hash;</div><div class="line">#    server tscweb1:9518 ;</div><div class="line">    server nexus:8081 fail_timeout=0;</div><div class="line">&#125;</div><div class="line">server &#123;</div><div class="line">        listen 443 ssl http2;</div><div class="line">        server_name dev.troylc.com.cn; #换成你的域名</div><div class="line">        ssl on;</div><div class="line">        ssl_certificate /etc/nginx/certificate/dev.troylc.com.cn.crt; #证书文件</div><div class="line">        ssl_certificate_key /etc/nginx/certificate/dev.troylc.com.cn.key; #秘钥文件</div><div class="line">        ssl_session_timeout 5m;</div><div class="line">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</div><div class="line">        ssl_ciphers  ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</div><div class="line">        ssl_prefer_server_ciphers   on;</div><div class="line"></div><div class="line">        add_header Strict-Transport-Security &quot;max-age=31536000; includeSubDomains&quot; always;   ##访问网站后，由浏览器方记住该域名是受保护的https://，以后的http://访问不用走上边的return</div><div class="line"></div><div class="line">        location /nexus/ &#123;</div><div class="line">            proxy_pass  http://nexusserver/nexus/;</div><div class="line">            proxy_redirect   off;</div><div class="line">            proxy_set_header   Host             $host;</div><div class="line">            proxy_set_header   X-Real-IP        $remote_addr;</div><div class="line">            proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;</div><div class="line">            proxy_set_header   X-Frame-Options  DENY;</div><div class="line">            proxy_connect_timeout 60;</div><div class="line">            proxy_read_timeout 3600s;</div><div class="line">            proxy_set_header   X-Forwarded-Proto $scheme;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">       location /home &#123;try_files $uri /index.html;&#125;</div><div class="line"></div><div class="line">       location = / &#123;</div><div class="line">           rewrite ^ /home;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       error_page  404              /404.html;</div><div class="line"></div><div class="line">       # redirect server error pages to the static page /50x.html</div><div class="line">       #</div><div class="line">       error_page   500 502 503 504  /50x.html;</div><div class="line">       location = /50x.html &#123;</div><div class="line">           root   /usr/share/nginx/html;</div><div class="line">       &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>配置上面的配置后，重启启动nginx,让以上配置生成效</p>
+<h1 id="浏览器验证"><a href="#浏览器验证" class="headerlink" title="浏览器验证"></a>浏览器验证</h1><p>当nginx启动后，我们需要去浏览器验证，因为是自签名的证书，所以需要把自签的根证书导入到系统的证书管理的信任证书中去，我这把mac电脑的配置。<br>在程序中找到钥匙串访问-系统-文件-导入项目找到我们上面生成的根证书中的cloudrootCA.pem文件导入进来，如下图：<br><img src="/images/certificate/15116263436759.jpg" alt=""><br>浏览器上访问nginx提供的服务<br><img src="/images/certificate/15116697191126.png" alt=""></p>
+<p><img src="/images/certificate/15116696692303.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在很多情况下，我们有内部开发环境中，希望用到https访问，并且如果没有正式的证书的话，都是用自签名的证书来进行一根多子的签发不同域名的证书。然后通过在浏览器配置一个根证书就可以得到多个子域名的https访问的证书安全绿的认证。&lt;br&gt;本文主要是用sh脚本通过openssl
+    
+    </summary>
+    
+      <category term="certificate" scheme="http://www.troylc.cc/categories/certificate/"/>
+    
+      <category term="nginx" scheme="http://www.troylc.cc/categories/certificate/nginx/"/>
+    
+      <category term="macOs" scheme="http://www.troylc.cc/categories/certificate/nginx/macOs/"/>
+    
+    
+      <category term="linux" scheme="http://www.troylc.cc/tags/linux/"/>
+    
+      <category term="macOs" scheme="http://www.troylc.cc/tags/macOs/"/>
+    
+      <category term="certificate nginx" scheme="http://www.troylc.cc/tags/certificate-nginx/"/>
+    
+      <category term="chrome" scheme="http://www.troylc.cc/tags/chrome/"/>
+    
+  </entry>
   
   <entry>
     <title>docker容器及swarm集群之compose健康检查与容器依赖</title>
@@ -1920,101 +1983,6 @@ a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/.
       <category term="spring-boot" scheme="http://www.troylc.cc/tags/spring-boot/"/>
     
       <category term="spring cloud" scheme="http://www.troylc.cc/tags/spring-cloud/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>docker-compose部署swarm服务(docker1.13.1)</title>
-    <link href="http://www.troylc.cc/docker-compose/2017/02/25/Docker08docker-compose01.html"/>
-    <id>http://www.troylc.cc/docker-compose/2017/02/25/Docker08docker-compose01.html</id>
-    <published>2017-02-25T15:18:08.000Z</published>
-    <updated>2017-02-25T15:22:31.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在2017年发布的 Docker 1.13版本中的Docker Compose v3 规范，已经全面支持 Swarm mode 概念。而且从 1.13 开始，Docker 命令行工具支持直接使用 v3 版本的 docker-compose.yml 通过docker stack deploy **进行部署管理，这大大简化了容器编排使用的复杂性。</p>
-<h3 id="部署环境"><a href="#部署环境" class="headerlink" title="部署环境"></a>部署环境</h3><table>
-<thead>
-<tr>
-<th>IP</th>
-<th>主机名</th>
-<th>角色</th>
-<th>安装软件  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>172.193.6.222</td>
-<td>cloud01</td>
-<td>manager</td>
-<td>centos7.2/docker1.13/docker-compose1,11</td>
-</tr>
-<tr>
-<td>172.193.6.223</td>
-<td>cloud02</td>
-<td>worker</td>
-<td>centos7.2/docker1.13/docker-compose1,11</td>
-</tr>
-<tr>
-<td>172.193.6.224</td>
-<td>cloud03</td>
-<td>worker</td>
-<td>centos7.2/docker1.13/docker-compose1,11  </td>
-</tr>
-</tbody>
-</table>
-<p>安装请参考 <a href="http://www.toutiao.com/i6385354267686863361/" target="_blank" rel="external">docker1.13.x及docker-compose1.11.x的安装与升级</a>  </p>
-<h3 id="服务部署"><a href="#服务部署" class="headerlink" title="服务部署"></a>服务部署</h3><p>服务部署示意图请参考 <a href="http://www.toutiao.com/i6384915440631546370/" target="_blank" rel="external">swarm集群服务部署与维护</a> 如下图所示：<br><img src="http://www.troylc.cc/images/docker/swarm/2-4.png" alt="image"></p>
-<h3 id="docker-compose在swarm模式中部署服务"><a href="#docker-compose在swarm模式中部署服务" class="headerlink" title="docker-compose在swarm模式中部署服务"></a>docker-compose在swarm模式中部署服务</h3><h4 id="compose文件定义："><a href="#compose文件定义：" class="headerlink" title="compose文件定义："></a>compose文件定义：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">#docker-compose v3版本规范</div><div class="line">version: &quot;3.1&quot;</div><div class="line"></div><div class="line">services:</div><div class="line">  mysql:</div><div class="line">    image: &quot;test:5000/myhub/mysql:5.7-dws&quot;</div><div class="line">    #container_name: dcmysql</div><div class="line">    networks:</div><div class="line">      - my-overlay-network</div><div class="line">    deploy:</div><div class="line">      update_config:</div><div class="line">        parallelism: 1</div><div class="line">        delay: 2s</div><div class="line">      restart_policy:</div><div class="line">        condition: on-failure</div><div class="line">    environment:</div><div class="line">      MYSQL_ROOT_PASSWORD: talent</div><div class="line">      MYSQL_DATABASE: citydb</div><div class="line">    volumes:</div><div class="line">      - /nfsdata/data/mysql:/var/lib/mysql</div><div class="line">    expose:</div><div class="line">     - &quot;3306&quot;</div><div class="line">  bootService:</div><div class="line">    image: &quot;test:5000/myhub/bootservice:2.0-dws&quot;</div><div class="line">    networks:</div><div class="line">      - my-overlay-network</div><div class="line">    deploy:</div><div class="line">      replicas: 3</div><div class="line">      update_config:</div><div class="line">        parallelism: 1</div><div class="line">        delay: 2s</div><div class="line">      restart_policy:</div><div class="line">        condition: on-failure</div><div class="line">    expose:</div><div class="line">      - &quot;8888&quot; </div><div class="line">  nginx:</div><div class="line">    image: &quot;test:5000/myhub/nginx:1.11-dws&quot;</div><div class="line">    networks:</div><div class="line">      - my-overlay-network</div><div class="line">    deploy:</div><div class="line">      replicas: 2</div><div class="line">      update_config:</div><div class="line">        parallelism: 1</div><div class="line">        delay: 2s</div><div class="line">      restart_policy:</div><div class="line">        condition: on-failure  </div><div class="line">    ports:</div><div class="line">      - &quot;172.19.6.223:80:80&quot;</div><div class="line">networks:</div><div class="line">  my-overlay-network:</div><div class="line">    driver: overlay</div><div class="line">    ipam:</div><div class="line">      config:</div><div class="line">        - subnet: &quot;10.0.7.0/24&quot;</div></pre></td></tr></table></figure>
-<p><strong>说明：</strong><br>v3 中引入了 deploy 指令，可对Swarm mode中服务部署的进行细粒度控制，包括  </p>
-<ul>
-<li>resources：定义  cpu_shares, cpu_quota, cpuset, mem_limit, memswap_limit 等容器资源控制。（v1/v2中相应指令不再支持）</li>
-<li>mode：支持 global 和 replicated (缺省) 模式的服务；</li>
-<li>replicas：定义 replicated 模式的服务的复本数量</li>
-<li>placement：定义服务容器的部署放置约束条件</li>
-<li>update_config：定义服务的更新方式</li>
-<li>restart_policy：定义服务的重启条件 （v1/v2中restart指令不再支持）</li>
-<li>service：定义服务的标签</li>
-</ul>
-<h4 id="部署服务的操作"><a href="#部署服务的操作" class="headerlink" title="部署服务的操作"></a>部署服务的操作</h4><p>Swarm模式允许创建一个Docker Engines集群。在1.13版本中， docker stack deploy命令可以用来部署一个Compose文件到Swarm模式。Docker Compose带给我们多容器应用，  </p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>docker stack deploy –compose-file=docker-compose.yml dws</td>
-<td>启动服务通过compose文件 stack命名为dws</td>
-</tr>
-<tr>
-<td>docker service scale xxx=n</td>
-<td>伸缩服务,需要指定服务名称和伸缩副本数  </td>
-</tr>
-<tr>
-<td>docker stack rm</td>
-<td>删除服务</td>
-</tr>
-</tbody>
-</table>
-<h4 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[root@tsccloud01 docker-compose]<span class="comment"># docker stack deploy --compose-file=docker-compose.yml dws</span></div><div class="line">Ignoring deprecated options:</div><div class="line"></div><div class="line">expose: Exposing ports is unnecessary - services on the same network can access each other<span class="string">'s containers on any port.</span></div><div class="line">Creating service dws_nginx</div><div class="line">Creating service dws_mysql </div><div class="line">Creating service dws_bootService</div><div class="line"></div><div class="line">[root@tsccloud01 docker-compose]# docker stack ps dws</div><div class="line">ID            NAME               IMAGE                               NODE        DESIRED STATE  CURRENT STATE               ERROR  PORTS</div><div class="line">khfdjfs5wycw  dws_bootService.1  tcr:5000/myhub/bootservice:1.0-dws  tsccloud02  Running        Running about a minute ago         </div><div class="line">omo3n8ftk8g3  dws_nginx.1        tcr:5000/myhub/nginx:1.11-dws       tsccloud03  Running        Running about a minute ago         </div><div class="line">e8mmigd1tj9e  dws_mysql.1        tcr:5000/myhub/mysql:5.7-dws        tsccloud01  Running        Running about an hour ago          </div><div class="line">xzlubd2fou4f  dws_bootService.2  tcr:5000/myhub/bootservice:1.0-dws  tsccloud03  Running        Running about a minute ago         </div><div class="line">5ws9o7xwmbpd  dws_nginx.2        tcr:5000/myhub/nginx:1.11-dws       tsccloud02  Running        Running about a minute ago         </div><div class="line">5gzncbpq9626  dws_bootService.3  tcr:5000/myhub/bootservice:1.0-dws  tsccloud01  Running        Running about a minute ago</div><div class="line"></div><div class="line">[root@tsccloud01 docker-compose]# docker service ls</div><div class="line">ID            NAME             MODE        REPLICAS  IMAGE</div><div class="line">b63us2e2eksg  dws_nginx        replicated  2/2       tcr:5000/myhub/nginx:1.11-dws</div><div class="line">kqo1g3s1z0mr  dws_bootService  replicated  3/3       tcr:5000/myhub/bootservice:1.0-dws</div><div class="line">rvlfnogtgtso  dws_mysql        replicated  1/1       tcr:5000/myhub/mysql:5.7-dws</div></pre></td></tr></table></figure>
-<p>通过以上操作，和之前用命令在swarm集群中部署一样，</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在2017年发布的 Docker 1.13版本中的Docker Compose v3 规范，已经全面支持 Swarm mode 概念。而且从 1.13 开始，Docker 命令行工具支持直接使用 v3 版本的 docker-compose.yml 通过docker stac
-    
-    </summary>
-    
-      <category term="docker-compose" scheme="http://www.troylc.cc/categories/docker-compose/"/>
-    
-    
-      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
-    
-      <category term="swarm" scheme="http://www.troylc.cc/tags/swarm/"/>
-    
-      <category term="docker-compose" scheme="http://www.troylc.cc/tags/docker-compose/"/>
     
   </entry>
   
