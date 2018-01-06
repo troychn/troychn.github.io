@@ -4,6 +4,33 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/CI-CD/gitlab/2018/01/04/cicd-gitlab.html</loc>
+    <lastmod>2018-01-04T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>持续集成(CI)与持续交付(CD)之gitlab服务安装与配置</title>
+        <pubTime>2018-01-04T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>gitlab</tag>
+         
+         
+           
+             
+              <breadCrumb title="CI/CD" url="http://www.troylc.cc/categories/CI-CD/"/>
+          
+             
+              <breadCrumb title="gitlab" url="http://www.troylc.cc/categories/CI-CD/gitlab/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/certificate/nginx/macOs/2017/11/27/nginx-chrome-ce.html</loc>
     <lastmod>2017-11-27T09:26:20.000Z</lastmod>
     <data>
@@ -248,28 +275,6 @@
 
     
   <url>
-    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
-    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
-    <data>
-        <display>
-        <title>linux系列(三)-linux在线调整分区大小-centos7</title>
-        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>shell</tag>
-         
-         
-           
-             
-              <breadCrumb title="linux" url="http://www.troylc.cc/categories/linux/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
     <lastmod>2017-06-02T09:26:20.000Z</lastmod>
     <data>
@@ -289,6 +294,28 @@
            
              
               <breadCrumb title="rancher" url="http://www.troylc.cc/categories/rancher/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
+    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>linux系列(三)-linux在线调整分区大小-centos7</title>
+        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>shell</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="http://www.troylc.cc/categories/linux/"/>
           
         </display>
     </data>

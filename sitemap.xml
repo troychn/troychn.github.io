@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.troylc.cc/CI-CD/gitlab/2018/01/04/cicd-gitlab.html</loc>
+    
+    <lastmod>2018-01-04T09:26:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.troylc.cc/certificate/nginx/macOs/2017/11/27/nginx-chrome-ce.html</loc>
     
     <lastmod>2017-11-27T09:26:20.000Z</lastmod>
@@ -65,14 +72,14 @@
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
+    <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
     
     <lastmod>2017-06-02T09:26:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
+    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
     
     <lastmod>2017-06-02T09:26:20.000Z</lastmod>
     
