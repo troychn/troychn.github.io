@@ -275,6 +275,28 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
+    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>linux系列(三)-linux在线调整分区大小-centos7</title>
+        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>shell</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="http://www.troylc.cc/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/rancher/2017/06/02/rancher-01.html</loc>
     <lastmod>2017-06-02T09:26:20.000Z</lastmod>
     <data>
@@ -294,28 +316,6 @@
            
              
               <breadCrumb title="rancher" url="http://www.troylc.cc/categories/rancher/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.troylc.cc/linux/2017/06/02/linux-03.html</loc>
-    <lastmod>2017-06-02T09:26:20.000Z</lastmod>
-    <data>
-        <display>
-        <title>linux系列(三)-linux在线调整分区大小-centos7</title>
-        <pubTime>2017-06-02T09:26:15.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>shell</tag>
-         
-         
-           
-             
-              <breadCrumb title="linux" url="http://www.troylc.cc/categories/linux/"/>
           
         </display>
     </data>
@@ -883,6 +883,7 @@
     </url>
 
     
+    
   <url>
     <loc>http://www.troylc.cc/linux/2016/07/23/linux-02.html</loc>
     <lastmod>2016-07-23T09:26:20.000Z</lastmod>
@@ -904,7 +905,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>http://www.troylc.cc/docker/2016/07/17/docker-01.html</loc>
