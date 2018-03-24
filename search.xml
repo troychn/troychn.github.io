@@ -616,6 +616,42 @@ a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/.
     </entry>
     
     <entry>
+      <title><![CDATA[macOs使用技巧与问题记录-outlook2016无法搜索]]></title>
+      <url>http://www.troylc.cc/macOs/2017/06/11/macos-03-use-records.html</url>
+      <content type="html"><![CDATA[<p>#使用技巧：</p>
+<p>#问题记录：</p>
+<ol>
+<li>macos最新版本安装outlook无法搜索的问题</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>问题描述</th>
+<th>问题环境</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macos最新版本安装    outlook无法搜索的问题</td>
+<td>Macos:10.13.3   Outlook:2016-16.11</td>
+<td>outlook2016版本的搜索功能依赖于mac的聚焦搜索(spotlight)功能，这时我用spotlight来测试一下，果然spotlight功能也不好使用，于是想到怎么来重建这个索引</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>解决方法：<br>首先：关闭outlook2016的应用<br>其次：在命令行中输入以下内容</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>该命令用来关闭索引</div><div class="line">sudo mdutil -i off /</div><div class="line"><span class="meta">#</span>该命令用来删除索引</div><div class="line">sudo mdutil -E /</div><div class="line"><span class="meta">#</span>该命令用来重建索引</div><div class="line">sudo mdutil -i on /</div></pre></td></tr></table></figure>
+<p>  然后用快捷键呼出spotlight菜单，随便输入一个词，就能看到提示，正在进行索引，并且告诉你重建索引的时间。于是搜索了一下，果然在spotlight里可以搜索了。<br>再次：进入outlook2016中，再试一下搜索，发现好像还是不行。于是从官网上找到了如下代码,来重新为outlook邮件创建索引  </p>
+<pre><code class="shell">mdimport -g /Applications/Microsoft\ Outlook.app/Contents/Library/Spotlight/Microsoft\ Outlook\ Spotlight\ Importer.mdimporter -d1 ~/Library/Group\ Containers/UBF8T346G9.Office/Outlook/Outlook\ 15\ Profiles/Main\ Profile
+</code></pre>
+<p>通过以上命令操作完后，再次打开outlook2016，发现果然在outlook2016中就可以搜索了    </p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[macOs终端工具优化iTerm2+oh my zsh]]></title>
       <url>http://www.troylc.cc/macOs/2017/06/11/macos-01.html</url>
       <content type="html"><![CDATA[<p>工欲善其事,必先利其器。能从千百年传承下来，必定是经过各行各业的实践与验证，到今年仍然适用，今天就分享一些软件行业对程序员来说的利器(zsh+oh my zsh)这款屌炸天linux下的增加命令行的工具。</p>

@@ -861,6 +861,71 @@ a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/.
   </entry>
   
   <entry>
+    <title>macOs使用技巧与问题记录-outlook2016无法搜索</title>
+    <link href="http://www.troylc.cc/macOs/2017/06/11/macos-03-use-records.html"/>
+    <id>http://www.troylc.cc/macOs/2017/06/11/macos-03-use-records.html</id>
+    <published>2017-06-11T09:26:15.000Z</published>
+    <updated>2017-06-11T09:26:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>#使用技巧：</p>
+<p>#问题记录：</p>
+<ol>
+<li>macos最新版本安装outlook无法搜索的问题</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>问题描述</th>
+<th>问题环境</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macos最新版本安装    outlook无法搜索的问题</td>
+<td>Macos:10.13.3   Outlook:2016-16.11</td>
+<td>outlook2016版本的搜索功能依赖于mac的聚焦搜索(spotlight)功能，这时我用spotlight来测试一下，果然spotlight功能也不好使用，于是想到怎么来重建这个索引</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>解决方法：<br>首先：关闭outlook2016的应用<br>其次：在命令行中输入以下内容</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>该命令用来关闭索引</div><div class="line">sudo mdutil -i off /</div><div class="line"><span class="meta">#</span>该命令用来删除索引</div><div class="line">sudo mdutil -E /</div><div class="line"><span class="meta">#</span>该命令用来重建索引</div><div class="line">sudo mdutil -i on /</div></pre></td></tr></table></figure>
+<p>  然后用快捷键呼出spotlight菜单，随便输入一个词，就能看到提示，正在进行索引，并且告诉你重建索引的时间。于是搜索了一下，果然在spotlight里可以搜索了。<br>再次：进入outlook2016中，再试一下搜索，发现好像还是不行。于是从官网上找到了如下代码,来重新为outlook邮件创建索引  </p>
+<pre><code class="shell">mdimport -g /Applications/Microsoft\ Outlook.app/Contents/Library/Spotlight/Microsoft\ Outlook\ Spotlight\ Importer.mdimporter -d1 ~/Library/Group\ Containers/UBF8T346G9.Office/Outlook/Outlook\ 15\ Profiles/Main\ Profile
+</code></pre>
+<p>通过以上命令操作完后，再次打开outlook2016，发现果然在outlook2016中就可以搜索了    </p>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#使用技巧：&lt;/p&gt;
+&lt;p&gt;#问题记录：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;macos最新版本安装outlook无法搜索的问题&lt;/li&gt;
+&lt;/ol&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;问题描述&lt;/th&gt;
+&lt;th&gt;问题环境&lt;/th&gt;
+&lt;th&gt;原因&lt;/th&gt;
+&lt;/tr&gt;
+    
+    </summary>
+    
+      <category term="macOs" scheme="http://www.troylc.cc/categories/macOs/"/>
+    
+    
+      <category term="macOs" scheme="http://www.troylc.cc/tags/macOs/"/>
+    
+      <category term="outlook" scheme="http://www.troylc.cc/tags/outlook/"/>
+    
+  </entry>
+  
+  <entry>
     <title>macOs终端工具优化iTerm2+oh my zsh</title>
     <link href="http://www.troylc.cc/macOs/2017/06/11/macos-01.html"/>
     <id>http://www.troylc.cc/macOs/2017/06/11/macos-01.html</id>
@@ -1749,132 +1814,6 @@ a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/.
     <summary type="html">
     
       &lt;p&gt;通过前面几节，我们已经通过spring cloud的组件构建了一个简单的微服务架构。&lt;br&gt;我们使用Spring Cloud中的Eureka实现了服务注册中心以及服务注册与发现；而服务间通过Feign实现服务的消费，为了使得服务集群更为健壮，使用Hystrix的融断机制来避
-    
-    </summary>
-    
-      <category term="spring cloud" scheme="http://www.troylc.cc/categories/spring-cloud/"/>
-    
-    
-      <category term="docker" scheme="http://www.troylc.cc/tags/docker/"/>
-    
-      <category term="swarm" scheme="http://www.troylc.cc/tags/swarm/"/>
-    
-      <category term="docker-compose" scheme="http://www.troylc.cc/tags/docker-compose/"/>
-    
-      <category term="java" scheme="http://www.troylc.cc/tags/java/"/>
-    
-      <category term="spring-boot" scheme="http://www.troylc.cc/tags/spring-boot/"/>
-    
-      <category term="spring cloud" scheme="http://www.troylc.cc/tags/spring-cloud/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>SpringCloud和docker之微服务-consumer(三)</title>
-    <link href="http://www.troylc.cc/spring-cloud/2017/03/11/spirng-cloud-productservice.html"/>
-    <id>http://www.troylc.cc/spring-cloud/2017/03/11/spirng-cloud-productservice.html</id>
-    <published>2017-03-10T16:39:41.000Z</published>
-    <updated>2017-03-10T16:44:18.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>本节主要说明一下通过springcloud的一种声明式、模板化的http客户端feign来实现获取注册到eureka注册中心的用户服务的信息。并集成了hystrix(熔断器)，控制服务和服务之间的节点调用，提高服务的延迟和故障的容错能力，通过hystrix dashboard(熔断器 仪表盘)来直观的展示。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><table>
-<thead>
-<tr>
-<th>疑问</th>
-<th>参考</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>如果你对eureka注册中心不太了解？</td>
-<td><a href="http://www.troylc.cc/spring-cloud/2017/03/01/spirng-cloud-eureka.html">SpringCloud和docker之微服务-eureka</a></td>
-</tr>
-<tr>
-<td>如果你对服务注册不太了解</td>
-<td><a href="http://www.troylc.cc/spring-cloud/2017/03/09/spirng-cloud-userservice.html">SpringCloud和docker之微服务-provider</a>  </td>
-</tr>
-<tr>
-<td>如果你对docker安装不了解</td>
-<td><a href="http://www.troylc.cc/docker/2017/01/05/docker04ininstall.html">docker、docker-compse最新版本安装</a></td>
-</tr>
-<tr>
-<td>如果你对docker-swarm服务部署不太了解</td>
-<td><a href="http://www.troylc.cc/docker/2017/02/07/Docker07docker-swarm01.html">docker-swarm创建与管理集群</a>、<a href="http://www.troylc.cc/docker/2017/02/19/Docker07docker-swarm02.html">docker-swarm集群服务部署与维护</a></td>
-</tr>
-</tbody>
-</table>
-<h2 id="效果访问说明："><a href="#效果访问说明：" class="headerlink" title="效果访问说明："></a>效果访问说明：</h2><table>
-<thead>
-<tr>
-<th>访问URL</th>
-<th>访问方式</th>
-<th>说明  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="http://productservice:9515/getUsers/1" target="_blank" rel="external">http://productservice:9515/getUsers/1</a></td>
-<td>FeginClient方式调用接口</td>
-<td>根据用户ID获取用户信息</td>
-</tr>
-<tr>
-<td><a href="http://productservice:9515/users-rest/1" target="_blank" rel="external">http://productservice:9515/users-rest/1</a></td>
-<td>RestTemplate方式调用接口</td>
-<td>根据ID获取用户信息  </td>
-</tr>
-</tbody>
-</table>
-<h2 id="Hystrix-Dashboard监控说明"><a href="#Hystrix-Dashboard监控说明" class="headerlink" title="Hystrix Dashboard监控说明"></a>Hystrix Dashboard监控说明</h2><table>
-<thead>
-<tr>
-<th>访问URL</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="http://productservice:9515/hystrix" target="_blank" rel="external">http://productservice:9515/hystrix</a></td>
-<td>hystrix仪表盘访问地址</td>
-</tr>
-<tr>
-<td><a href="http://productservice:9515/hystrix.stream" target="_blank" rel="external">http://productservice:9515/hystrix.stream</a></td>
-<td>实时监控接口调用的访问地址，配合仪表盘使用，更能直观展示服务的访问情况。  </td>
-</tr>
-</tbody>
-</table>
-<h2 id="FeignClient"><a href="#FeignClient" class="headerlink" title="FeignClient"></a>FeignClient</h2><ul>
-<li>首先创建子工程、引用依赖包<br>创建一个consumer maven子工程microservice-consumer-productservice,并在pom.xml中引用所需依赖，如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">&lt;!--添加spring cloud服务注册的依赖--&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">     &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">     &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div><div class="line"> &lt;!--添加spring cloud的feign依赖--&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">     &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">     &lt;artifactId&gt;spring-cloud-starter-feign&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div><div class="line"> &lt;!--添加spring cloud的hystrix断路器：主要是服务间调用提供更加强大的容错能力 --&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">     &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">     &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div><div class="line"> &lt;!-- 用于暴露自身信息的模块，它的主要作用是用于监控与管理 --&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">     &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div><div class="line"> &lt;!-- Spring Boot中使用Swagger2构建RESTful APIs  --&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">     &lt;groupId&gt;io.springfox&lt;/groupId&gt;</div><div class="line">     &lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">     &lt;groupId&gt;io.springfox&lt;/groupId&gt;</div><div class="line">     &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div><div class="line"> &lt;!-- hystrix-dashboard监控 --&gt;</div><div class="line"> &lt;dependency&gt;</div><div class="line">     &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">     &lt;artifactId&gt;spring-cloud-starter-hystrix-dashboard&lt;/artifactId&gt;</div><div class="line"> &lt;/dependency&gt;</div></pre></td></tr></table></figure>
-<ul>
-<li>定义FeignClient、Hystrix<br>在spring boot启动类上增加@EnableFeignClients、@EnableCircuitBreaker、@EnableHystrixDashboard</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="meta">@EnableDiscoveryClient</span></div><div class="line"><span class="meta">@EnableFeignClients</span></div><div class="line"><span class="meta">@EnableCircuitBreaker</span> <span class="comment">//使用@EnableCircuitBreaker注解开启断路器功能</span></div><div class="line"><span class="meta">@EnableHystrixDashboard</span> <span class="comment">//启用HystrixDashboard功能</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductServiceApplication</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 实例化RestTemplate，通过<span class="doctag">@LoadBalanced</span>注解开启均衡负载能力.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span> restTemplate</div><div class="line">     */</div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="meta">@LoadBalanced</span></div><div class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SpringApplication.run(ProductServiceApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>定义需要通过FeignClient访问的接口列表，如下</p>
-<p>UserServiceFeign<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// name为服务名，对应spring.application.name。注意：此服务名必须已注册进Eureka服务中心</div><div class="line">@FeignClient(name = &quot;microservice-provider-userservice&quot;,fallback = UserServiceFeignFallback.class, configuration = FeignConfig.class)</div><div class="line">public interface UserServiceFeign extends IUserService&#123;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>IUserService</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 用户业务接口</div><div class="line"> * Created by troylc on 2017/3/6.</div><div class="line"> */</div><div class="line">public interface IUserService &#123;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 根据ID查的对应的用户</div><div class="line">     *</div><div class="line">     * @param id</div><div class="line">     * @return</div><div class="line">     */</div><div class="line">    @RequestMapping(value = &quot;/users/&#123;id&#125;&quot;, method = RequestMethod.GET)</div><div class="line">    ResultInfo&lt;UserBean&gt; getUserById(@PathVariable(value = &quot;id&quot;) Long id) throws Exception;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>定义各接口对应的fallback方式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 定义各接口对应的fallback方法</div><div class="line"> * Created by troylc on 2017/3/6.</div><div class="line"> */</div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceFeignFallback</span> <span class="keyword">implements</span> <span class="title">UserServiceFeign</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> ResultInfo <span class="title">getUserById</span><span class="params">(Long id)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultInfo&lt;&gt;(ReturnInfoEnum.NULL.getState(), ReturnInfoEnum.NULL.getStateInfo());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>定义以RestTemplae方式调用接口<br>UserServiceFeignRest</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 定义通过rest方式访问接口</div><div class="line"> * Created by troylc on 2017/3/6.</div><div class="line"> */</div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceFeignRest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> RestTemplate restTemplate;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ResultInfo&lt;UserBean&gt; <span class="title">getUser</span><span class="params">(Long id)</span> </span>&#123;</div><div class="line">        ResultInfo&lt;UserBean&gt; resultInfo  = restTemplate.exchange(<span class="string">"http://microservice-provider-userservice/users/&#123;id&#125;"</span>, HttpMethod.GET, <span class="keyword">null</span>, <span class="keyword">new</span> ParameterizedTypeReference&lt;ResultInfo&lt;UserBean&gt;&gt;() &#123;</div><div class="line">        &#125;, id).getBody();</div><div class="line">        <span class="keyword">return</span> resultInfo;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>定义controller<br>controoler中增加API文档注解、设置启用Hystrix超时及时间</li>
-</ul>
-<p>ProductControoler<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 测试商品controol</div><div class="line"> * Created by troylc on 2017/3/5.</div><div class="line"> */</div><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductControoler</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Logger log = LoggerFactory.getLogger(ProductControoler.class);</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> IProductService productService;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> UserServiceFeign userServiceFeign;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> UserServiceFeignRest userServiceFeignRest;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 注：<span class="doctag">@GetMapping</span>("/&#123;id&#125;")是spring 4.3的新注解等价于：</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> id</div><div class="line">     * <span class="doctag">@return</span> user信息</div><div class="line">     * <span class="doctag">@RequestMapping</span>(value = "/id", method = RequestMethod.GET)</div><div class="line">     * 类似的注解还有<span class="doctag">@PostMapping</span>等等</div><div class="line">     */</div><div class="line">    <span class="meta">@ApiOperation</span>(value = <span class="string">"查找用户,通过spring cloud feign方式"</span>, notes = <span class="string">"根据用户的ID，查找对应的用户"</span>)</div><div class="line">    <span class="meta">@ApiImplicitParam</span>(name = <span class="string">"id"</span>, value = <span class="string">"用户ID"</span>, required = <span class="keyword">true</span>, paramType = <span class="string">"path"</span>, dataType = <span class="string">"Long"</span>)</div><div class="line">    <span class="meta">@HystrixCommand</span>(commandProperties = &#123;</div><div class="line">            <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.isolation.thread.timeoutInMilliseconds"</span>, value = <span class="string">"1000"</span>),</div><div class="line">            <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.timeout.enabled"</span>, value = <span class="string">"false"</span>)&#125;)</div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/getUsers/&#123;id&#125;"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> ResultInfo <span class="title">getUserById</span><span class="params">(@PathVariable Long id)</span> </span>&#123;</div><div class="line">        UserBean userBean = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ResultInfo&lt;UserBean&gt; resultInfo = userServiceFeign.getUserById(id);</div><div class="line">            userBean = resultInfo.getData();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">            log.error(e.getMessage());</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ResultInfo&lt;UserBean&gt;(ReturnInfoEnum.SYSTEM_ERROR.getState(), ReturnInfoEnum.SYSTEM_ERROR.getStateInfo());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultInfo&lt;&gt;(ReturnInfoEnum.SUCCESS.getState(), ReturnInfoEnum.SUCCESS.getStateInfo(), userBean);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 注：<span class="doctag">@GetMapping</span>("/&#123;id&#125;")是spring 4.3的新注解等价于：</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> id</div><div class="line">     * <span class="doctag">@return</span> user信息</div><div class="line">     * <span class="doctag">@RequestMapping</span>(value = "/id", method = RequestMethod.GET)</div><div class="line">     * 类似的注解还有<span class="doctag">@PostMapping</span>等等</div><div class="line">     */</div><div class="line">    <span class="meta">@ApiOperation</span>(value = <span class="string">"查找库存端口"</span>, notes = <span class="string">"根据端口的ID，查找对应的商品信息"</span>)</div><div class="line">    <span class="meta">@ApiImplicitParam</span>(name = <span class="string">"id"</span>, value = <span class="string">"商品ID"</span>, required = <span class="keyword">true</span>, paramType = <span class="string">"path"</span>, dataType = <span class="string">"Long"</span>)</div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/getCommodityBean/&#123;id&#125;"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> ResultInfo <span class="title">getCommodityBeanById</span><span class="params">(@PathVariable Long id)</span> </span>&#123;</div><div class="line">        ProductBean productBean = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            productBean = productService.getCommodityById(id);</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            log.error(e.getMessage());</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ResultInfo&lt;ProductBean&gt;(ReturnInfoEnum.SYSTEM_ERROR.getState(), ReturnInfoEnum.SYSTEM_ERROR.getStateInfo());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultInfo&lt;&gt;(ReturnInfoEnum.SUCCESS.getState(), ReturnInfoEnum.SUCCESS.getStateInfo(), productBean);</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="meta">@ApiOperation</span>(value = <span class="string">"查找用户,通过spring RestTemplate方式"</span>, notes = <span class="string">"根据用户的ID，查找对应的用户"</span>)</div><div class="line">    <span class="meta">@ApiImplicitParam</span>(name = <span class="string">"id"</span>, value = <span class="string">"用户ID"</span>, required = <span class="keyword">true</span>, paramType = <span class="string">"path"</span>, dataType = <span class="string">"Long"</span>)</div><div class="line">    <span class="meta">@HystrixCommand</span>(commandProperties = &#123;</div><div class="line">            <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.isolation.thread.timeoutInMilliseconds"</span>, value = <span class="string">"1000"</span>),</div><div class="line">            <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.timeout.enabled"</span>, value = <span class="string">"false"</span>)&#125;)</div><div class="line">    <span class="meta">@RequestMapping</span>(value = <span class="string">"/users-rest/&#123;id&#125;"</span>, method = RequestMethod.GET)</div><div class="line">    <span class="function"><span class="keyword">public</span> ResultInfo <span class="title">getUserByRest</span><span class="params">(@PathVariable Long id)</span> </span>&#123;</div><div class="line">        UserBean userBean = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ResultInfo&lt;UserBean&gt; resultInfo = userServiceFeignRest.getUser(id);</div><div class="line">            userBean =   resultInfo.getData();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">            log.error(e.getMessage());</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ResultInfo&lt;UserBean&gt;(ReturnInfoEnum.SYSTEM_ERROR.getState(), ReturnInfoEnum.SYSTEM_ERROR.getStateInfo());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultInfo&lt;&gt;(ReturnInfoEnum.SUCCESS.getState(), ReturnInfoEnum.SUCCESS.getStateInfo(), userBean);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="部署至swarm集群中-运行测试"><a href="#部署至swarm集群中-运行测试" class="headerlink" title="部署至swarm集群中-运行测试"></a>部署至swarm集群中-运行测试</h2><p>docker-compose文件内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line">version: &quot;3&quot;</div><div class="line">services:</div><div class="line">  eurekaService1:      # 默认情况下，其他服务可以使用服务名称连接到该服务。因此，对于peer2的节点，它需要连接http://peer1:8761/eureka/，因此需要配置该服务的名称是peer1。</div><div class="line">    image: tcr:5000/myhub/microservice-eureka-service:0.0.1</div><div class="line">    deploy:</div><div class="line">      replicas: 1   #定义 replicated 模式的服务的复本数量</div><div class="line">      update_config:</div><div class="line">        parallelism: 1    #每次更新复本数量</div><div class="line">        delay: 2s       #每次更新间隔</div><div class="line">      restart_policy:</div><div class="line">        condition: on-failure     #定义服务的重启条件</div><div class="line">    networks:</div><div class="line">      - eureka-net</div><div class="line">    ports:</div><div class="line">      - &quot;9511:9511&quot;</div><div class="line">    environment:</div><div class="line">      - spring.profiles.active=eurekaService1</div><div class="line">  eurekaService2:</div><div class="line">    image: tcr:5000/myhub/microservice-eureka-service:0.0.1</div><div class="line">    deploy:</div><div class="line">      replicas: 1   #定义 replicated 模式的服务的复本数量</div><div class="line">      update_config:</div><div class="line">        parallelism: 1    #每次更新复本数量</div><div class="line">        delay: 2s       #每次更新间隔</div><div class="line">      restart_policy:</div><div class="line">        condition: on-failure     #定义服务的重启条件</div><div class="line">    networks:</div><div class="line">      - eureka-net</div><div class="line">    ports:</div><div class="line">      - &quot;9512:9512&quot;</div><div class="line">    environment:</div><div class="line">      - spring.profiles.active=eurekaService2</div><div class="line">  eurekaService3:</div><div class="line">      image: tcr:5000/myhub/microservice-eureka-service:0.0.1</div><div class="line">      deploy:</div><div class="line">        replicas: 1   #定义 replicated 模式的服务的复本数量</div><div class="line">        update_config:</div><div class="line">          parallelism: 1    #每次更新复本数量</div><div class="line">          delay: 2s       #每次更新间隔</div><div class="line">        restart_policy:</div><div class="line">          condition: on-failure     #定义服务的重启条件</div><div class="line">      networks:</div><div class="line">        - eureka-net</div><div class="line">      ports:</div><div class="line">        - &quot;9513:9513&quot;</div><div class="line">      environment:</div><div class="line">        - spring.profiles.active=eurekaService3</div><div class="line">  userService:</div><div class="line">        image: tcr:5000/myhub/microservice-provider-userservice:0.0.2</div><div class="line">        deploy:</div><div class="line">          replicas: 1   #定义 replicated 模式的服务的复本数量</div><div class="line">          update_config:</div><div class="line">            parallelism: 1    #每次更新复本数量</div><div class="line">            delay: 2s       #每次更新间隔</div><div class="line">          restart_policy:</div><div class="line">            condition: on-failure     #定义服务的重启条件</div><div class="line">        networks:</div><div class="line">          - eureka-net</div><div class="line">        ports:</div><div class="line">          - &quot;9514:9514&quot;</div><div class="line">  productService:</div><div class="line">          image: tcr:5000/myhub/microservice-consumer-productservice:0.0.2</div><div class="line">          deploy:</div><div class="line">            replicas: 1   #定义 replicated 模式的服务的复本数量</div><div class="line">            update_config:</div><div class="line">              parallelism: 1    #每次更新复本数量</div><div class="line">              delay: 2s       #每次更新间隔</div><div class="line">            restart_policy:</div><div class="line">              condition: on-failure     #定义服务的重启条件</div><div class="line">          networks:</div><div class="line">            - eureka-net</div><div class="line">          ports:</div><div class="line">            - &quot;9515:9515&quot;</div><div class="line">networks:</div><div class="line">  eureka-net:</div><div class="line">    driver: overlay</div></pre></td></tr></table></figure>
-<p>执行：<br><img src="/images/spring-cloud/productservice/1.png" alt="image"></p>
-<p>在AIP接口文档界面点击获取用户接口以feign的方式，输入用户ID，<br>在AIP接口文档界面点击获取用户接口以rest的方式，输入用户ID<br><img src="/images/spring-cloud/productservice/2.png" alt="image"><br><img src="/images/spring-cloud/productservice/3.png" alt="image"><br><img src="/images/spring-cloud/productservice/4.png" alt="image"></p>
-<p>打开仪表盘(<a href="http://productservice:9515/hystrix)，输入http://productservice:9515/hystrix.stream,再多点击几次就出现了监控的数据。" target="_blank" rel="external">http://productservice:9515/hystrix)，输入http://productservice:9515/hystrix.stream,再多点击几次就出现了监控的数据。</a><br><img src="/images/spring-cloud/productservice/5.png" alt="image"><br><img src="/images/spring-cloud/productservice/6.png" alt="image"></p>
-<p><strong>附代码仓库地址：</strong><br>码云：<br><a href="https://git.oschina.net/gittroylc/spring-cloud-docker-microservice" target="_blank" rel="external">https://git.oschina.net/gittroylc/spring-cloud-docker-microservice</a><br>github:<br><a href="https://github.com/troychn/spring-cloud-docker-microservice" target="_blank" rel="external">https://github.com/troychn/spring-cloud-docker-microservice</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;本节主要说明一下通过springcloud的一种声明式、模板化的http客户端feign来实现获取注册到eureka注册中心的用户服务的信息。并集成了hystrix(熔断器)，控制服务和服务之间的节点调用，提高服务的延迟和故障的容错能力，通过hystrix dashboar
     
     </summary>
     
