@@ -4,6 +4,62 @@
   
     
     <entry>
+      <title><![CDATA[ubuntu18.04 server lts版本安装docker及相关配置]]></title>
+      <url>http://www.troylc.cc/ubuntu/2018/05/27/ubuntu18.04-installd-docker.html</url>
+      <content type="html"><![CDATA[<p>最近因项目需要，把服务器的相关操作系统转到ubuntu server上来，所以正好记录一下安装docker的常用配置及注意事项。由于之前项目一直是用centos来做服务器的操作系统，很少关注ubuntu的服务器版本。在使用docker及相关容器平台时发现centos会带来一些不可预知的错误，也很难有相关的修复答案。在查询相关资料后，国外大多在使用ubuntu来做容器平台的操作系统，而且社区相关的问题也比较活跃，所以近期我们也正在考虑转入ubuntu来做容器的操作系统。借此以记录ubuntu相关的基本操作与docker安装。</p>
+<h2 id="ubuntu-18-04-server版本的网络及主机名的配置"><a href="#ubuntu-18-04-server版本的网络及主机名的配置" class="headerlink" title="ubuntu 18.04 server版本的网络及主机名的配置"></a>ubuntu 18.04 server版本的网络及主机名的配置</h2><h4 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h4><p>ubuntu18.04的网络配置已经用netplay接管了，所以修改网络需要修改/etc/netplan/下的50-cloud-init.yaml文件，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">admin@node01:~$ sudo vim /etc/netplan/50-cloud-init.yaml</div><div class="line"><span class="meta">#</span> This file is generated from information provided by<span class="meta">#</span> the datasource.  Changes to it will not persist across an instance.<span class="meta">#</span> To disable cloud-init's network configuration capabilities, write a file<span class="meta">#</span> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg with the following:<span class="meta">#</span> network: &#123;config: disabled&#125;network:    ethernets:        eno1:            addresses:            - 192.168.18.21/24            gateway4: 192.168.18.1            nameservers:                addresses:                - 114.114.114.114                search: []            optional: true    version: 2~                                                                                                                                                                                  :wq</div><div class="line">admin@node01:~$ sudo netplan apply</div><div class="line">admin@node01:~$ ifconfig</div></pre></td></tr></table></figure>
+<p><img src="/images/linux/ubuntu-01/15274068318377.jpg" alt=""></p>
+<h4 id="主机名配置"><a href="#主机名配置" class="headerlink" title="主机名配置"></a>主机名配置</h4><p>如果您正在使用Ubuntu 18.04 LTS服务器，如何重命名或更改服务器主机名。主机名是服务器的唯一名称。这就是服务器在网络上被识别的方式。</p>
+<ol>
+<li>更改主机名文件/etc/hostname中的服务器名称<br>首先编辑/etc/cloud/cloud.cfg并将参数“ preserve_hostname ”从“ false ”设置为“ true</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">admin@node01:~$ sudo vim /etc/cloud/cloud.cfg</div></pre></td></tr></table></figure>
+<p><img src="/images/linux/ubuntu-01/15274072047285.jpg" alt=""><br>其次是编辑/etc/hostname文件，并编辑文件中的名字为你所需要的主机名称<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">admin@node01:~$ sudo vim /etc/hostname</div></pre></td></tr></table></figure></p>
+<p><img src="/images/linux/ubuntu-01/15274073917659.jpg" alt=""></p>
+<ol>
+<li>更改主机文件/etc/hosts中的服务器名称<br>更改主机文件/etc/hosts中的服务器名称,在127.0.0.1后面增加主机名称。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">admin@node01:~$ sudo vim /etc/hosts</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><img src="/images/linux/ubuntu-01/15274075104177.jpg" alt=""></p>
+<ol>
+<li>重新启动服务器<br>最后，重新启动服务器以应用新名称…如果您未重新启动，则新名称将无法正确应用。运行以下命令重新启动服务器。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">admin@node01:~$ sudu reboot</div></pre></td></tr></table></figure>
+<h2 id="ubuntu-18-04-server版本的docker安装及配置"><a href="#ubuntu-18-04-server版本的docker安装及配置" class="headerlink" title="ubuntu 18.04 server版本的docker安装及配置"></a>ubuntu 18.04 server版本的docker安装及配置</h2><h4 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h4><ol>
+<li>移除旧版本docker </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">admin@node21:~$ sudo apt-get remove docker docker-engine docker.io</div></pre></td></tr></table></figure>
+<ol>
+<li>安装软件包来允许apt通过HTTPS使用存储库 </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install apt-transport-https ca-certificates curl software-properties-common</div></pre></td></tr></table></figure>
+<ol>
+<li>添加Docker的官方GPG密钥 </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</div></pre></td></tr></table></figure>
+<ol>
+<li>添加docker的下载源，<br>因为官方还没有ubuntu18的下载源，所以先用ubuntu17（zesty）的<br>如果操作系统是ubuntu14.04把zesty换成trusty，如果是ubuntu16.04换成xenial </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu zesty stable&quot;</div></pre></td></tr></table></figure>
+<ol>
+<li>安装docker-ce </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update </div><div class="line">sudo apt-get install docker-ce</div></pre></td></tr></table></figure>
+<ol>
+<li>授于当前用户不需要使用sudo来执行docker命令的权限<br>创建docker组 </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo groupadd docker</div></pre></td></tr></table></figure>
+<p>将当前用户加入docker组 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo gpasswd -a $&#123;USER&#125; docker </div><div class="line">#或者 </div><div class="line">sudo usermod -aG docker $USER</div></pre></td></tr></table></figure>
+<p>重启docker 并设置开机启动docker</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo systemctl restart docker</div><div class="line">sudo systemctl enable docker</div></pre></td></tr></table></figure>
+<h4 id="docker-简单配置"><a href="#docker-简单配置" class="headerlink" title="docker 简单配置"></a>docker 简单配置</h4><p>这里我只对docker的存储驱动和国内镜像源加速器（阿里个人加载器）的配置，修改或者创建/etc/docker/daemon.json</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo /etc/docker/daemon.json</div><div class="line">&#123;</div><div class="line">  &quot;storage-driver&quot;: &quot;devicemapper&quot;,</div><div class="line">  &quot;registry-mirrors&quot;: [&quot;https://1i186hp0.mirror.aliyuncs.com&quot;]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[持续集成(CI)与持续交付(CD)之gitlab-Fork工作流与IntellijIDEA操作]]></title>
       <url>http://www.troylc.cc/CI-CD/gitlab/IntelliJ-IDEA/2018/01/08/cicd-gitlab-fork-idea.html</url>
       <content type="html"><![CDATA[<p>承接上一篇，gitlab在本地部署完后，我们就可以像拥抱github一下来体验一下gitlab的精妙之处，在git中我们针对代码的版本管理，有很多种玩法，如有集中式工作流，功能分支工作流，gitflow工作流，git-fork工作流。不同的玩法，有不同的操作；前三种都是基于集中式代码管理来进行操作的，有点类似于SVN的方式，只不过git的集中式代码管理还是一种分布式的管理，针对开分支，合并分支等相关操作，要比SVN方便很多。<br>本文主要讲上面提的到第四种gitlab的fork工作流，目前最流行的github中开源团队协作的方式就是这种。Forking工作流的一个主要优势是，贡献的代码可以被集成，而不需要所有人都能push代码到仅有的中央仓库中。 开发者push到自己的服务端仓库，而只有项目维护者才能push到正式仓库。 这样项目维护者可以接受任何开发者的提交，但无需给他正式代码库的写权限。<br>在安装完git bash工具后,本文主要是以文档的方式做操作，而且主要工具是Intellij idea来开发。所以以下的操作都是在IDEA中进行。</p>
@@ -616,42 +672,6 @@ a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/.
     </entry>
     
     <entry>
-      <title><![CDATA[macOs使用技巧与问题记录-outlook2016无法搜索]]></title>
-      <url>http://www.troylc.cc/macOs/2017/06/11/macos-03-use-records.html</url>
-      <content type="html"><![CDATA[<p>#使用技巧：</p>
-<p>#问题记录：</p>
-<ol>
-<li>macos最新版本安装outlook无法搜索的问题</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>问题描述</th>
-<th>问题环境</th>
-<th>原因</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>macos最新版本安装    outlook无法搜索的问题</td>
-<td>Macos:10.13.3   Outlook:2016-16.11</td>
-<td>outlook2016版本的搜索功能依赖于mac的聚焦搜索(spotlight)功能，这时我用spotlight来测试一下，果然spotlight功能也不好使用，于是想到怎么来重建这个索引</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>解决方法：<br>首先：关闭outlook2016的应用<br>其次：在命令行中输入以下内容</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>该命令用来关闭索引</div><div class="line">sudo mdutil -i off /</div><div class="line"><span class="meta">#</span>该命令用来删除索引</div><div class="line">sudo mdutil -E /</div><div class="line"><span class="meta">#</span>该命令用来重建索引</div><div class="line">sudo mdutil -i on /</div></pre></td></tr></table></figure>
-<p>  然后用快捷键呼出spotlight菜单，随便输入一个词，就能看到提示，正在进行索引，并且告诉你重建索引的时间。于是搜索了一下，果然在spotlight里可以搜索了。<br>再次：进入outlook2016中，再试一下搜索，发现好像还是不行。于是从官网上找到了如下代码,来重新为outlook邮件创建索引  </p>
-<pre><code class="shell">mdimport -g /Applications/Microsoft\ Outlook.app/Contents/Library/Spotlight/Microsoft\ Outlook\ Spotlight\ Importer.mdimporter -d1 ~/Library/Group\ Containers/UBF8T346G9.Office/Outlook/Outlook\ 15\ Profiles/Main\ Profile
-</code></pre>
-<p>通过以上命令操作完后，再次打开outlook2016，发现果然在outlook2016中就可以搜索了    </p>
-</li>
-</ul>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[macOs终端工具优化iTerm2+oh my zsh]]></title>
       <url>http://www.troylc.cc/macOs/2017/06/11/macos-01.html</url>
       <content type="html"><![CDATA[<p>工欲善其事,必先利其器。能从千百年传承下来，必定是经过各行各业的实践与验证，到今年仍然适用，今天就分享一些软件行业对程序员来说的利器(zsh+oh my zsh)这款屌炸天linux下的增加命令行的工具。</p>
@@ -692,6 +712,42 @@ a926b7dd1740        rancher/ranchervm   <span class="string">"/var/lib/rancher/.
 <p>最后执行<code>source ~/.zshrc</code>让插件即时生效：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">source ~/.zshrc</div></pre></td></tr></table></figure>
 <p>其它自定义的插件，安装方法类似，大家可以自行到网络上搜索oh my zsh的插件，我也是在慢慢的探索新逼格的新插件中。至此分享结束，后续也会持续关注有关macOs上的工具优化。希望能够帮到大家，相互学习。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[macOs使用技巧与问题记录-outlook2016无法搜索]]></title>
+      <url>http://www.troylc.cc/macOs/2017/06/11/macos-03-use-records.html</url>
+      <content type="html"><![CDATA[<p>#使用技巧：</p>
+<p>#问题记录：</p>
+<ol>
+<li>macos最新版本安装outlook无法搜索的问题</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>问题描述</th>
+<th>问题环境</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macos最新版本安装    outlook无法搜索的问题</td>
+<td>Macos:10.13.3   Outlook:2016-16.11</td>
+<td>outlook2016版本的搜索功能依赖于mac的聚焦搜索(spotlight)功能，这时我用spotlight来测试一下，果然spotlight功能也不好使用，于是想到怎么来重建这个索引</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>解决方法：<br>首先：关闭outlook2016的应用<br>其次：在命令行中输入以下内容</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>该命令用来关闭索引</div><div class="line">sudo mdutil -i off /</div><div class="line"><span class="meta">#</span>该命令用来删除索引</div><div class="line">sudo mdutil -E /</div><div class="line"><span class="meta">#</span>该命令用来重建索引</div><div class="line">sudo mdutil -i on /</div></pre></td></tr></table></figure>
+<p>  然后用快捷键呼出spotlight菜单，随便输入一个词，就能看到提示，正在进行索引，并且告诉你重建索引的时间。于是搜索了一下，果然在spotlight里可以搜索了。<br>再次：进入outlook2016中，再试一下搜索，发现好像还是不行。于是从官网上找到了如下代码,来重新为outlook邮件创建索引  </p>
+<pre><code class="shell">mdimport -g /Applications/Microsoft\ Outlook.app/Contents/Library/Spotlight/Microsoft\ Outlook\ Spotlight\ Importer.mdimporter -d1 ~/Library/Group\ Containers/UBF8T346G9.Office/Outlook/Outlook\ 15\ Profiles/Main\ Profile
+</code></pre>
+<p>通过以上命令操作完后，再次打开outlook2016，发现果然在outlook2016中就可以搜索了    </p>
+</li>
+</ul>
 ]]></content>
     </entry>
     
