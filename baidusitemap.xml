@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/ceph/2018/06/29/ubuntu18.04-installd-ceph.html</loc>
+    <lastmod>2018-06-29T18:02:37.028Z</lastmod>
+    <data>
+        <display>
+        <title>在ubuntu18.04中安装基于docker容器的ceph文件共享服务</title>
+        <pubTime>2018-06-29T15:20:21.420Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>ubuntu</tag>
+         
+        <tag>ceph</tag>
+         
+         
+           
+             
+              <breadCrumb title="ceph" url="http://www.troylc.cc/categories/ceph/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/ubuntu/2018/05/27/ubuntu18.04-installd-docker.html</loc>
     <lastmod>2018-05-27T10:15:42.739Z</lastmod>
     <data>
