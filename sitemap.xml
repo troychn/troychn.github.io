@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.troylc.cc/ceph/2018/06/29/ubuntu18.04-installd-ceph.html</loc>
+    <loc>http://www.troylc.cc/ubuntu/2018/05/27/ubuntu18.04-installd-docker.html</loc>
     
-    <lastmod>2018-06-29T18:02:37.028Z</lastmod>
+    <lastmod>2018-07-25T02:35:14.480Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.troylc.cc/ubuntu/2018/05/27/ubuntu18.04-installd-docker.html</loc>
+    <loc>http://www.troylc.cc/harbor/2018/07/14/ubuntu18.04-installd-harbor.html</loc>
     
-    <lastmod>2018-05-27T10:15:42.739Z</lastmod>
+    <lastmod>2018-07-14T15:56:29.919Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.troylc.cc/ceph/2018/06/29/ubuntu18.04-installd-ceph.html</loc>
+    
+    <lastmod>2018-06-29T18:02:37.028Z</lastmod>
     
   </url>
   

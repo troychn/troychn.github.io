@@ -4,6 +4,58 @@
 
     
   <url>
+    <loc>http://www.troylc.cc/ubuntu/2018/05/27/ubuntu18.04-installd-docker.html</loc>
+    <lastmod>2018-07-25T02:35:14.480Z</lastmod>
+    <data>
+        <display>
+        <title>ubuntu18.04 server lts版本安装docker及相关配置</title>
+        <pubTime>2018-05-27T07:19:59.077Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>ubuntu</tag>
+         
+         
+           
+             
+              <breadCrumb title="ubuntu" url="http://www.troylc.cc/categories/ubuntu/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.troylc.cc/harbor/2018/07/14/ubuntu18.04-installd-harbor.html</loc>
+    <lastmod>2018-07-14T15:56:29.919Z</lastmod>
+    <data>
+        <display>
+        <title>ubuntu18.04中安装docker私有镜像仓库harbor</title>
+        <pubTime>2018-07-14T14:59:32.806Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>docker</tag>
+         
+        <tag>registry</tag>
+         
+        <tag>ubuntu</tag>
+         
+        <tag>harbor</tag>
+         
+         
+           
+             
+              <breadCrumb title="harbor" url="http://www.troylc.cc/categories/harbor/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.troylc.cc/ceph/2018/06/29/ubuntu18.04-installd-ceph.html</loc>
     <lastmod>2018-06-29T18:02:37.028Z</lastmod>
     <data>
@@ -23,30 +75,6 @@
            
              
               <breadCrumb title="ceph" url="http://www.troylc.cc/categories/ceph/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.troylc.cc/ubuntu/2018/05/27/ubuntu18.04-installd-docker.html</loc>
-    <lastmod>2018-05-27T10:15:42.739Z</lastmod>
-    <data>
-        <display>
-        <title>ubuntu18.04 server lts版本安装docker及相关配置</title>
-        <pubTime>2018-05-27T07:19:59.077Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>docker</tag>
-         
-        <tag>ubuntu</tag>
-         
-         
-           
-             
-              <breadCrumb title="ubuntu" url="http://www.troylc.cc/categories/ubuntu/"/>
           
         </display>
     </data>
